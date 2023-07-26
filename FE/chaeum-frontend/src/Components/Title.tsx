@@ -5,7 +5,7 @@ export interface TitleProps {
 }
 
 function Title({ text }: TitleProps) {
-  return <div>{text}</div>;
+  return <div className="text-3xl font-bold underline">{text}</div>;
 }
 
 export default Title;
