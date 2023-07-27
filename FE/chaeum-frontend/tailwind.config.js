@@ -1,9 +1,43 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const colors = require('tailwindcss/colors');
+const withMT = require('@material-tailwind/react/utils/withMT');
+
+
+
+module.exports = withMT({
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        environmentR: ['EnvironmentR'],
+      },
+    },
     colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      black: colors.black,
+      white: colors.white,
+      gray: colors.gray,
+      emerald: colors.emerald,
+      indigo: colors.indigo,
+      yellow: colors.yellow,
+      slate: colors.slate,
+      zinc: colors.zinc,
+      neutral: colors.neutral,
+      stone: colors.stone,
+      red: colors.red,
+      orange: colors.orange,
+      amber: colors.amber,
+      lime: colors.lime,
+      green: colors.green,
+      teal: colors.teal,
+      cyan: colors.cyan,
+      sky: colors.sky,
+      blue: colors.blue,
+      violet: colors.violet,
+      fuchsia: colors.fuchsia,
+      pink: colors.pink,
+      rose: colors.rose,
       'chaeum-blue-100': '#e4ffff',
       'chaeum-blue-200': '#bbfbfc',
       'chaeum-blue-300': '#98f4f5',
@@ -35,4 +69,4 @@ module.exports = {
     },
   },
   plugins: [],
-};
+});
