@@ -238,22 +238,6 @@ const ArticleCard = () => {
                     댓글 모두보기
                   </span>
                 )}
-
-                {/* <div className="flex w-[360px] mt-5 overflow-auto">
-                {arr.map((container, key) => (
-                  <ColorContainer
-                    key={key}
-                    color={container.color}
-                    hoverColor={container.hoverColor}
-                  />
-                ))}
-              </div> */}
-                {/* <Dropdown />
-              <ChatMessage /> */}
-
-                <ActiveInformation />
-                <ChatPreview />
-                {/* <LoadingScreen/> */}
               </article>
             ))}
           </div>
