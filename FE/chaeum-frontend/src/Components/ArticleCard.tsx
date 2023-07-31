@@ -1,36 +1,16 @@
-import React from 'react';
-import CommentCarousel from './CommentCarousel';
+import React, { useEffect, useState } from 'react';
 import CommentInput from './CommentInput';
-
-type User = {
-  nickName: string;
-  profileImage: string;
-};
-
-type Activity = {
-  category: string;
-  color: string;
-  time: number;
-};
-
-type Comment = {
-  user: User;
-  content: string;
-};
-
-type Article = {
-  id: number;
-  user: User;
-  date: string;
-  dateTime: string;
-  activityInfo: Activity;
-  likeCount: number;
-  commentCount: number;
-  content: string;
-  imageList: string[];
-  encourageMessageList: Comment[];
-  commentList: Comment[];
-};
+import ColorContainer from './ColorContainer';
+import Dropdown from './Dropdown';
+import ChatMessage from './ChatMessage';
+import EncourageMessageDetail from './EncourageMessageDetail';
+import EncourageMessageCarousel from './EncourageMessageCarousel';
+import CommentList from './CommentList';
+import ActiveInformation from './ActiveInformation';
+import ChatPreview from './ChatPreview';
+import { Article, ColorForSelection } from './Types';
+import LoadingPage from './LoadingPage';
+import { isConstructorDeclaration } from 'typescript';
 
 const ArticleCard = () => {
   const example1: Article = {
@@ -86,81 +66,201 @@ const ArticleCard = () => {
 
   const exampleList = [example1, example2];
 
-  const arr: string[] = [
-    'bg-blue-400',
-    'bg-cyan-400',
-    'bg-yellow-400',
-    'bg-orange-400',
-    'bg-lime-400',
-    'bg-teal-400',
-    'bg-sky-400',
+  const arr: ColorForSelection[] = [
+    { color: 'bg-slate-400', hoverColor: 'hover:bg-slate-500' },
+    { color: 'bg-red-400', hoverColor: 'hover:bg-red-500' },
+    { color: 'bg-orange-400', hoverColor: 'hover:bg-orange-500' },
+    { color: 'bg-amber-400', hoverColor: 'hover:bg-amber-500' },
+    { color: 'bg-yellow-400', hoverColor: 'hover:bg-yellow-500' },
+    { color: 'bg-lime-400', hoverColor: 'hover:bg-lime-500' },
+    { color: 'bg-green-400', hoverColor: 'hover:bg-green-500' },
+    { color: 'bg-emerald-400', hoverColor: 'hover:bg-emerald-500' },
+    { color: 'bg-teal-400', hoverColor: 'hover:bg-teal-500' },
+    { color: 'bg-chaeum-blue-400', hoverColor: 'hover:bg-chaeum-blue-500' },
+    { color: 'bg-cyan-400', hoverColor: 'hover:bg-cyan-500' },
+    { color: 'bg-sky-400', hoverColor: 'hover:bg-sky-500' },
+    { color: 'bg-blue-400', hoverColor: 'hover:bg-blue-500' },
+    { color: 'bg-indigo-400', hoverColor: 'hover:bg-indigo-500' },
+    { color: 'bg-violet-400', hoverColor: 'hover:bg-violet-500' },
+    { color: 'bg-purple-400', hoverColor: 'hover:bg-purple-500' },
+    { color: 'bg-fuchsia-400', hoverColor: 'hover:bg-fuchsia-500' },
+    { color: 'bg-pink-400', hoverColor: 'hover:bg-pink-500' },
+    { color: 'bg-rose-400', hoverColor: 'hover:bg-rose-500' },
   ];
+
+  const [isPlusButtonClicked, setIsPlusButtonClicked] =
+    useState<boolean>(false);
+  const [detailedArticle, setDetailedArticle] = useState<boolean>(false);
+  const [focusedArticle, setFocusedArticle] = useState<number>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isFadingOut, setIsFadingOut] = useState<boolean>(false);
+
+  //로딩스크린 페이드아웃을 만들어보자...
+  //페이지 로드가 끝나면
+  //isFadingOut true로 바꿔주기
+  //isloading 값은 false로 바꾸기
+  //isFadingOut 이 true인 동안 애니메이션
+  //이후 다시 setTimeout으로 false 로 변환
+  //최종적으로 isLoading과 isFadingOut이 둘다 false가 되면
+  //페이지 이동.
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsFadingOut(true);
+      setIsLoading(false);
+      console.log('애니메이션시작');
+    }, 5000);
+  }, []);
+
+  useEffect(() => {
+    if (isFadingOut) {
+      setTimeout(() => {
+        setIsFadingOut(false);
+        console.log('화면전환');
+      }, 700);
+    }
+  }, [isFadingOut]);
+
+  const onPlusButtonClicked = (id: number) => {
+    setIsPlusButtonClicked(!isPlusButtonClicked);
+    setFocusedArticle(id);
+  };
+
+  const onMoreCommentClicked = (id: number) => {
+    setDetailedArticle(true);
+    setFocusedArticle(id);
+  };
+
+  const onCloseButtonClicked = (id: number) => {
+    setDetailedArticle(false);
+    setFocusedArticle(id);
+  };
 
   return (
     <div className="bg-gray-100 py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto w-max">
-          {exampleList.map(post => (
-            <article
-              key={post.id}
-              className="flex p-3 max-w-sm flex-col items-start justify-between mb-5 bg-white"
-            >
-              <div className="relative flex items-center gap-x-4">
-                <img
-                  src={post.user.profileImage}
-                  alt=""
-                  className="h-16 w-16 rounded-full bg-gray-50"
-                />
-                <div className="text-lg leading-6">
-                  <p className="text-chaeum-gray-900 text-left">
-                    {post.user.nickName}
-                  </p>
-                  <div
-                    className={`text-sm ${post.activityInfo.color} rounded-md py-0.5 px-1 w-fit`}
-                  >
-                    <p className="text-white text-left">
-                      #{post.activityInfo.category}
+      {!isLoading && !isFadingOut ? (
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto w-max">
+            {exampleList.map(post => (
+              <article
+                key={post.id}
+                className="flex p-3 max-w-sm flex-col items-start justify-between mb-5 bg-white"
+              >
+                <div className="relative flex items-center gap-x-4">
+                  <img
+                    src={post.user.profileImage}
+                    alt=""
+                    className="h-16 w-16 rounded-full bg-gray-50"
+                  />
+                  <div className="text-lg leading-6">
+                    <p className="text-chaeum-gray-900 text-left">
+                      {post.user.nickName}
                     </p>
-                    <p className="text-white text-left">
-                      {post.activityInfo.time}시간
-                    </p>
+                    <div
+                      className={`text-sm ${post.activityInfo.color} rounded-md py-0.5 px-1 w-fit`}
+                    >
+                      <p className="text-white text-left">
+                        #{post.activityInfo.category}
+                      </p>
+                      <p className="text-white text-left">
+                        {post.activityInfo.time}시간
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="place-self-end absolute ">
-                <time dateTime={post.dateTime} className="text-chaeum-gray-900">
-                  {post.date}
-                </time>
+                <div className="place-self-end absolute ">
+                  <time
+                    dateTime={post.dateTime}
+                    className="text-chaeum-gray-900"
+                  >
+                    {post.date}
+                  </time>
 
-                <div className="text-right text-chaeum-gray-900">
-                  <i className="fa-regular fa-heart mr-0.5 " />
-                  {post.likeCount}
-                  <i className="fa-regular fa-comment ml-2 mr-0.5" />
-                  {post.commentCount}
+                  <div className="text-right text-chaeum-gray-900">
+                    <i className="fa-regular fa-heart mr-0.5 " />
+                    {post.likeCount}
+                    <i className="fa-regular fa-comment ml-2 mr-0.5" />
+                    {post.commentCount}
+                  </div>
                 </div>
-              </div>
+                <div className="group relative">
+                  <p className="mt-5 line-clamp-3 text-sm text-left leading-6 text-chaeum-gray-900 whitespace-pre-line">
+                    {post.content}
+                  </p>
+                </div>
+                {/* 이미지 미리보기 / 상세 */}
+                {detailedArticle && focusedArticle === post.id ? (
+                  <div className="mt-5 flex flex-row w-[360px] h-[360px] overflow-auto mb-5 snap-x">
+                    {post.imageList.map((image, key) => (
+                      <img
+                        src={image}
+                        key={key}
+                        alt=""
+                        className="flex-none mr-2 h-[330px] w-[330px] rounded-lg snap-center"
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-5 flex flex-row w-[360px] overflow-auto mb-5">
+                    {post.imageList.map((image, key) => (
+                      <img
+                        src={image}
+                        key={key}
+                        alt=""
+                        className="flex-none mr-2 h-[150px] w-[150px] rounded-lg"
+                      />
+                    ))}
+                  </div>
+                )}
 
-              <div className="group relative">
-                <p className="mt-5 line-clamp-3 text-sm text-left leading-6 text-chaeum-gray-900 whitespace-pre-line">
-                  {post.content}
-                </p>
-              </div>
-              <div className="mt-5 flex flex-row w-[360px] overflow-auto mb-5">
-                {post.imageList.map((image, key) => (
-                  <img
-                    src={image}
+                {/* 응원글 미리보기 / 상세 */}
+                {isPlusButtonClicked ? (
+                  <EncourageMessageDetail
+                    onPlusButtonClicked={onPlusButtonClicked}
+                    articleId={post.id}
+                  />
+                ) : (
+                  <EncourageMessageCarousel
+                    onPlusButtonClicked={onPlusButtonClicked}
+                    articleId={post.id}
+                  />
+                )}
+                <CommentInput />
+                {detailedArticle && focusedArticle === post.id ? (
+                  <div className="flex flex-col justify-start">
+                    <span onClick={() => onCloseButtonClicked(post.id)}>
+                      닫기
+                    </span>
+                    <CommentList />
+                  </div>
+                ) : (
+                  <span onClick={() => onMoreCommentClicked(post.id)}>
+                    댓글 모두보기
+                  </span>
+                )}
+
+                {/* <div className="flex w-[360px] mt-5 overflow-auto">
+                {arr.map((container, key) => (
+                  <ColorContainer
                     key={key}
-                    alt=""
-                    className="mr-2 h-[150px] w-[150px] rounded-lg"
+                    color={container.color}
+                    hoverColor={container.hoverColor}
                   />
                 ))}
-              </div>
-              <CommentCarousel />
-              <CommentInput />
-            </article>
-          ))}
+              </div> */}
+                {/* <Dropdown />
+              <ChatMessage /> */}
+
+                <ActiveInformation />
+                <ChatPreview />
+                {/* <LoadingScreen/> */}
+              </article>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        <LoadingPage isFadingOut={isFadingOut} />
+      )}
     </div>
   );
 };
