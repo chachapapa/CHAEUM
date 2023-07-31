@@ -1,6 +1,11 @@
 import { Carousel, Typography, IconButton } from '@material-tailwind/react';
 import React from 'react';
 
+type Props = {
+  onPlusButtonClicked : (id: number)=> void;
+  articleId : number;
+}
+
 type User = {
   nickName: string;
   profileImage: string;
@@ -43,7 +48,7 @@ const commentList: Comment[] = [
 
 ];
 
-const CommentCarousel = () => {
+const EncourageMessageCarousel = (props:Props) => {
   return (
     <Carousel
       className="rounded-lg mb-3"
@@ -87,8 +92,8 @@ const CommentCarousel = () => {
         <IconButton
           variant="text"
           color="white"
-          size="lg"
-          // onClick={onClickPlus}
+          size="sm"
+          // onClick={props.onPlusButtonClicked}
           className="!absolute top-2/4 !right-1 -translate-y-2/4"
         >
           <svg
@@ -103,12 +108,12 @@ const CommentCarousel = () => {
     >
       {commentList.map((comment, key) => (
         <div className="relative w-full h-10" key={key}>
-          <div className="absolute inset-0 h-full w-full grid justify-items-start items-center bg-gray-100 pl-2">
-            <div className="flex">
+          <div className="absolute h-full w-full grid justify-items-start items-center bg-gray-100 pl-2">
+            <div className="flex h-full">
               <img
                 src={comment.user.profileImage}
                 alt=""
-                className="h-7 w-7 rounded-full bg-gray-50 mr-2"
+                className="h-7 w-7 rounded-full bg-gray-50 mr-2 self-center"
               />
 
               <div className="text-center self-center">
@@ -128,4 +133,4 @@ const CommentCarousel = () => {
   );
 };
 
-export default CommentCarousel;
+export default EncourageMessageCarousel;
