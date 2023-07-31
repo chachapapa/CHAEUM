@@ -6,7 +6,7 @@ import TextBox from './TextBox';
 
 const CommentInput = () => {
   return (
-    <div className="flex w-full">
+    <div className="flex w-full mb-2">
       <TextBox inputPlaceholder = "댓글 달기..."/>
       <div className="flex">
         <IconButton variant="text" className="rounded-full">
