@@ -66,6 +66,8 @@ module.exports = withMT({
       'chaeum-gray-600': '#989caf',
       'chaeum-gray-700': '#696d80',
       'chaeum-gray-900': '#45495b',
+      'kakao-yellow' : '#fee500',
+      'naver-green' : '#06bd34',
     },
   },
   plugins: [],
