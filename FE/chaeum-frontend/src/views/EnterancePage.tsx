@@ -5,7 +5,14 @@ import TextButton from '../components/common/TextButton';
 const EnterancePage = () => {
   return (
     <div className="w-[452px] h-[932px] bg-white outline outline-1">
-      <AnimatedLogo />
+      <div
+        // className="mx-auto w-max"
+        className="mx-auto w-max"
+      >
+        <div className="flex w-96 h-[600px] items-center">
+          <AnimatedLogo />
+        </div>
+      </div>
       <TextButton
         icon="kakao"
         type="kakao"

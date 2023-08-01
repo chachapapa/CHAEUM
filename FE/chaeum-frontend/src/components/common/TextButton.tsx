@@ -60,7 +60,7 @@ const TextButton = ({
   if (icon) iconType = IconType[icon];
 
   return (
-    <div className="w-100 mb-3">
+    <div className="w-100 mb-5">
       <button className={classNames}>
         <div className="relative flex items-center justify-content gap-x-8">
           {icon && <img src={iconType} alt="회사로고" className='w-[35px]'></img>}
