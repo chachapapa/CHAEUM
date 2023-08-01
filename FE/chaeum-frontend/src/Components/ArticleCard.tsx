@@ -11,6 +11,7 @@ import ChatPreview from './ChatPreview';
 import { Article, ColorForSelection } from './Types';
 import LoadingPage from './LoadingPage';
 import { isConstructorDeclaration } from 'typescript';
+import { Avatar } from '@material-tailwind/react';
 
 const ArticleCard = () => {
   const example1: Article = {

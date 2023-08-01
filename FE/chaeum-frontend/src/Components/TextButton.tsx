@@ -30,9 +30,9 @@ const IconType = {
 
 // 종류에 알맞는 버튼 타입을 선택합니다.
 const ButtonType = {
-  kakao: 'bg-yellow-400 text-black font-bold rounded',
-  naver: 'bg-green-500 text-black font-bold rounded',
-  google: 'bg-gray-300 text-black font-bold rounded',
+  kakao: 'bg-kakao-yellow text-black font-bold rounded',
+  naver: 'bg-naver-green text-black font-bold rounded',
+  google: 'bg-gray-100 text-black font-bold rounded',
   primary:
     'bg-chaeum-blue-500 hover:bg-chaeum-blue-700 text-white font-bold rounded',
   white: 'bg-white-500 hover:bg-gray-700 text-black font-bold rounded',
@@ -60,10 +60,10 @@ const TextButton = ({
   if (icon) iconType = IconType[icon];
 
   return (
-    <div className="w-100">
+    <div className="w-100 mb-3">
       <button className={classNames}>
         <div className="relative flex items-center justify-content gap-x-8">
-          {icon && <img src={iconType} alt="회사로고"></img>}
+          {icon && <img src={iconType} alt="회사로고" className='w-[35px]'></img>}
           {label}
         </div>
       </button>
