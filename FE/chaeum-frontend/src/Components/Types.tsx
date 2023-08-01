@@ -33,4 +33,31 @@ type ColorForSelection = {
   hoverColor: string;
 };
 
-export type {User, Activity, Comment, Article, ColorForSelection}; 
+export interface ColorPropsType {
+  color?: string;
+  weight?: 'w1' | 'w2' | 'w3' | 'w4' | 'w5';
+}
+
+type ColorNameType = {
+  [key in string]: string;
+};
+
+export interface StreakInfoType {
+  info?: { date: string; activetime: number }[];
+  color?: string;
+}
+
+export interface RivalPropsType {
+  name: string;
+  tag: string;
+  profile?: string;
+}
+
+export type {
+  User,
+  Activity,
+  Comment,
+  Article,
+  ColorForSelection,
+  ColorNameType,
+};

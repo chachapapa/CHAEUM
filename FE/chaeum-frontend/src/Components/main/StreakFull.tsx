@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StreakDay } from './StreakDay';
 import { type } from 'os';
-import { StreakInfoType } from './TypeInterface';
+import { StreakInfoType } from '../Types';
 
 // 시작 날짜 구하기
 // 일요일 : 현재날짜 - 41

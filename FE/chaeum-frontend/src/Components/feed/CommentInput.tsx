@@ -1,13 +1,11 @@
 import { IconButton } from '@material-tailwind/react';
 import React from 'react';
-import TextBox from './TextBox';
-
-
+import TextBox from '../common/TextBox';
 
 const CommentInput = () => {
   return (
     <div className="flex w-full mb-2">
-      <TextBox inputPlaceholder = "댓글 달기..."/>
+      <TextBox inputPlaceholder="댓글 달기..." />
       <div className="flex">
         <IconButton variant="text" className="rounded-full">
           <svg

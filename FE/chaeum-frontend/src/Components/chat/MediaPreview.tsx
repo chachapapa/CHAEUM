@@ -5,7 +5,7 @@ import {
   Typography,
   IconButton,
 } from '@material-tailwind/react';
-import TextButton from './TextButton';
+import TextButton from '../common/TextButton';
 
 const MediaPreview = () => {
   const [openBottom, setOpenBottom] = React.useState(false);

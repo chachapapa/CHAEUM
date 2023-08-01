@@ -1,6 +1,6 @@
 import React from 'react';
-import { StreakColor } from './theme/StreakTheme';
-import type { ColorPropsType } from './TypeInterface';
+import { StreakColor } from '../theme/StreakTheme';
+import { ColorPropsType } from '../Types';
 
 export const StreakDay = ({ color, weight }: ColorPropsType) => {
   const streakColor = StreakColor({ color, weight });

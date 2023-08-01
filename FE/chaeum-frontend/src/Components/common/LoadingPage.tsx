@@ -1,17 +1,24 @@
 import React from 'react';
-import './styles/Wave.css';
+import './styles/wave.css';
 import { ReactComponent as Logo } from '../Assets/chaeum_logo_text_noeffect.svg';
+import { ReactComponent as Circle } from '../Assets/Ellipse 6.svg';
 
-
-const AnimatedLogo = () => {
+type Props = {
+  isFadingOut?: boolean;
+};
+const LoadingPage = (props: Props) => {
   return (
     <div
       // className="mx-auto w-max"
-      className='mx-auto w-max'
+      className="mx-auto w-max"
     >
       <div className="flex w-96 h-[700px] bg-white items-center">
         <svg
-          className={'loading flex items-center mx-auto'}
+          className={
+            props.isFadingOut
+              ? 'loading flex items-center mx-auto opacity-0 transition-all duration-500'
+              : 'loading flex items-center mx-auto'
+          }
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -32,7 +39,7 @@ const AnimatedLogo = () => {
             >
               {/* 물결 조정시 d 건드리면 됨 */}
               <path
-                fill="#2bb7c4"
+                fill="#49d9e6"
                 d="M0.25,1H0c0,0,0-0.659,0-0.916c0.083-0.303,0.158,0.334,0.25,0C0.25,0.327,0.25,1,0.25,1z"
               />
             </pattern>
@@ -66,10 +73,10 @@ const AnimatedLogo = () => {
             </mask>
           </defs>
 
-          <use x="0" y="0" xlinkHref="#text"/>
+          {/* <use x="0" y="0" xlinkHref="#text"/> */}
 
           <rect
-            className="water-waving"
+            className="water-fill"
             mask="url(#text_mask)"
             fill="url(#water1)"
             x="-400"
@@ -78,7 +85,7 @@ const AnimatedLogo = () => {
             height="120"
           />
           <rect
-            className="water-waving"
+            className="water-fill"
             mask="url(#text_mask)"
             fill="url(#water2)"
             x="-400"
@@ -92,4 +99,4 @@ const AnimatedLogo = () => {
   );
 };
 
-export default AnimatedLogo;
+export default LoadingPage;

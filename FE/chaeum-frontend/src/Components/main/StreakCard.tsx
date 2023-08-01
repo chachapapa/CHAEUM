@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StreakFull } from './StreakFull';
-import { Tag } from './Tag';
+import { Tag } from '../common/Tag';
 import { JsxElement } from 'typescript';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -13,9 +13,9 @@ import {
   faChevronDown,
   faChevronUp,
 } from '@fortawesome/free-solid-svg-icons';
-import { ColorPropsType, StreakInfoType } from './TypeInterface';
-import { TextColor } from './theme/TextColorTheme';
-import { ActiveColor } from './theme/ActiveColorTheme';
+import { StreakInfoType } from '../Types';
+import { TextColor } from '../theme/TextColorTheme';
+import { ActiveColor } from '../theme/ActiveColorTheme';
 import { StreakRank } from './StreakRank';
 
 interface StreakCardProps extends StreakInfoType {

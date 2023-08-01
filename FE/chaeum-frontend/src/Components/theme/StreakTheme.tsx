@@ -1,4 +1,4 @@
-import type { ColorPropsType } from '../TypeInterface';
+import type { ColorPropsType } from '../Types';
 
 type ColorNameType = {
   [key in string]: string;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fragment } from 'react';
-import { StreakColor } from './theme/StreakTheme';
+import { StreakColor } from '../theme/StreakTheme';
 
 interface TagPropsType {
   tag: string;

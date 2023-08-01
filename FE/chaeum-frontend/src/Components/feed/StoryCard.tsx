@@ -6,7 +6,7 @@ import {
   Typography,
   Avatar,
 } from '@material-tailwind/react';
-import ActivityOutlineCard from './ActivityOutlineCard';
+import ActivityOutlineCard from './write/ActivityOutlineCard';
 
 /*
   사용법

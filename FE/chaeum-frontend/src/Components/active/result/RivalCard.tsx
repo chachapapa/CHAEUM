@@ -1,25 +1,21 @@
 import React from 'react';
-import { ReactComponent as BubbleFrame } from '../assets/bubbleFrame.svg';
+import { ReactComponent as CardFrame } from '../assets/rectangle.svg';
 import './styles/cardwave.css';
-import { RivalPropsType } from './TypeInterface';
+import { RivalPropsType } from '../../Types';
 
-interface BubblePropsType extends RivalPropsType {
-  time: string;
-}
-
-export const ActiveBubble = ({ name, tag, profile, time }: BubblePropsType) => {
+export const RivalCard = ({ name, tag, profile }: RivalPropsType) => {
   return (
-    <div>
+    <>
       <svg
-        className="bubbleactive"
+        className="rivalcard"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
         x="0px"
         y="0px"
         width="430"
-        height="auto"
-        viewBox="0 0 430 430"
+        height="vh"
+        viewBox="0 0 430 190"
         enableBackground="new 0 0 574.558 120"
         xmlSpace="preserve"
       >
@@ -47,27 +43,27 @@ export const ActiveBubble = ({ name, tag, profile, time }: BubblePropsType) => {
             />
           </pattern>
           <circle
-            id="bubblecircle"
-            cx="105"
-            cy="70"
+            id="circle"
+            cx="93.5"
+            cy="92"
             r="20"
             vectorEffect="non-scaling-stroke"
           />
-          <clipPath id="bubble-circle-clip">
-            <use xlinkHref="#bubblecircle" />
+          <clipPath id="circle-clip">
+            <use xlinkHref="#circle" />
           </clipPath>
 
-          <mask id="bubble_mask">
-            <use x="0" y="0" xlinkHref="#bubble" opacity="1" fill="#0e98a4" />
+          <mask id="text_mask">
+            <use x="0" y="0" xlinkHref="#text" opacity="1" fill="#0e98a4" />
           </mask>
         </defs>
 
         {/* <use x="0" y="0" xlinkHref="#text" fill="#0e98a4" /> */}
-        <BubbleFrame x="0" y="0" id="bubble"></BubbleFrame>
+        <CardFrame x="0" y="0" id="text"></CardFrame>
 
         <rect
           className="water-fill1"
-          mask="url(#bubble_mask)"
+          mask="url(#text_mask)"
           fill="url(#water1)"
           x="-400"
           y="0"
@@ -76,7 +72,7 @@ export const ActiveBubble = ({ name, tag, profile, time }: BubblePropsType) => {
         />
         <rect
           className="water-fill2"
-          mask="url(#bubble_mask)"
+          mask="url(#text_mask)"
           fill="url(#water2)"
           x="-400"
           y="0"
@@ -84,27 +80,28 @@ export const ActiveBubble = ({ name, tag, profile, time }: BubblePropsType) => {
           height="100"
         />
 
-        <g x="0" y="0" clipPath="url(#bubble-circle-clip)">
+        <g clipPath="url(#circle-clip)">
           <image
             xlinkHref="../temp1.jpg"
             x="60"
-            y="40"
+            y="50"
             width="75"
             height="78"
             preserveAspectRatio="xMidYMid slice"
           />
           <use
-            xlinkHref="#bubblecircle"
+            xlinkHref="#circle"
             fill="none"
             stroke="#45495B"
             strokeWidth="4"
             opacity="0.25"
           />
         </g>
+        {/* <image href="../chacha1.jpg" width="10%" /> */}
         <text
           textAnchor="middle"
           alignmentBaseline="middle"
-          transform="translate(105, 110)"
+          transform="translate(92, 130)"
           fontSize="1.2rem"
           fill="#45495B"
         >
@@ -113,22 +110,13 @@ export const ActiveBubble = ({ name, tag, profile, time }: BubblePropsType) => {
         <text
           textAnchor="middle"
           alignmentBaseline="middle"
-          transform="translate(105,130)"
+          transform="translate(92,150)"
           fontSize="0.8rem"
           fill="#45495B"
         >
           #{tag}
         </text>
-        <text
-          textAnchor="middle"
-          alignmentBaseline="middle"
-          transform="translate(105,150)"
-          fontSize="0.8rem"
-          fill="#45495B"
-        >
-          {time}
-        </text>
       </svg>
-    </div>
+    </>
   );
 };

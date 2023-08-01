@@ -1,4 +1,4 @@
-import type { ColorPropsType, ColorNameType } from '../TypeInterface';
+import type { ColorPropsType, ColorNameType } from '../Types';
 
 const TextColorList: ColorNameType = {
   // emerald

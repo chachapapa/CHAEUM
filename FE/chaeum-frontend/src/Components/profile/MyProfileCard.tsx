@@ -2,7 +2,8 @@ import React from 'react';
 import { Avatar } from '@material-tailwind/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { Tag } from './Tag';
+import { Tag } from '../common/Tag';
+
 interface ProfileCardPropsType {
   name: string;
   age?: number;

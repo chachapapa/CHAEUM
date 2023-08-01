@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import CommentInput from './CommentInput';
-import ColorContainer from './ColorContainer';
-import Dropdown from './Dropdown';
-import ChatMessage from './ChatMessage';
-import EncourageMessageDetail from './EncourageMessageDetail';
+import ColorContainer from '../common/ColorContainer';
+import Dropdown from '../common/Dropdown';
+import ChatMessage from '../chat/ChatMessage';
 import EncourageMessageCarousel from './EncourageMessageCarousel';
+import EncourageMessageDetail from './EncourageMessageDetail';
 import CommentList from './CommentList';
-import ActiveInformation from './ActiveInformation';
-import ChatPreview from './ChatPreview';
-import { Article, ColorForSelection } from './Types';
-import LoadingPage from './LoadingPage';
+import ActiveInformation from '../main/ActiveInformation';
+import ChatPreview from '../chat/ChatPreview';
+import { Article, ColorForSelection } from '../Types';
+import LoadingPage from '../common/LoadingPage';
 import { isConstructorDeclaration } from 'typescript';
 import { Avatar } from '@material-tailwind/react';
 

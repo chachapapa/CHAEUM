@@ -5,6 +5,7 @@ import {
   faGrip,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
+
 export const ChaeumNav = () => {
   return (
     <div className="fixed bottom-0 left-0 flex flex-row justify-around items-center w-screen h-14 bg-white">
