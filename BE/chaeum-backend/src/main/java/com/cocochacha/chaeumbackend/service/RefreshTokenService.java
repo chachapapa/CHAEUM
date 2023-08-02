@@ -12,11 +12,11 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     /**
-     * ÁÖ¾îÁø ¸®ÇÁ·¹½Ã ÅäÅ«À¸·Î µ¥ÀÌÅÍº£ÀÌ½º¿¡¼­ ÇØ´ç RefreshTokenÀ» °Ë»öÇÕ´Ï´Ù
+     * ì£¼ì–´ì§„ ë¦¬í”„ë ˆì‹œ í† í°ìœ¼ë¡œ ë°ì´í„°ë² ì´ìŠ¤ì—ì„œ í•´ë‹¹ RefreshTokenì„ ê²€ìƒ‰í•©ë‹ˆë‹¤
      *
-     * @param refreshToken °Ë»öÇÏ°íÀÚ ÇÏ´Â ¸®ÇÁ·¹½Ã ÅäÅ«
-     * @return °Ë»öµÈ RefreshToken °´Ã¼
-     * @throws IllegalArgumentException ÁÖ¾îÁø ¸®ÇÁ·¹½Ã ÅäÅ«À¸·Î °Ë»öµÈ RefreshTokenÀÌ ¾ø´Â °æ¿ì ¿¹¿Ü ¹ß»ı
+     * @param refreshToken ê²€ìƒ‰í•˜ê³ ì í•˜ëŠ” ë¦¬í”„ë ˆì‹œ í† í°
+     * @return ê²€ìƒ‰ëœ RefreshToken ê°ì²´
+     * @throws IllegalArgumentException ì£¼ì–´ì§„ ë¦¬í”„ë ˆì‹œ í† í°ìœ¼ë¡œ ê²€ìƒ‰ëœ RefreshTokenì´ ì—†ëŠ” ê²½ìš° ì˜ˆì™¸ ë°œìƒ
      */
     public RefreshToken findByRefreshToken(String refreshToken) {
         return refreshTokenRepository.findByRefreshToken(refreshToken)
