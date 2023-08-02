@@ -1,6 +1,6 @@
 import React from 'react';
-import './styles/activewave.css';
-import { ReactComponent as Active } from '../Assets/active_section.svg';
+import '../../styles/activewave.css';
+import { ReactComponent as ActiveSection } from '../../../assets/article_card.svg';
 
 /*
   사용 예시
@@ -36,7 +36,7 @@ const ActivityOutlineCard = (props: Props) => {
     >
       <defs>
         <pattern
-          id="water"
+          id="active-water"
           width=".25"
           height="1.1"
           patternContentUnits="objectBoundingBox"
@@ -56,19 +56,25 @@ const ActivityOutlineCard = (props: Props) => {
           CHAEUM
         </text> */}
         {/* <Logo id="text"></Logo> */}
-        <Active id="text"></Active>
+        <ActiveSection id="active-text"></ActiveSection>
 
-        <mask id="text_mask">
-          <use x="0" y="0" xlinkHref="#text" opacity="1" fill="#0e98a4" />
+        <mask id="active-text_mask">
+          <use
+            x="0"
+            y="0"
+            xlinkHref="#active-text"
+            opacity="1"
+            fill="#0e98a4"
+          />
         </mask>
       </defs>
 
-      <use x="0" y="-100" xlinkHref="#text" fill="#0e98a4" />
+      <use x="0" y="-100" xlinkHref="#active-text" fill="#0e98a4" />
 
       <rect
-        className="water-fill"
-        mask="url(#text_mask)"
-        fill="url(#water)"
+        className="active-water-fill"
+        mask="url(#active-text_mask)"
+        fill="url(#active-water)"
         x="-400"
         y="0"
         width="1600"
