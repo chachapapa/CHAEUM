@@ -115,7 +115,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("i9a810.p.ssafy.io")
+                .host("localhost")
                 .port(3000)
                 .path("/main")
                 .queryParam("token", token)
