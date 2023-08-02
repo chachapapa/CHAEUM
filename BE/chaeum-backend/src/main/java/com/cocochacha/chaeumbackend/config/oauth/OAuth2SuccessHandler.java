@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -21,10 +22,20 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    /**
+     * 새로 생성된 리프레시 토큰을 저장할 쿠키의 이름입니다.
+     */
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
+
+    /**
+     * 리프레시 토큰의 유효 기간입니다.
+     */
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
+
+    /**
+     * 엑세스 토큰의 유효 기간입니다.
+     */
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
-    public static final String REDIRECT_PATH = "/articles";
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -35,20 +46,30 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        User user = userService.findByEmail((String) oAuth2User.getAttributes().get("email"));
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
 
+        User user = userService.findByEmail((String) kakaoAccount.get("email"));
+
+        // 리프레시 토큰 생성 -> 저장 -> 쿠키에 저장
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
         saveRefreshToken(user.getId(), refreshToken);
         addRefreshTokenToCookie(request, response, refreshToken);
-
+        // 엑세스 토큰 생성 -> 패스에 엑세스 토큰을 추가
         String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
         String targetUrl = getTargetUrl(accessToken);
-
+        // 인증 관련 설정값, 쿠키 제거
         clearAuthenticationAttributes(request, response);
-
+        // 리다이렉트
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
+    /**
+     * 생성된 리프레시 토큰을 전달받아 데이터베이스에 저장합니다.
+     *
+     * @param userId          사용자 ID(Long 타입)
+     * @param newRefreshToken 생성된 리프레시 토큰
+     */
     private void saveRefreshToken(Long userId, String newRefreshToken) {
         RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
                 .map(entity -> entity.update(newRefreshToken))
@@ -57,6 +78,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         refreshTokenRepository.save(refreshToken);
     }
 
+    /**
+     * 생성된 리프레시 토큰을 쿠키에 저장합니다.
+     *
+     * @param request      HttpServletRequest 객체
+     * @param response     HttpServletResponse 객체
+     * @param refreshToken 생성된 리프레시 토큰
+     */
     private void addRefreshTokenToCookie(HttpServletRequest request, HttpServletResponse response,
             String refreshToken) {
         int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
@@ -65,14 +93,31 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge);
     }
 
+    /**
+     * 인증 관련 설정값과 쿠키를 제거합니다.
+     *
+     * @param request  HttpServletRequest 객체
+     * @param response HttpServletResponse 객체
+     */
     private void clearAuthenticationAttributes(HttpServletRequest request,
             HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
         authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
+    /**
+     * 엑세스 토큰을 패스에 추가한 URL을 반환합니다.
+     *
+     * @param token 엑세스 토큰
+     * @return 엑세스 토큰이 추가된 URL 문자열
+     */
     private String getTargetUrl(String token) {
-        return UriComponentsBuilder.fromUriString(REDIRECT_PATH)
+        return UriComponentsBuilder
+                .newInstance()
+                .scheme("http")
+                .host("i9a810.p.ssafy.io")
+                .port(3000)
+                .path("/main")
                 .queryParam("token", token)
                 .build()
                 .toUriString();

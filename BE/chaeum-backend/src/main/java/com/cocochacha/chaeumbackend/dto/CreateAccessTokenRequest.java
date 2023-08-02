@@ -3,10 +3,9 @@ package com.cocochacha.chaeumbackend.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
-public class AddUserRequest {
+@Setter
+public class CreateAccessTokenRequest {
 
-    private String email;
-    private String password;
+    private String refreshToken;
 }

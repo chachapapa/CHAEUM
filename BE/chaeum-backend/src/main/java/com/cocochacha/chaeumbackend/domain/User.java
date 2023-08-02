@@ -2,8 +2,6 @@ package com.cocochacha.chaeumbackend.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.Collection;
@@ -23,7 +21,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
     private Long id;
 
@@ -34,23 +31,34 @@ public class User implements UserDetails {
     private String password;
 
     // 사용자 이름
-    @Column(name = "nickname", unique = true)
+    @Column(name = "nickname")
     private String nickname;
 
+    @Column(name = "profile_url")
+    private String profileImageUrl;
+
+    // 유저 정보 초기 설정
+    @Column(name = "is_registered", nullable = false)
+    private Boolean isRegistered;
+
     @Builder
-    public User(String email, String password, String nickname) {
+    public User(Long id, String email, String password, String nickname, String profileImageUrl,
+            Boolean isRegistered) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
+        this.isRegistered = isRegistered;
     }
 
-    // 사용자 이름 변경
-    public User update(String nickname) {
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
-
-        return this;
     }
 
+    public void registData() {
+        this.isRegistered = true;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -59,7 +67,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return nickname;
     }
 
     @Override
