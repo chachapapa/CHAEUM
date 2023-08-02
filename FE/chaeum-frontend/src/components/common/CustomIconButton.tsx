@@ -9,10 +9,19 @@ import React from 'react';
 
 // props 타입 지정
 interface InputProps {
-  colorInput: 'blue' | 'yellow' | 'lime' | 'navy' | 'gray';
+  icon: 'heart' | 'play' | 'comment' | 'mag';
+  colorInput: 'blue' | 'yellow' | 'lime' | 'navy' | 'gray' | 'white';
   // img: string;
   // des: string;
 }
+
+// 미리 지정한 아이콘 타입
+const IconType = {
+  heart: 'fa-solid fa-heart',
+  play: 'fa-solid fa-play',
+  comment: 'fa-solid fa-comment',
+  mag: 'fa-solid fa-magnifying-glass',
+};
 
 // 미리 지정한 색 타입
 const ColorType = {
@@ -21,15 +30,18 @@ const ColorType = {
   lime: 'bg-lime-500',
   navy: 'bg-navy-500',
   gray: 'bg-gray-500',
+  white: 'bg-white-500',
 };
 
-const CustomIconButton = ({ colorInput, ...props }: InputProps) => {
+const CustomIconButton = (props: InputProps) => {
+  let iconinput;
+  if (props.icon) iconinput = IconType[props.icon];
   let colorinput;
-  if (colorInput) colorinput = ColorType[colorInput];
+  if (props.colorInput) colorinput = ColorType[props.colorInput];
   return (
     <div className="flex items-center gap-4">
       <IconButton className={colorinput}>
-        <i className="fa-solid fa-play" />
+        <i className={iconinput} />
       </IconButton>
     </div>
   );
