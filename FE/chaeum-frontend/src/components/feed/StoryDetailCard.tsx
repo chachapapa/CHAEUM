@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
 import {
   Menu,
@@ -73,8 +74,20 @@ const StoryDetailCard = () => {
         {/* 댓글 인풋 & 작성버튼, 좋아요버튼 */}
         <div className="relative flex items-center gap-x-2">
           <InputTag label="댓글달기"></InputTag>
-          <CustomIconButton icon="comment" colorInput="lime"></CustomIconButton>
-          <CustomIconButton icon="heart" colorInput="lime"></CustomIconButton>
+          <CustomIconButton
+            size="sm"
+            textsize="2xl"
+            iconType="comment"
+            colorInput="lime"
+            callback={function (): void {}}
+          ></CustomIconButton>
+          <CustomIconButton
+            size="sm"
+            textsize="2xl"
+            iconType="heart"
+            colorInput="lime"
+            callback={function (): void {}}
+          ></CustomIconButton>
         </div>
 
         {/* 댓글 목록 */}
