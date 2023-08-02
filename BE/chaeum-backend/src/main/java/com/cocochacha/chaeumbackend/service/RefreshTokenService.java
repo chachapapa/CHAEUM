@@ -12,7 +12,7 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     /**
-     * 주어진 리프레시 토큰으로 데이터베이스에서 해당 RefreshToken을 검색합니다.
+     * 주어진 리프레시 토큰으로 데이터베이스에서 해당 RefreshToken을 검색합니다
      *
      * @param refreshToken 검색하고자 하는 리프레시 토큰
      * @return 검색된 RefreshToken 객체
