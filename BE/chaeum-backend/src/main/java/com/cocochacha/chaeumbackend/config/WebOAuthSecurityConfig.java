@@ -1,6 +1,6 @@
 package com.cocochacha.chaeumbackend.config;
 
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+// import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 import com.cocochacha.chaeumbackend.config.jwt.TokenProvider;
 import com.cocochacha.chaeumbackend.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
@@ -39,7 +39,7 @@ public class WebOAuthSecurityConfig {
     @Bean
     public WebSecurityCustomizer configure() {
         return (web) -> web.ignoring()
-                .requestMatchers(toH2Console())
+                // .requestMatchers(toH2Console())
                 .requestMatchers("/img/**", "/css/**", "/js/**");
     }
 
