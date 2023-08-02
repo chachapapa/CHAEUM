@@ -1,5 +1,8 @@
 .App {
+  height : 100vh;
+  width : 46.15vh;
   display : flex;
+  justify-self: center;
   text-align: center;
   justify-content: center;
 }

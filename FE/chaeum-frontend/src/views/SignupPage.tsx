@@ -1,36 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AnimatedLogo from '../components/common/AnimatedLogo';
-import TextButton from '../components/common/TextButton';
+import TermsOfUse from '../components/signup/TermsOfUse';
+import '../components/styles/terms.css';
 
-/*
-  feature/#256
-  EntrancePage.tsx 에서 파일명만 바꿨습니다.
-*/
+const SignupPage = () => {
+  const [isStarted, setIsStarted] = useState<boolean>(false);
+  const [currentStep, setCurrentStep] = useState<number>(1);
 
-const EnterancePage = () => {
+  const onClickNext = () => {
+    if (currentStep < 3) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+  
+  setTimeout(() => {
+    setIsStarted(true);
+  }, 500);
+
   return (
-    <div className="w-[452px] h-[932px] bg-white outline outline-1">
-      <AnimatedLogo />
-      <TextButton
-        icon="kakao"
-        type="kakao"
-        size="medium"
-        label="카카오로 시작하기"
-      />
-      <TextButton
-        icon="naver"
-        type="naver"
-        size="medium"
-        label="네이버로 시작하기"
-      />
-      <TextButton
-        icon="google"
-        type="google"
-        size="medium"
-        label="구글로 시작하기"
-      />
+    <div className=" w-full h-full bg-white outline outline-1">
+      <div
+        className={
+          isStarted
+            ? 'flex w-1/2 h-1/6 mx-auto items-center transition-all duration-700'
+            : 'flex w-full h-2/3 items-center'
+        }
+      >
+        <AnimatedLogo />
+      </div>
+
+      <TermsOfUse isStarted={isStarted} onClickNext={onClickNext} />
     </div>
   );
 };
 
-export default EnterancePage;
+export default SignupPage;
