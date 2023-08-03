@@ -38,7 +38,9 @@ public class UserApiController {
 
         // 현재 인증된 사용자의 정보를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findById((Long) authentication.getPrincipal());
+        Long userId = Long.parseLong(
+                ((org.springframework.security.core.userdetails.User) (authentication.getPrincipal())).getUsername());
+        User user = userService.findById(userId);
 
         // MyInfoResponse 객체에 사용자 정보를 담아 응답
         MyInfoResponse myInfoResponse = new MyInfoResponse(user.getId(), user.getEmail(),
