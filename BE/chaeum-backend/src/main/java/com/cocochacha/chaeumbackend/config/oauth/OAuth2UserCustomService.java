@@ -1,7 +1,7 @@
 package com.cocochacha.chaeumbackend.config.oauth;
 
-import com.cocochacha.chaeumbackend.domain.User;
-import com.cocochacha.chaeumbackend.repository.UserRepository;
+import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import com.cocochacha.chaeumbackend.repository.UserPersonalInfoRepository;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 
-    private final UserRepository userRepository;
+    private final UserPersonalInfoRepository userPersonalInfoRepository;
 
     /**
      * OAuth2UserRequest를 기반으로 사용자 정보를 가져옵니다. 가져온 정보를 데이터베이스에 저장 또는 업데이트합니다.
@@ -42,7 +42,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
      * @param oAuth2User 사용자 정보를 담고 있는 OAuth2User 객체
      * @return 데이터베이스에 저장 또는 업데이트된 User 객체를 반환합니다.
      */
-    private User saveOrUpdate(OAuth2User oAuth2User) {
+    private UserPersonalInfo saveOrUpdate(OAuth2User oAuth2User) {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
@@ -52,8 +52,8 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         String name = (String) profile.get("nickname");
         String profileImageUrl = (String) profile.get("profile_image_url");
 
-        User user = userRepository.findByEmail(email)
-                .orElse(User.builder()
+        UserPersonalInfo userPersonalInfo = userPersonalInfoRepository.findByEmail(email)
+                .orElse(UserPersonalInfo.builder()
                         .id(id)
                         .email(email)
                         .nickname(name)
@@ -61,6 +61,6 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
                         .isRegistered(false)
                         .build());
 
-        return userRepository.save(user);
+        return userPersonalInfoRepository.save(userPersonalInfo);
     }
 }

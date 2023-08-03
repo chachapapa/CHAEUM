@@ -7,11 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class MyInfoResponse {
+public class MyPersonalInfoRequest {
 
-    private Long id;
-    private String email;
     private String nickname;
-    private String profileImageUrl;
-    private Boolean isRegistered;
 }

@@ -7,7 +7,7 @@ import com.cocochacha.chaeumbackend.config.oauth.OAuth2AuthorizationRequestBased
 import com.cocochacha.chaeumbackend.config.oauth.OAuth2SuccessHandler;
 import com.cocochacha.chaeumbackend.config.oauth.OAuth2UserCustomService;
 import com.cocochacha.chaeumbackend.repository.RefreshTokenRepository;
-import com.cocochacha.chaeumbackend.service.UserService;
+import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +33,7 @@ public class WebOAuthSecurityConfig {
     private final OAuth2UserCustomService oAuth2UserCustomService;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
+    private final UserPersonalInfoService userPersonalInfoService;
 
     // 스프링 시큐리티 기능 비활성화
     @Bean
@@ -104,7 +104,7 @@ public class WebOAuthSecurityConfig {
         return new OAuth2SuccessHandler(tokenProvider,
                 refreshTokenRepository,
                 oAuth2AuthorizationRequestBasedOnCookieRepository(),
-                userService
+                userPersonalInfoService
         );
     }
 

@@ -18,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class User implements UserDetails {
+public class UserPersonalInfo implements UserDetails {
 
     @Id
     @Column(name = "id", updatable = false)
@@ -42,7 +42,7 @@ public class User implements UserDetails {
     private Boolean isRegistered;
 
     @Builder
-    public User(Long id, String email, String password, String nickname, String profileImageUrl,
+    public UserPersonalInfo(Long id, String email, String password, String nickname, String profileImageUrl,
             Boolean isRegistered) {
         this.id = id;
         this.email = email;
