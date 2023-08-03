@@ -14,12 +14,14 @@ const UserNicknameInput = ({
   onClickNext,
   onClickBefore,
 }: Props) => {
-  const [isDuplicationTested, setIsDuplicationTested] = useState(false);
+  const [isDuplicationTested, setIsDuplicationTested] = useState<number>(0);
   const resp = true;
 
   const onClickTest = () => {
     if (resp) {
-      setIsDuplicationTested(true);
+      setIsDuplicationTested(1);
+    }else{
+      setIsDuplicationTested(2);
     }
   };
 
@@ -37,11 +39,12 @@ const UserNicknameInput = ({
           <br /> 당신의 이름은 무엇인가요?
         </div>
 
-        <TextBox inputPlaceholder="닉네임을 입력해주세요." height="h-16" />
+        <TextBox inputPlaceholder="닉네임을 입력해주세요." height="h-16" isDuplicationTested={isDuplicationTested}/>
+        
       </div>
 
       <div className="w-10/12 mb-10">
-        {isDuplicationTested ? (
+        {isDuplicationTested === 1 ? (
           <div onClick={onClickNext} className="mb-5">
             <TextButton size="large" label="다음으로" type="primary" />
           </div>

@@ -10,7 +10,7 @@ const EntrancePage = () => {
         <AnimatedLogo />
       </div>
       <div className="flex flex-col h-1/3 justify-evenly  items-center">
-        <Link to="/signup">
+        <Link to="/signup" className='w-3/4'>
           <TextButton
             icon="kakao"
             type="kakao"
@@ -18,7 +18,7 @@ const EntrancePage = () => {
             label="카카오로 시작하기"
           />
         </Link>
-        <Link to="/signup">
+        <Link to="/signup" className='w-3/4'>
           <TextButton
             icon="naver"
             type="naver"
@@ -26,7 +26,7 @@ const EntrancePage = () => {
             label="네이버로 시작하기"
           />
         </Link>
-        <Link to="/signup">
+        <Link to="/signup" className='w-3/4'>
           <TextButton
             icon="google"
             type="google"
