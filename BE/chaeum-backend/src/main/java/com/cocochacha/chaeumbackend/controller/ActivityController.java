@@ -3,7 +3,10 @@ package com.cocochacha.chaeumbackend.controller;
 import com.cocochacha.chaeumbackend.dto.AddActivityRequest;
 import com.cocochacha.chaeumbackend.dto.EndActivityRequest;
 import com.cocochacha.chaeumbackend.service.ActivityService;
+import jakarta.transaction.Transactional;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,10 +27,18 @@ public class ActivityController {
         return null;
     }
 
+    @Transactional
     @PatchMapping("")
     public ResponseEntity<?> endActivity(@RequestBody EndActivityRequest endActivityRequest) {
-        activityService.endActivity(endActivityRequest);
-        return null;
+        // 종료하고 값을 던져줘야함
+        try {
+            EndActivityRequest returnValue = activityService.endActivity(endActivityRequest);
+            return new ResponseEntity<>(returnValue, HttpStatus.OK);
+        } catch (NoSuchElementException | NullPointerException NSEE) {
+            // 리턴 하기
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
 
