@@ -1,15 +1,27 @@
-import React from 'react';
 import { Select, Option } from '@material-tailwind/react';
- 
-const Dropdown = () => {
+import React from 'react';
+import '../styles/select.css';
+
+type MiddleCategory = {
+  id : number;
+  name : string;
+}[]
+
+type Props = {
+  mainCategory : string;
+} 
+
+const middleCategory = [{id:0,name:'수영'},{id:1, name:'러닝'}, {id:2, name:'헬스'}, {id:3, name:'자전거'}, {id:4, name:'클라이밍'}];
+
+const Dropdown = ({mainCategory}:Props) => {
   return (
-    <div className='flex w-80 flex-col gap-6'>
-      <Select color='blue' label='운동 카테고리를 고르세요.'>
-        <Option>수영</Option>
-        <Option>러닝</Option>
-        <Option>헬스</Option>
-        <Option>자전거</Option>
-        <Option>클라이밍</Option>
+
+    <div className="mySelect flex flex-col w-full mb-5">
+      <label className='self-start text-lg font-bold'>{mainCategory}</label>
+      <Select className="h-16 bg-gray-100">
+        {middleCategory.map( category => (
+          <Option key={category.id}>{category.name}</Option>
+        ))}
       </Select>
     </div>
   );

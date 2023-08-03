@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import ArticleCard from './components/feed/ArticleCard';
-import EnterancePage from './views/EnterancePage';
+import EntrancePage from './views/EntrancePage';
 import SignupPage from './views/SignupPage';
 import MainPage from './views/MainPage';
 import ActivePage from './views/ActivePage';
@@ -28,15 +28,17 @@ function App() {
     }
   }, [location.pathname]);
 
+
+  console.log(isLogedin);
   return (
     <div className="App">
       <Routes>
-        <Route path="/entrance" element={<EnterancePage />}></Route>
+        <Route path="/entrance" element={<EntrancePage />}></Route>
         <Route path="/signup" element={<SignupPage />}></Route>
         <Route path="/main" element={<MainPage />}></Route>
         <Route
           path="/"
-          element={isLogedin ? <MainPage /> : <Navigate to="/enterance" />}
+          element={isLogedin ? <MainPage /> : <Navigate to="/entrance" />}
         />
         <Route path="/active" element={<ActivePage />}>
           <Route path="result" element={<ResultPage />}></Route>
@@ -51,7 +53,6 @@ function App() {
         </Route>
         <Route path="/profile/:userId" element={<ProfilePage />}></Route>
       </Routes>
-      <EnterancePage />
     </div>
   );
 }

@@ -1,24 +1,37 @@
 import React from 'react';
-import { Textarea } from '@material-tailwind/react';
 
 type Props = {
-  inputPlaceholder : string;
-}
+  inputPlaceholder: string;
+  height: string;
+  label?: string;
+  isDuplicationTested?: number;
+};
 
-const TextBox = (props : Props) => {
+const TextBox = (props: Props) => {
   return (
-    <div className="flex w-full flex-row items-center gap-2 rounded-lg  bg-gray-100">
-      <Textarea
-        rows={1}
+    <div className={props.isDuplicationTested === 0 || !props.isDuplicationTested? 'flex flex-col w-full mb-5' : 'flex flex-col w-full'}>
+      {props.label ? (
+        <label className="self-start text-lg font-bold">{props.label}</label>
+      ) : null}
+      <input
         placeholder={props.inputPlaceholder}
-        className="min-h-full !border-0 focus:border-transparent w-72"
-        containerProps={{
-          className: 'grid h-full',
-        }}
-        labelProps={{
-          className: 'before:content-none after:content-none',
-        }}
-      />
+        className={
+          props.isDuplicationTested === 1
+            ? `bg-gray-100 rounded-lg p-5 w-full ${props.height} outline outline-chaeum-blue-500`
+            : props.isDuplicationTested === 2
+              ? `bg-gray-100 rounded-lg p-5 w-full ${props.height} outline outline-red-400`
+              : `bg-gray-100 rounded-lg p-5 w-full ${props.height} focus:outline-none`
+        }
+      ></input>
+      {props.isDuplicationTested === 1 ? (
+        <label className="self-start text-sm font-normal text-chaeum-blue-500 ml-2">
+          사용 가능한 닉네임입니다.
+        </label>
+      ) : props.isDuplicationTested === 2 ? (
+        <label className="self-start text-sm font-normal text-red-500 ml-2">
+          이미 존재하는 닉네임입니다.
+        </label>
+      ) : null}
     </div>
   );
 };
