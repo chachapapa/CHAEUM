@@ -9,7 +9,7 @@ const EntrancePage = () => {
       <div className="flex w-full h-2/3 items-center">
         <AnimatedLogo />
       </div>
-      <div className="flex flex-col h-1/3 justify-evenly">
+      <div className="flex flex-col h-1/3 justify-evenly  items-center">
         <Link to="/signup">
           <TextButton
             icon="kakao"

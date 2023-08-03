@@ -1,24 +1,19 @@
 import React from 'react';
-import { Textarea } from '@material-tailwind/react';
 
 type Props = {
-  inputPlaceholder : string;
-}
+  inputPlaceholder: string;
+  height: string;
+  label?: string;
+};
 
-const TextBox = (props : Props) => {
+const TextBox = (props: Props) => {
   return (
-    <div className="flex w-full flex-row items-center gap-2 rounded-lg  bg-gray-100">
-      <Textarea
-        rows={1}
+    <div className="flex flex-col w-full mb-5">
+      {props.label ? <label className='self-start text-lg font-bold'>{props.label}</label> : null}
+      <input
         placeholder={props.inputPlaceholder}
-        className="min-h-full !border-0 focus:border-transparent w-72"
-        containerProps={{
-          className: 'grid h-full',
-        }}
-        labelProps={{
-          className: 'before:content-none after:content-none',
-        }}
-      />
+        className={`bg-gray-100 rounded-lg p-5 w-full ${props.height} focus:outline-none`}
+      ></input>
     </div>
   );
 };

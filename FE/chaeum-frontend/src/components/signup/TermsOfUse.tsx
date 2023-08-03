@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TextButton from '../common/TextButton';
 
 type Props = {
@@ -7,10 +7,13 @@ type Props = {
 };
 
 const TermsOfUse = ({ isStarted, onClickNext }: Props) => {
+
+  const [isNextClicked, setIsNextClicked]=useState(false);
+  
   return (
     <div
       className={
-        isStarted
+        isStarted && !isNextClicked
           ? 'flex flex-col w-full h-5/6 items-center gap-8 transition-opacity duration-1000'
           : 'flex flex-col w-full h-5/6 items-center gap-8 opacity-0'
       }
