@@ -43,8 +43,8 @@ public class UserPersonalInfoApiController {
         UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(userId);
 
         // MyInfoResponse 객체에 사용자 정보를 담아 응답
-        MyPersonalInfoResponse myPersonalInfoResponse = new MyPersonalInfoResponse(userPersonalInfo.getId(), userPersonalInfo.getEmail(),
-                userPersonalInfo.getNickname(),
+        MyPersonalInfoResponse myPersonalInfoResponse = new MyPersonalInfoResponse(
+                userPersonalInfo.getEmail(), userPersonalInfo.getNickname(),
                 userPersonalInfo.getProfileImageUrl(), userPersonalInfo.getIsRegistered());
 
         return ResponseEntity.ok().body(myPersonalInfoResponse);
@@ -83,7 +83,8 @@ public class UserPersonalInfoApiController {
 
         // 현재 인증된 사용자의 정보를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById((Long) authentication.getPrincipal());
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                (Long) authentication.getPrincipal());
 
         // 주어진 닉네임이 이미 사용 중일 경우 false를 응답
         if (userPersonalInfoService.findByNickname(newNickname) != null) {
