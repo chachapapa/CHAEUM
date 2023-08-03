@@ -25,6 +25,12 @@ public class ActivityService {
         activityRepository.save(activity);
     }
 
+    /**
+     * 활동 종료 후, 값을 DB에 저장하는 메소드
+     *
+     * @param endActivityRequest 입력으로 받는 값
+     * @return DB에 저장이 되는 값
+     */
     public EndActivityRequest endActivity(EndActivityRequest endActivityRequest) {
         int activityId = endActivityRequest.getActivityId();
 

@@ -27,6 +27,12 @@ public class ActivityController {
         return null;
     }
 
+    /**
+     * 활동 종료에 대한 요청에 응답을 해주는 메소드
+     *
+     * @param endActivityRequest 활동 ID, 스트릭 ID, 종료 시간
+     * @return DB에 저장된 값
+     */
     @Transactional
     @PatchMapping("")
     public ResponseEntity<?> endActivity(@RequestBody EndActivityRequest endActivityRequest) {
