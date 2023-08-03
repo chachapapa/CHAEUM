@@ -14,12 +14,11 @@ const UserNicknameInput = ({
   onClickNext,
   onClickBefore,
 }: Props) => {
-
   const [isDuplicationTested, setIsDuplicationTested] = useState(false);
   const resp = true;
 
   const onClickTest = () => {
-    if(resp){
+    if (resp) {
       setIsDuplicationTested(true);
     }
   };
@@ -42,13 +41,16 @@ const UserNicknameInput = ({
       </div>
 
       <div className="w-10/12 mb-10">
-        
+        {isDuplicationTested ? (
+          <div onClick={onClickNext} className="mb-5">
+            <TextButton size="large" label="다음으로" type="primary" />
+          </div>
+        ) : (
+          <div onClick={onClickTest} className="mb-5">
+            <TextButton size="large" label="중복체크" type="primary" />
+          </div>
+        )}
 
-        <div onClick={onClickNext} className='mb-5'>
-          <TextButton size="large" label="다음으로" type="primary" />
-        </div>
-        
-        
         <div onClick={onClickBefore}>
           <TextButton size="large" label="이전으로" type="gray" />
         </div>
