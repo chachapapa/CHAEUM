@@ -78,6 +78,8 @@ public class WebOAuthSecurityConfig {
                 .formLogin().disable()
                 .logout().disable();
 
+        http.cors();
+
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
