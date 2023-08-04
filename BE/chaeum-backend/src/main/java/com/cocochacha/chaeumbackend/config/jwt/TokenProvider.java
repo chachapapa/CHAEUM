@@ -52,7 +52,7 @@ public class TokenProvider {
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .setSubject(userPersonalInfo.getEmail())
-                .claim("id", userPersonalInfo.getId().toString())
+                .claim("id", userPersonalInfo.getId())
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
     }
@@ -87,7 +87,7 @@ public class TokenProvider {
                 new SimpleGrantedAuthority("ROLE_USER"));
 
         return new UsernamePasswordAuthenticationToken(
-                new org.springframework.security.core.userdetails.User(claims.getId(), "",
+                new org.springframework.security.core.userdetails.User(claims.get("id").toString(), "",
                         authorities), token, authorities);
     }
 
