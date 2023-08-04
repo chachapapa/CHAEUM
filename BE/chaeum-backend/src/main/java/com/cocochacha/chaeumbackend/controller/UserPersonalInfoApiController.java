@@ -1,9 +1,9 @@
 package com.cocochacha.chaeumbackend.controller;
 
-import com.cocochacha.chaeumbackend.domain.User;
-import com.cocochacha.chaeumbackend.dto.MyInfoRequest;
-import com.cocochacha.chaeumbackend.dto.MyInfoResponse;
-import com.cocochacha.chaeumbackend.service.UserService;
+import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import com.cocochacha.chaeumbackend.dto.MyPersonalInfoRequest;
+import com.cocochacha.chaeumbackend.dto.MyPersonalInfoResponse;
+import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user")
-public class UserApiController {
+public class UserPersonalInfoApiController {
 
-    private final UserService userService;
+    private final UserPersonalInfoService userPersonalInfoService;
 
     /**
      * 현재 인증된 사용자의 정보를 가져와서 MyInfoResponse 객체로 응답합니다.
@@ -33,19 +33,21 @@ public class UserApiController {
      * @throws IllegalArgumentException 인자가 유효하지 않을 때 발생하는 예외
      */
     @GetMapping("/me")
-    public ResponseEntity<MyInfoResponse> myInfoResponseEntity(HttpServletRequest request,
+    public ResponseEntity<MyPersonalInfoResponse> myInfoResponseEntity(HttpServletRequest request,
             HttpServletResponse response) throws IllegalArgumentException {
 
         // 현재 인증된 사용자의 정보를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findById((Long) authentication.getPrincipal());
+        Long userId = Long.parseLong(
+                ((org.springframework.security.core.userdetails.User) (authentication.getPrincipal())).getUsername());
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(userId);
 
         // MyInfoResponse 객체에 사용자 정보를 담아 응답
-        MyInfoResponse myInfoResponse = new MyInfoResponse(user.getId(), user.getEmail(),
-                user.getNickname(),
-                user.getProfileImageUrl(), user.getIsRegistered());
+        MyPersonalInfoResponse myPersonalInfoResponse = new MyPersonalInfoResponse(
+                userPersonalInfo.getEmail(), userPersonalInfo.getNickname(),
+                userPersonalInfo.getProfileImageUrl(), userPersonalInfo.getIsRegistered());
 
-        return ResponseEntity.ok().body(myInfoResponse);
+        return ResponseEntity.ok().body(myPersonalInfoResponse);
     }
 
     /**
@@ -61,7 +63,7 @@ public class UserApiController {
             HttpServletRequest request, HttpServletResponse response) {
 
         // 주어진 닉네임이 중복되지 않을 경우 true, 중복될 경우 false를 응답
-        if (userService.findByNickname(nickname) != null) {
+        if (userPersonalInfoService.findByNickname(nickname) != null) {
             return ResponseEntity.ok().body(false);
         }
 
@@ -75,22 +77,23 @@ public class UserApiController {
      * @return 유저 정보 초기 설정이 성공하면 true를, 닉네임이 이미 사용 중일 경우 false를 ResponseEntity로 응답합니다.
      */
     @PostMapping("me")
-    public ResponseEntity<Boolean> setMyInfo(@RequestBody MyInfoRequest myInfo) {
+    public ResponseEntity<Boolean> setMyInfo(@RequestBody MyPersonalInfoRequest myInfo) {
         // 전달받은 닉네임
         String newNickname = myInfo.getNickname();
 
         // 현재 인증된 사용자의 정보를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findById((Long) authentication.getPrincipal());
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                (Long) authentication.getPrincipal());
 
         // 주어진 닉네임이 이미 사용 중일 경우 false를 응답
-        if (userService.findByNickname(newNickname) != null) {
+        if (userPersonalInfoService.findByNickname(newNickname) != null) {
             return ResponseEntity.ok().body(false);
         }
 
         // 닉네임과 초기 설정 여부를 업데이트하고, 데이터베이스에 저장
-        user.updateNickname(newNickname);
-        user.registData();
+        userPersonalInfo.updateNickname(newNickname);
+        userPersonalInfo.registData();
 
         return ResponseEntity.ok().body(true);
     }

@@ -1,7 +1,7 @@
 package com.cocochacha.chaeumbackend.service;
 
 import com.cocochacha.chaeumbackend.config.jwt.TokenProvider;
-import com.cocochacha.chaeumbackend.domain.User;
+import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ public class TokenService {
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenService refreshTokenService;
-    private final UserService userService;
+    private final UserPersonalInfoService userPersonalInfoService;
 
     /**
      * 주어진 리프레시 토큰으로 새로운 액세스 토큰을 생성합니다.
@@ -28,9 +28,9 @@ public class TokenService {
         }
 
         Long userId = refreshTokenService.findByRefreshToken(refreshToken).getUserId();
-        User user = userService.findById(userId);
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(userId);
 
-        return tokenProvider.generateToken(user, Duration.ofHours(2));
+        return tokenProvider.generateToken(userPersonalInfo, Duration.ofHours(2));
     }
 }
 
