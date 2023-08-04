@@ -43,8 +43,9 @@ public class WebOAuthSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080",
-                "http://i9a810.p.ssafy.io:80", "http://i9a810.p.ssafy.io:8080"));
+//        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080",
+//                "http://i9a810.p.ssafy.io:80", "http://i9a810.p.ssafy.io:8080", ""));
+        configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowCredentials(true);
         configuration.addAllowedHeader("*");
