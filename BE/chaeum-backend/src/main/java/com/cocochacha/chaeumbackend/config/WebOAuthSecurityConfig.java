@@ -8,6 +8,7 @@ import com.cocochacha.chaeumbackend.config.oauth.OAuth2SuccessHandler;
 import com.cocochacha.chaeumbackend.config.oauth.OAuth2UserCustomService;
 import com.cocochacha.chaeumbackend.repository.RefreshTokenRepository;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * 웹 OAuth 보안 구성 클래스입니다.
@@ -34,6 +38,21 @@ public class WebOAuthSecurityConfig {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserPersonalInfoService userPersonalInfoService;
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080", "https://trainbot.site", "https://j8s001.p.ssafy.io"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowCredentials(true);
+        configuration.addAllowedHeader("*");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
 
     // 스프링 시큐리티 기능 비활성화
     @Bean
