@@ -1,7 +1,6 @@
 import React from 'react';
-import './styles/wave.css';
-import { ReactComponent as Logo } from '../Assets/chaeum_logo_text_noeffect.svg';
-import { ReactComponent as Circle } from '../Assets/Ellipse 6.svg';
+import '../styles/wave.css';
+import { ReactComponent as Logo } from '../../assets/chaeum_logo_text_noeffect.svg';
 
 type Props = {
   isFadingOut?: boolean;

@@ -38,7 +38,7 @@ function App() {
         <Route path="/main" element={<MainPage />}></Route>
         <Route
           path="/"
-          element={isLogedin ? <MainPage /> : <Navigate to="/entrance" />}
+          element={isLogedin ? <Navigate to="/main" /> : <Navigate to="/entrance" />}
         />
         <Route path="/active" element={<ActivePage />}>
           <Route path="result" element={<ResultPage />}></Route>
