@@ -40,11 +40,10 @@ export interface ColorPropsType {
 
 export interface WaveColorPropsType {
   color? : string;
-  weight1? : 'w1';
   weight2? : 'w2';
   weight3? : 'w3';
   weight4? : 'w4';
-  weight5? : 'w5';
+
 }
 
 type ColorNameType = {

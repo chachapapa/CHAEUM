@@ -1,4 +1,5 @@
 import type { ColorPropsType, ColorNameType } from '../Types';
+import { WaveColorPropsType } from '../Types';
 
 const WaveColorList: ColorNameType = {
   // emerald
@@ -131,10 +132,10 @@ const WaveColorList: ColorNameType = {
   defaultw3: 'fill-chaeum-gray-300',
 };
 
-const WaveColor = ({ color, weight }: ColorPropsType) => {
+const WaveColor = ({ color, weight2, weight3, weight4 }: WaveColorPropsType) => {
   //type narrowing
   const newcolor = typeof color !== 'undefined' ? color : 'default';
-  const newweight = typeof weight !== 'undefined' ? weight : 'w3';
+  const newweight = weight2?'w2':weight3?'w3':'w4';
 
   return WaveColorList[newcolor + newweight];
 };

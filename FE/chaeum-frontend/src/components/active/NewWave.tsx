@@ -1,16 +1,22 @@
 import React from 'react';
 import '../styles/activecardwave.css';
 import { WaveColor } from '../theme/WaveColorTheme';
+import { WaveBottomColor } from '../theme/StreakTheme';
 
 type Props = {
   color?: string;
 };
 
 const NewWave = ({ color }: Props) => {
-  // const  = 'w5';
-  // const waveFirst = <WaveColor color={color} weight='w1'/>;
-  // const waveSecond = <WaveColor color={color} weight='w3'/>;
-  // const waveThird = WaveColor({color,w5});
+  const  weight2 = 'w2';
+  const weight3 = 'w3';
+  const weight4 = 'w4';
+  const waveFirst = WaveColor({color,weight4});
+  const waveSecond = WaveColor({color, weight3});
+  const waveThird = WaveColor({color,weight2});
+  const BottomFirst = WaveBottomColor({color,weight4});
+  const BottomSecond = WaveBottomColor({color,weight3});
+  const BottomThird = WaveBottomColor({color,weight2});
   return (
     <div className="w-full overflow-auto">
       <svg
@@ -40,21 +46,21 @@ const NewWave = ({ color }: Props) => {
             xlinkHref="#gentle-wave-back"
             x="48"
             y="0"
-            className="fill-chaeum-blue-300 opacity-50"
+            className={`${waveThird} opacity-50`}
           />
           <use
             xlinkHref="#gentle-wave-middle"
             x="48"
             y="0"
-            className="fill-chaeum-blue-600 opacity-50"
+            className={`${waveSecond} opacity-50`}
           />
-          <use xlinkHref="#gentle-wave-front" x="48" y="0" className='fill-chaeum-blue-800 opacity-50' />
+          <use xlinkHref="#gentle-wave-front" x="48" y="0" className={`${waveFirst} opacity-50`} />
         </g>
       </svg>
       <div className="relative h-16">
-        <div className="absolute bottom-0 w-full h h-16 bg-chaeum-blue-300 opacity-50"></div>
-        <div className="absolute bottom-0 w-full h h-16 bg-chaeum-blue-600 opacity-50"></div>
-        <div className='absolute bottom-0 w-full h-16 bg-chaeum-blue-800 opacity-50'></div>
+        <div className={`absolute bottom-0 w-full h h-16 ${BottomThird} opacity-50`}></div>
+        <div className={`absolute bottom-0 w-full h h-16 ${BottomSecond} opacity-50`}></div>
+        <div className={`absolute bottom-0 w-full h h-16 ${BottomFirst} opacity-50`}></div>
       </div>
     </div>
   );
