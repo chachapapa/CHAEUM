@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@material-tailwind/react';
+import { CookiesProvider } from 'react-cookie';
 import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(
@@ -13,7 +14,9 @@ root.render(
   <React.StrictMode>
     <ThemeProvider>
       <BrowserRouter>
-        <App />
+        <CookiesProvider>
+          <App />
+        </CookiesProvider>
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>

@@ -38,6 +38,15 @@ export interface ColorPropsType {
   weight?: 'w1' | 'w2' | 'w3' | 'w4' | 'w5';
 }
 
+export interface WaveColorPropsType {
+  color? : string;
+  weight1? : 'w1';
+  weight2? : 'w2';
+  weight3? : 'w3';
+  weight4? : 'w4';
+  weight5? : 'w5';
+}
+
 type ColorNameType = {
   [key in string]: string;
 };

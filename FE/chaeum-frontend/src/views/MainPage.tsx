@@ -1,36 +1,58 @@
 import React from 'react';
+import { useEffect } from 'react';
 import AnimatedLogo from '../components/common/AnimatedLogo';
 import TextButton from '../components/common/TextButton';
+import ActiveInfoCard from '../components/active/ActiveInfoCard';
+import { useSearchParams } from 'react-router-dom';
+import {useCookies} from 'react-cookie';
+import axios from 'axios';
 
 /*
   feature/#256
   EntrancePage.tsx 에서 파일명만 바꿨습니다.
 */
+const ACCESS_TOKEN_URL = 'http://i9a810.p.ssafy.io:8080/api/token';
 
-const EnterancePage = () => {
+const MainPage = () => {
+
+  //이후 쿠키 가져올 때 사용할 코드
+  // const getCookie= (key:string) => {
+  //   let result = null;
+  //   const cookie = document.cookie.split(';');
+  //   cookie.some( (item) : boolean => {
+  //     item = item.replace(' ', '');
+
+  //     const  dic = item.split('=');
+
+  //     if(key === dic[0]) {
+  //       result = dic[1];
+  //       return true;
+  //     }else{
+  //       return false;
+  //     }
+
+  //   });
+  //   return result;
+  // };
+
+  // console.log('함수로 가져오기'+ getCookie('refresh_token'));
+
+  // const [cookie, setCookie] = useCookies(['__stripe_mid']);
+
+  // console.log('그냥다큐먼트 내부 쿠키'+ document.cookie);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const token = searchParams.get('token');
+
+  //로컬스토리지에 토큰 저장하기.
+  if (token) {
+    localStorage.setItem('access_token', token);
+  }
   return (
-    <div className="w-[452px] h-[932px] bg-white outline outline-1">
-      <AnimatedLogo />
-      <TextButton
-        icon="kakao"
-        type="kakao"
-        size="medium"
-        label="카카오로 시작하기"
-      />
-      <TextButton
-        icon="naver"
-        type="naver"
-        size="medium"
-        label="네이버로 시작하기"
-      />
-      <TextButton
-        icon="google"
-        type="google"
-        size="medium"
-        label="구글로 시작하기"
-      />
+    <div className="w-full h-full flex justify-center items-end outline">
+      <ActiveInfoCard />
     </div>
   );
 };
 
-export default EnterancePage;
+export default MainPage;

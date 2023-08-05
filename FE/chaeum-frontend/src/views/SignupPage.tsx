@@ -6,22 +6,23 @@ import '../components/styles/terms.css';
 import UserNicknameInput from '../components/signup/UserNicknameInput';
 import UserStreakCreationInput from '../components/signup/UserStreakCreationInput';
 import { useNavigate } from 'react-router-dom';
+import LoadingPage from '../components/common/LoadingPage';
 
 const SignupPage = () => {
   const navigate = useNavigate();
   const [isStarted, setIsStarted] = useState<boolean>(false);
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [currentStep, setCurrentStep] = useState<number>(0);
 
   const onClickNext = () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
-    } else if (currentStep === 3){
+    } else if (currentStep === 3) {
       navigate('/main');
     }
   };
 
   const onClickBefore = () => {
-    if (currentStep > 1) {
+    if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
@@ -41,11 +42,23 @@ const SignupPage = () => {
       >
         <AnimatedLogo />
       </div>
-      {currentStep === 1 ? (
+      {currentStep === 0 ? (
+        <LoadingPage />
+      ) : currentStep === 1 ? (
         <TermsOfUse isStarted={isStarted} onClickNext={onClickNext} />
       ) : currentStep === 2 ? (
-        <UserNicknameInput currentStep={currentStep} onClickNext={onClickNext} onClickBefore={onClickBefore} />
-      ) : <UserStreakCreationInput currentStep={currentStep} onClickNext={onClickNext} onClickBefore={onClickBefore}/>}
+        <UserNicknameInput
+          currentStep={currentStep}
+          onClickNext={onClickNext}
+          onClickBefore={onClickBefore}
+        />
+      ) : (
+        <UserStreakCreationInput
+          currentStep={currentStep}
+          onClickNext={onClickNext}
+          onClickBefore={onClickBefore}
+        />
+      )}
     </div>
   );
 };
