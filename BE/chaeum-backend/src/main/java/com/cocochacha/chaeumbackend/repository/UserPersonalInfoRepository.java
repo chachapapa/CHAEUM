@@ -1,6 +1,7 @@
 package com.cocochacha.chaeumbackend.repository;
 
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,10 +16,10 @@ public interface UserPersonalInfoRepository extends JpaRepository<UserPersonalIn
     Optional<UserPersonalInfo> findByEmail(String email);
 
     /**
-     * 해당하는 닉네임을 가지는 유저가 있는지 검색합니다.
+     * 해당하는 닉네임을 가지는 유저들을 검색합니다.
      *
      * @param nickname 검색하고자 하는 사용자의 닉네임
-     * @return 검색된 사용자 객체(Optional)
+     * @return 검색된 사용자 객체들의 컬렉션 (List)
      */
-    Optional<UserPersonalInfo> findByNickname(String nickname);
+    List<UserPersonalInfo> findAllByNickname(String nickname);
 }
