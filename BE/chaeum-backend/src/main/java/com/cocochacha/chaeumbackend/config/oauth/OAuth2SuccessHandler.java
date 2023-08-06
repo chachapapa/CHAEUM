@@ -2,9 +2,9 @@ package com.cocochacha.chaeumbackend.config.oauth;
 
 import com.cocochacha.chaeumbackend.config.jwt.TokenProvider;
 import com.cocochacha.chaeumbackend.domain.RefreshToken;
-import com.cocochacha.chaeumbackend.domain.User;
+import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.repository.RefreshTokenRepository;
-import com.cocochacha.chaeumbackend.service.UserService;
+import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import com.cocochacha.chaeumbackend.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,7 +40,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
-    private final UserService userService;
+    private final UserPersonalInfoService userPersonalInfoService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -49,14 +49,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Map<String, Object> attributes = oAuth2User.getAttributes();
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
 
-        User user = userService.findByEmail((String) kakaoAccount.get("email"));
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findByEmail((String) kakaoAccount.get("email"));
 
         // 리프레시 토큰 생성 -> 저장 -> 쿠키에 저장
-        String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
-        saveRefreshToken(user.getId(), refreshToken);
+        String refreshToken = tokenProvider.generateToken(userPersonalInfo, REFRESH_TOKEN_DURATION);
+        saveRefreshToken(userPersonalInfo.getId(), refreshToken);
         addRefreshTokenToCookie(request, response, refreshToken);
         // 엑세스 토큰 생성 -> 패스에 엑세스 토큰을 추가
-        String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
+        String accessToken = tokenProvider.generateToken(userPersonalInfo, ACCESS_TOKEN_DURATION);
         String targetUrl = getTargetUrl(accessToken);
         // 인증 관련 설정값, 쿠키 제거
         clearAuthenticationAttributes(request, response);

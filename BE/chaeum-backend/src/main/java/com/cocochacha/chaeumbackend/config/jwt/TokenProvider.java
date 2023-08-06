@@ -1,6 +1,6 @@
 package com.cocochacha.chaeumbackend.config.jwt;
 
-import com.cocochacha.chaeumbackend.domain.User;
+import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
@@ -27,23 +27,23 @@ public class TokenProvider {
     /**
      * 사용자 정보와 만료 기간을 바탕으로 JWT 토큰을 생성합니다.
      *
-     * @param user      사용자 객체
+     * @param userPersonalInfo      사용자 객체
      * @param expiredAt 토큰의 만료 기간 (Duration 타입)
      * @return 생성된 JWT 토큰 문자열
      */
-    public String generateToken(User user, Duration expiredAt) {
+    public String generateToken(UserPersonalInfo userPersonalInfo, Duration expiredAt) {
         Date now = new Date();
-        return makeToken(new Date(now.getTime() + expiredAt.toMillis()), user);
+        return makeToken(new Date(now.getTime() + expiredAt.toMillis()), userPersonalInfo);
     }
 
     /**
      * JWT 토큰을 생성합니다.
      *
      * @param expiry 토큰의 만료 시각
-     * @param user   사용자 객체
+     * @param userPersonalInfo   사용자 객체
      * @return 생성된 JWT 토큰 문자열
      */
-    private String makeToken(Date expiry, User user) {
+    private String makeToken(Date expiry, UserPersonalInfo userPersonalInfo) {
         Date now = new Date();
 
         return Jwts.builder()
@@ -51,8 +51,8 @@ public class TokenProvider {
                 .setIssuer(jwtProperties.getIssuer())
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .setSubject(user.getEmail())
-                .claim("id", user.getId())
+                .setSubject(userPersonalInfo.getEmail())
+                .claim("id", userPersonalInfo.getId())
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
     }
@@ -87,8 +87,8 @@ public class TokenProvider {
                 new SimpleGrantedAuthority("ROLE_USER"));
 
         return new UsernamePasswordAuthenticationToken(
-                new org.springframework.security.core.userdetails.User(claims.getSubject
-                        (), "", authorities), token, authorities);
+                new org.springframework.security.core.userdetails.User(claims.get("id").toString(), "",
+                        authorities), token, authorities);
     }
 
     /**
