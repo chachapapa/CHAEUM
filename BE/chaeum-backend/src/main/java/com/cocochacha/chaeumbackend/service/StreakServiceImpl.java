@@ -41,7 +41,7 @@ public class StreakServiceImpl implements StreakService{
      */
     @Override
     @Transactional
-    public boolean createStreak(CreateStreakRequest createStreakRequest) {
+    public boolean createStreak(CreateStreakRequest createStreakRequest, UserPersonalInfo userPersonalInfo) {
 
         /**
          * 들어온 createStreakRequest 를 사용해서
@@ -53,6 +53,7 @@ public class StreakServiceImpl implements StreakService{
                 .streakColor(createStreakRequest.getStreakColor())
                 .category(categoryRepository.findByCategoryMainAndCategoryMiddle(
                         createStreakRequest.getCategoryMain(), createStreakRequest.getCategoryMiddle()).get())
+                .userPersonalInfo(userPersonalInfo)
                 .build();
 
         // 스트릭 정보 리스트를 선언한다.

@@ -49,6 +49,10 @@ public class Streak {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserPersonalInfo userPersonalInfo;
+
     public void changeStreakDeleted(boolean b) {
         this.streakDeleted = b;
     }

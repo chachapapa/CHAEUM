@@ -40,7 +40,9 @@ public class StreakController {
     @PostMapping("")
     public ResponseEntity<?> createStreak(@RequestBody CreateStreakRequest createStreakRequest){
 
-        if(streakService.createStreak(createStreakRequest)){
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+
+        if(streakService.createStreak(createStreakRequest, userPersonalInfo)){
             return new ResponseEntity<>(HttpStatus.CREATED);
         }else{
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -49,4 +51,13 @@ public class StreakController {
     }
 
 
+    /**
+     * 헤더에서 UserId를 추출하는 함수
+     *
+     * @return UserId
+     */
+    private Long getUserIDFromAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return Long.parseLong(authentication.getName());
+    }
 }
