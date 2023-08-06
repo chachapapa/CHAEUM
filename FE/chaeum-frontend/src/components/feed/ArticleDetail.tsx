@@ -13,7 +13,7 @@ import LoadingPage from '../common/LoadingPage';
 import { isConstructorDeclaration } from 'typescript';
 import { Avatar } from '@material-tailwind/react';
 
-const ArticleCard = () => {
+const ArticleDetail = () => {
   const example1: Article = {
     id: 1,
     user: { nickName: 'chacha', profileImage: '../chacha2.png' },
@@ -138,53 +138,50 @@ const ArticleCard = () => {
   };
 
   return (
-    <div className="bg-gray-100 mt-5">
+    <div className="bg-gray-100 mt-5 w-100%">
       {!isLoading && !isFadingOut ? (
         <div className="max-w-7xl">
-          <div className="w-full">
+          <div className="w-max">
             {exampleList.map(post => (
               <article
                 key={post.id}
                 className="flex p-3 w-full flex-col items-start justify-between mb-5 bg-white"
               >
-                <div className='flex justify-between w-full'>
-                  <div className="relative flex items-center gap-x-4">
-                    <img
-                      src={post.user.profileImage}
-                      alt=""
-                      className="h-16 w-16 rounded-full bg-gray-50"
-                    />
-                    <div className="text-lg leading-6">
-                      <p className="text-chaeum-gray-900 text-left">
-                        {post.user.nickName}
+                <div className="relative flex items-center gap-x-4">
+                  <img
+                    src={post.user.profileImage}
+                    alt=""
+                    className="h-16 w-16 rounded-full bg-gray-50"
+                  />
+                  <div className="text-lg leading-6">
+                    <p className="text-chaeum-gray-900 text-left">
+                      {post.user.nickName}
+                    </p>
+                    <div
+                      className={`text-sm ${post.activityInfo.color} rounded-md py-0.5 px-1 w-fit`}
+                    >
+                      <p className="text-white text-left">
+                        #{post.activityInfo.category}
                       </p>
-                      <div
-                        className={`text-sm ${post.activityInfo.color} rounded-md py-0.5 px-1 w-fit`}
-                      >
-                        <p className="text-white text-left">
-                          #{post.activityInfo.category}
-                        </p>
-                        <p className="text-white text-left">
-                          {post.activityInfo.time}시간
-                        </p>
-                      </div>
+                      <p className="text-white text-left">
+                        {post.activityInfo.time}시간
+                      </p>
                     </div>
                   </div>
+                </div>
+                <div className="place-self-end absolute ">
+                  <time
+                    dateTime={post.dateTime}
+                    className="text-chaeum-gray-900"
+                  >
+                    {post.date}
+                  </time>
 
-                  <div>
-                    <time
-                      dateTime={post.dateTime}
-                      className="text-chaeum-gray-900"
-                    >
-                      {post.date}
-                    </time>
-
-                    <div className="text-right text-chaeum-gray-900">
-                      <i className="fa-regular fa-heart mr-0.5 " />
-                      {post.likeCount}
-                      <i className="fa-regular fa-comment ml-2 mr-0.5" />
-                      {post.commentCount}
-                    </div>
+                  <div className="text-right text-chaeum-gray-900">
+                    <i className="fa-regular fa-heart mr-0.5 " />
+                    {post.likeCount}
+                    <i className="fa-regular fa-comment ml-2 mr-0.5" />
+                    {post.commentCount}
                   </div>
                 </div>
                 <div className="group relative">
@@ -194,7 +191,7 @@ const ArticleCard = () => {
                 </div>
                 {/* 이미지 미리보기 / 상세 */}
                 {detailedArticle && focusedArticle === post.id ? (
-                  <div className="my-5 flex flex-row overflow-auto snap-x">
+                  <div className="mt-5 flex flex-row w-[360px] h-[360px] overflow-auto mb-5 snap-x">
                     {post.imageList.map((image, key) => (
                       <img
                         src={image}
@@ -205,7 +202,7 @@ const ArticleCard = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="mt-5 flex flex-row overflow-auto mb-5">
+                  <div className="mt-5 flex flex-row w-[360px] overflow-auto mb-5">
                     {post.imageList.map((image, key) => (
                       <img
                         src={image}
@@ -253,4 +250,4 @@ const ArticleCard = () => {
   );
 };
 
-export default ArticleCard;
+export default ArticleDetail;

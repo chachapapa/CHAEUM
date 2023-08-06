@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as LogoText } from '../assets/chaeum_logo_text.svg';
+import { ReactComponent as LogoText } from '../../assets/chaeum_logo_text.svg';
 
 interface HeaderPropsType {
   title?: string;
@@ -9,7 +9,7 @@ interface HeaderPropsType {
 
 export const ChaeumHeader = ({ title, isLogo, icon }: HeaderPropsType) => {
   return (
-    <div className="flex flex-row justify-between items-center fixed top-0 left-0 w-screen h-14 bg-white">
+    <div className="flex flex-row justify-between items-center sticky top-0 left-0 w-100% h-14 bg-white" >
       <div>
         {isLogo ? (
           <LogoText height="auto" width="10rem" className="px-2" />
