@@ -5,6 +5,7 @@ import com.cocochacha.chaeumbackend.domain.StreakInfo;
 import com.cocochacha.chaeumbackend.domain.Tag;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
+import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import com.cocochacha.chaeumbackend.repository.CategoryRepository;
 import com.cocochacha.chaeumbackend.repository.StreakInfoRepository;
@@ -44,10 +45,8 @@ public class StreakServiceImpl implements StreakService{
     @Transactional
     public boolean createStreak(CreateStreakRequest createStreakRequest, UserPersonalInfo userPersonalInfo) {
 
-        /**
-         * 들어온 createStreakRequest 를 사용해서
-         * 새로운 Streak 객체를 만들어준다.
-         */
+        //들어온 createStreakRequest 를 사용해서
+        //새로운 Streak 객체를 만들어준다.
 
         Streak streak = Streak.builder()
                 .streakName(createStreakRequest.getStreakName())
@@ -55,6 +54,7 @@ public class StreakServiceImpl implements StreakService{
                 .category(categoryRepository.findByCategoryMainAndCategoryMiddle(
                         createStreakRequest.getCategoryMain(), createStreakRequest.getCategoryMiddle()).get())
                 .userPersonalInfo(userPersonalInfo)
+                .streakActive(true)
                 .build();
 
         // 스트릭 정보 리스트를 선언한다.
@@ -98,8 +98,11 @@ public class StreakServiceImpl implements StreakService{
             streak.changeStreakName(modifyStreakRequest.getStreakName());
             streak.changeStreakColor(modifyStreakRequest.getStreakColor());
 
+            // 스트릭 정보 리스트를 선언한다.
             List<StreakInfo> streakInfos = new ArrayList<>();
 
+            // 들어온 태그 리스트들을 사용한다.
+            // 만약 태그가 저장되어있지 않다면 태그를 새로 저장한다
             for(String tagName : modifyStreakRequest.getTagList()){
                 Optional<Tag> optionalTag = tagRepository.findByTagName(tagName);
                 Tag tag;
@@ -119,9 +122,33 @@ public class StreakServiceImpl implements StreakService{
                 streakInfos.add(streakInfo);
             }
 
+            // 스트릭에 스트릭 정보를 넣어준다.
             streak.changeStreakInfoList(streakInfos);
 
         }else{
+            return false;
+        }
+
+        // 잘 저장이 되었다면 true 아니라면 false
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteStreak(DeleteStreakRequest deleteStreakRequest) {
+        // deleteStreakRequest의 StreakId를 이용해서 streak을 뽑아낸다.
+        Optional<Streak> optionalStreak = streakRepository.findById(deleteStreakRequest.getStreakId());
+
+        // StreakId에 해당하는 streak이 존재한다면
+        if(optionalStreak.isPresent()){
+            Streak streak = optionalStreak.get();
+            // deleted를 true로 만드는 형태로 스트릭을 삭제 처리 한다.
+            streak.changeStreakDeleted(true);
+
+            if(!streak.isStreakDeleted()) return false;
+        }
+        // 존재하지 않는다면 false 리턴
+        else{
             return false;
         }
 

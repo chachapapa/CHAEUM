@@ -2,6 +2,7 @@ package com.cocochacha.chaeumbackend.controller;
 
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
+import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import com.cocochacha.chaeumbackend.service.StreakService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
@@ -52,7 +53,9 @@ public class StreakController {
     }
 
     /**
-     * 스트릭을 수정합니다.
+     * 사용자의 스트릭을 수정합니다.
+     * 사용자의 태그를 수정합니다.
+     * 스트릭 정보 테이블을 수정합니다.
      *
      * @param modifyStreakRequest
      * @return
@@ -65,6 +68,22 @@ public class StreakController {
         }
         else{
             return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
+        }
+    }
+
+    /**
+     * 사용자 스트릭의 deleted를 true로 바꿔서 삭제 처리한다.
+     *
+     * @param deleteStreakRequest
+     * @return
+     */
+    @PatchMapping("/deletion")
+    public ResponseEntity<?> deleteStreak(@RequestBody DeleteStreakRequest deleteStreakRequest){
+        if(streakService.deleteStreak(deleteStreakRequest)){
+            return new ResponseEntity<>("true", HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("false",HttpStatus.NO_CONTENT);
         }
     }
 
