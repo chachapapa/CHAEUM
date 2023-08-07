@@ -30,8 +30,8 @@ const ArticleCard = () => {
       '../chacha1.jpg',
     ],
     encourageMessageList: [
-      { user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      { user: { nickName: 'coco', profileImage: '코코' }, content: '응원글 1' },
+      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '응원글 2' },
     ],
     commentList: [
       { user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
@@ -218,14 +218,14 @@ const ArticleCard = () => {
                 )}
 
                 {/* 응원글 미리보기 / 상세 */}
-                {isPlusButtonClicked ? (
+                {isPlusButtonClicked && focusedArticle === post.id? (
                   <EncourageMessageDetail
-                    onPlusButtonClicked={onPlusButtonClicked}
+                    onPlusButtonClicked={() => onPlusButtonClicked(post.id)}
                     articleId={post.id}
                   />
                 ) : (
                   <EncourageMessageCarousel
-                    onPlusButtonClicked={onPlusButtonClicked}
+                    onPlusButtonClicked={() => onPlusButtonClicked(post.id)}
                     articleId={post.id}
                   />
                 )}
@@ -238,8 +238,10 @@ const ArticleCard = () => {
                     <CommentList />
                   </div>
                 ) : (
+
+
                   <span onClick={() => onMoreCommentClicked(post.id)}>
-                    댓글 모두보기
+                    게시글 상세보기
                   </span>
                 )}
               </article>

@@ -56,17 +56,7 @@ const LoadingPage = (props: Props) => {
               />
             </pattern>
 
-            {/* <text
-          id="text"
-          transform="matrix(1 0 0 1 -8.0684 116.7852)"
-          fontSize="100px"
-          fontFamily="EnvironmentR"
-        >
-          CHAEUM
-        </text> */}
-
             <Logo id="text" />
-            {/* <Circle id= 'text'/> */}
             <mask id="text_mask">
               <use x="0" y="0" xlinkHref="#text" opacity="1" />
             </mask>

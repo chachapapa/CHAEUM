@@ -2,7 +2,7 @@ import { Avatar, IconButton, Typography } from '@material-tailwind/react';
 import React from 'react';
 
 type Props = {
-  onPlusButtonClicked : (id: number) => void;
+  onPlusButtonClicked : () => void;
   articleId : number;
 }
 
@@ -10,14 +10,14 @@ type Props = {
 
 const EncourageMessageDetail = (props:Props) => {
   return (
-    <div className="bg-gray-100 rounded-lg w-[360px] p-1 pl-2 mb-3">
+    <div className="bg-gray-100 rounded-lg w-full p-1 pl-2 mb-3">
       <div className="flex justify-between mb-2">
         <span className="flex items-center text-sm">응원글</span>
         <IconButton
           variant="text"
           color="white"
           size="sm"
-          // onClick={props.onPlusButtonClicked(props.articleId)}
+          onClick={props.onPlusButtonClicked}
           className=""
         >
           <svg

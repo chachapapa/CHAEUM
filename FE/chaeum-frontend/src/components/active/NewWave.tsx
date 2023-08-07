@@ -8,7 +8,7 @@ type Props = {
 };
 
 const NewWave = ({ color }: Props) => {
-  const  weight2 = 'w2';
+  const weight2 = 'w2';
   const weight3 = 'w3';
   const weight4 = 'w4';
   const waveFirst = WaveColor({color,weight4});
@@ -17,6 +17,7 @@ const NewWave = ({ color }: Props) => {
   const BottomFirst = WaveBottomColor({color,weight4});
   const BottomSecond = WaveBottomColor({color,weight3});
   const BottomThird = WaveBottomColor({color,weight2});
+
   return (
     <div className="w-full overflow-auto">
       <svg
@@ -26,6 +27,7 @@ const NewWave = ({ color }: Props) => {
         viewBox="0 24 150 28"
         preserveAspectRatio="none"
         shapeRendering="auto"
+        width="100%"
       >
         <defs>
           <path

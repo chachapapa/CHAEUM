@@ -2,7 +2,7 @@ import { Carousel, Typography, IconButton } from '@material-tailwind/react';
 import React from 'react';
 
 type Props = {
-  onPlusButtonClicked : (id: number)=> void;
+  onPlusButtonClicked : ()=> void;
   articleId : number;
 }
 
@@ -93,7 +93,7 @@ const EncourageMessageCarousel = (props:Props) => {
           variant="text"
           color="white"
           size="sm"
-          // onClick={props.onPlusButtonClicked}
+          onClick={props.onPlusButtonClicked}
           className="!absolute top-2/4 !right-1 -translate-y-2/4"
         >
           <svg

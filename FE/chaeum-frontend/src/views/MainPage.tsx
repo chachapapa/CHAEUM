@@ -6,6 +6,7 @@ import ActiveInfoCard from '../components/active/ActiveInfoCard';
 import { useSearchParams } from 'react-router-dom';
 import {useCookies} from 'react-cookie';
 import axios from 'axios';
+import { ChaeumNav } from '../components/common/ChaeumNav';
 
 /*
   feature/#256
@@ -49,8 +50,9 @@ const MainPage = () => {
     localStorage.setItem('access_token', token);
   }
   return (
-    <div className="w-full h-full flex justify-center items-end outline">
+    <div className="w-full h-full flex flex-col justify-between items-end outline">
       <ActiveInfoCard />
+      <ChaeumNav/>
     </div>
   );
 };

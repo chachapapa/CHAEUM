@@ -29,7 +29,7 @@ function App() {
   }, [location.pathname]);
 
 
-  console.log(isLogedin);
+  console.log('라우팅 시 로그인 여부' + isLogedin);
   return (
     <div className="App">
       <Routes>
@@ -45,7 +45,7 @@ function App() {
         </Route>
         <Route path="/feed" element={<FeedPage />}>
           <Route path="write" element={<FeedWritePage />}></Route>
-          <Route path="detail" element={<FeedDetailPage />}></Route>
+          <Route path=":articleId" element={<FeedDetailPage />}></Route>
         </Route>
         <Route path="/chat" element={<ChatPage />}>
           <Route path="init" element={<ChatInitPage />}></Route>
