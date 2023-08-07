@@ -5,6 +5,7 @@ import com.cocochacha.chaeumbackend.domain.StreakInfo;
 import com.cocochacha.chaeumbackend.domain.Tag;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
+import com.cocochacha.chaeumbackend.dto.DeactivateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import com.cocochacha.chaeumbackend.repository.CategoryRepository;
@@ -149,6 +150,23 @@ public class StreakServiceImpl implements StreakService{
         }
         // 존재하지 않는다면 false 리턴
         else{
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean deactivateStreak(DeactivateStreakRequest deactivateStreakRequest) {
+        Optional<Streak> optionalStreak = streakRepository.findById(deactivateStreakRequest.getStreakId());
+
+        if(optionalStreak.isPresent()){
+            Streak streak = optionalStreak.get();
+            streak.changeStreakActive(false);
+
+            if(streak.isStreakActive()) return false;
+        }else{
             return false;
         }
 

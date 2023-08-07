@@ -2,6 +2,7 @@ package com.cocochacha.chaeumbackend.controller;
 
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
+import com.cocochacha.chaeumbackend.dto.DeactivateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import com.cocochacha.chaeumbackend.service.StreakService;
@@ -85,6 +86,21 @@ public class StreakController {
         else {
             return new ResponseEntity<>("false",HttpStatus.NO_CONTENT);
         }
+    }
+
+    /**
+     * 사용자 스트릭의 active 정보를 비활성화 합니다.
+     *
+     * @param deactivateStreakRequest
+     * @return
+     */
+    @PatchMapping("/deactivation")
+    public ResponseEntity<?> deactivateStreak(@RequestBody DeactivateStreakRequest deactivateStreakRequest){
+
+        if(streakService.deactivateStreak(deactivateStreakRequest)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
