@@ -13,17 +13,19 @@ import {
   faChevronDown,
   faChevronUp,
 } from '@fortawesome/free-solid-svg-icons';
-import { StreakInfoType } from '../Types';
+import { StreakCardProps } from '../Types';
 import { TextColor } from '../theme/TextColorTheme';
 import { ActiveColor } from '../theme/ActiveColorTheme';
 import { StreakRank } from './StreakRank';
+import ActiveInformation from './ActiveInformation';
 
-interface StreakCardProps extends StreakInfoType {
-  title: string;
-  tags: string[];
-}
-
-export const StreakCard = ({ title, tags, color, info }: StreakCardProps) => {
+export const StreakCard = ({
+  title,
+  tags,
+  color,
+  info,
+  ...props
+}: StreakCardProps) => {
   const [isSettingOpen, setIsSettingOpen] = useState(false);
   const [isListOpen, SetIsListOpen] = useState(false);
 
@@ -59,8 +61,7 @@ export const StreakCard = ({ title, tags, color, info }: StreakCardProps) => {
       else return 42 + Date * 7;
     };
 
-    if (todayDuration >= getStreakCnt())
-      return '현재 ' + todayDuration + '일 이상';
+    if (todayDuration >= getStreakCnt()) return '5주 이상';
 
     return '현재 ' + todayDuration + '일';
   };
@@ -82,11 +83,14 @@ export const StreakCard = ({ title, tags, color, info }: StreakCardProps) => {
   ];
 
   return (
-    <div className="grid gap-x-1 grid-cols-3 grid-rows-3-auto w-96 p-4 rounded-lg shadow-[0_0_10px_5px_rgba(208,211,222,0.5)] shadow-chauem-gray-500/50 mb-4">
-      <div className="text-xl col-span-2 font-bold mb-2 text-left">{title}</div>
-      <div className="flex flex-row justify-end p-0.5 mb-2">
+    <div
+      className={`text-chaeum-gray-900 grid gap-x-1 grid-cols-3 grid-rows-3-auto w-full h-full px-4 pt-4 rounded-lg border-2 m-4 mb-10  ${props.className}`}
+    >
+      <div className="card-header col-span-3 flex flex-row items-center justify-between">
+        <span className="title text-xl font-bold mb-2 text-black">{title}</span>
+
         {isSettingOpen ? (
-          <div>
+          <div className="flex flex-row justify-end items-center p-0.5 mb-2">
             <FontAwesomeIcon
               icon={faTrashCan}
               className="text-chaeum-gray-600 text-2xl "
@@ -106,7 +110,7 @@ export const StreakCard = ({ title, tags, color, info }: StreakCardProps) => {
             />
           </div>
         ) : (
-          <div>
+          <div className="flex flex-row justify-end items-center p-0.5 mb-2">
             <FontAwesomeIcon
               onClick={settingToggle}
               icon={faGear}
@@ -115,7 +119,7 @@ export const StreakCard = ({ title, tags, color, info }: StreakCardProps) => {
           </div>
         )}
       </div>
-      <div className="flex flex-row justify-start col-span-3 mb-2">
+      <div className="flex flex-row justify-start shrink-0 flex-wrap col-span-3 mb-2">
         {tags.map((tag, key) => {
           return <Tag key={key} tag={tag} color={color} />;
         })}
@@ -127,7 +131,7 @@ export const StreakCard = ({ title, tags, color, info }: StreakCardProps) => {
         <div>
           <StreakRank userlist={userlistSample} />
         </div>
-        <div className="text-2xl">{duration()}</div>
+        <div className="duration text-xl pb-2">{duration()}</div>
         <div onClick={goStreakSetting}>
           <FontAwesomeIcon
             icon={faCirclePlay}
@@ -137,28 +141,44 @@ export const StreakCard = ({ title, tags, color, info }: StreakCardProps) => {
           />
         </div>
       </div>
-      <div className="col-span-3 py-4">
+      <div className="col-span-3 pt-4 ">
         <hr />
-        {isListOpen ? (
-          <div>
-            <FontAwesomeIcon
-              onClick={settingList}
-              icon={faChevronUp}
-              className="text-chaeum-gray-600 "
-            />
-            <div>ListBox1</div>
-            <div>ListBox2</div>
-            <div>ListBox3</div>
-            <div>ListBox4</div>
-          </div>
-        ) : (
+        <div className="pb-2">
           <FontAwesomeIcon
             onClick={settingList}
-            icon={faChevronDown}
-            className="text-chaeum-gray-600 "
+            icon={faChevronUp}
+            className="text-chaeum-gray-600 pt-2 text-xl "
           />
-        )}
+          <div className={isListOpen ? OPEN_TYPE.open : OPEN_TYPE.close}>
+            <div className="transition-height duration-500 delay-200">
+              <ActiveInformation />
+            </div>
+            <div className="transition-height duration-500 delay-200">
+              <ActiveInformation />
+            </div>
+            <div className="transition-height duration-500 delay-200">
+              <ActiveInformation />
+            </div>
+            <div className="transition-height duration-500 delay-200">
+              <ActiveInformation />
+            </div>
+            <div className="transition-height duration-500 delay-200">
+              <ActiveInformation />
+            </div>
+            <div className="transition-height duration-500 delay-200">
+              <ActiveInformation />
+            </div>
+            <div className="transition-height duration-500 delay-200">
+              <ActiveInformation />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
+};
+
+const OPEN_TYPE = {
+  open: 'pb-2 h-96 ease-in-out overflow-scroll opacity-100 duration-700 transition-height',
+  close: 'h-0 ease-in-out overflow-hidden duration-700 transition-height',
 };
