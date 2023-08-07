@@ -38,9 +38,9 @@ const NewStoryCard = (props: Props) => {
   const weight2 = 'w2';
   const weight3 = 'w3';
   const weight4 = 'w4';
-  const waveFirst = WaveColor({ color: props.color, weight4 });
-  const waveSecond = WaveColor({ color: props.color, weight3 });
-  const waveThird = WaveColor({ color: props.color, weight2 });
+  const waveFirst = WaveColor({ color: props.color, weight: weight4 });
+  const waveSecond = WaveColor({ color: props.color, weight: weight3 });
+  const waveThird = WaveColor({ color: props.color, weight: weight2 });
   const BottomFirst = WaveBottomColor({ color: props.color, weight4 });
   const BottomSecond = WaveBottomColor({ color: props.color, weight3 });
   const BottomThird = WaveBottomColor({ color: props.color, weight2 });
