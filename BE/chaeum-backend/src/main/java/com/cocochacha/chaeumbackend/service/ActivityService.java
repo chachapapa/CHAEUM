@@ -5,8 +5,10 @@ import com.cocochacha.chaeumbackend.domain.Streak;
 import com.cocochacha.chaeumbackend.dto.AddActivityRequest;
 import com.cocochacha.chaeumbackend.dto.AddActivityResponse;
 import com.cocochacha.chaeumbackend.dto.EndActivityRequest;
+import com.cocochacha.chaeumbackend.dto.StartMessageRequest;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -102,5 +104,33 @@ public class ActivityService {
             return endActivityRequest;
         }
     }
+
+    public void startMessage(StartMessageRequest startMessageRequest) {
+        List<String> sentences = createSentence("일단은 확인하기");
+
+        for (String sentence : sentences) {
+            System.out.println(sentence);
+        }
+    }
+
+    public List<String> createSentence(String prompt) {
+        /*
+            여기는 AI 모델이 보내는 값을 보고, 그에 맞게 고쳐쓸 것
+            지금 포맷을 정하는 것은 너무 도박적인 일임
+            파싱하는 과정은 어렵지 않으니 그냥 아무거나 넘기는 것으로 할 것
+         */
+
+//        AIClient client = new GoogleBardClient("ZgjP_v4J5GQyCQWfzgTnY582o6rgDGYbjeTHHhAVjfGmDBJWxYN-AfZSU7uT7tBrBidvRg.");
+//        Answer answer = client.ask("오늘 저녁 추천해줘");
+
+        List<String> sentences = new ArrayList<>();
+        sentences.add("모든게 그대론데");
+        sentences.add("우리는 변해있네");
+        sentences.add("헤어지지 못하는 여자");
+        sentences.add("떠나가지 못하는 남자");
+
+        return sentences;
+    }
+
 }
 
