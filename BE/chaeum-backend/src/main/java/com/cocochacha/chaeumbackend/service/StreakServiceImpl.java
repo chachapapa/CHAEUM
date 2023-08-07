@@ -5,6 +5,7 @@ import com.cocochacha.chaeumbackend.domain.StreakInfo;
 import com.cocochacha.chaeumbackend.domain.Tag;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
+import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import com.cocochacha.chaeumbackend.repository.CategoryRepository;
 import com.cocochacha.chaeumbackend.repository.StreakInfoRepository;
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
@@ -85,5 +86,45 @@ public class StreakServiceImpl implements StreakService{
 
         // 잘 저장이 되었다면 true 아니라면 false
         return streak.equals(streakRepository.save(streak));
+    }
+
+    @Override
+    @Transactional
+    public boolean modifyStreak(ModifyStreakRequest modifyStreakRequest) {
+        Optional<Streak> optionalStreak = streakRepository.findById(modifyStreakRequest.getStreakId());
+
+        if(optionalStreak.isPresent()){
+            Streak streak = optionalStreak.get();
+            streak.changeStreakName(modifyStreakRequest.getStreakName());
+            streak.changeStreakColor(modifyStreakRequest.getStreakColor());
+
+            List<StreakInfo> streakInfos = new ArrayList<>();
+
+            for(String tagName : modifyStreakRequest.getTagList()){
+                Optional<Tag> optionalTag = tagRepository.findByTagName(tagName);
+                Tag tag;
+                if(optionalTag.isEmpty()){
+                    tag = Tag.builder()
+                            .tagName(tagName)
+                            .build();
+                    tagRepository.save(tag);
+                }
+                else{
+                    tag = optionalTag.get();
+                }
+                StreakInfo streakInfo = StreakInfo.builder()
+                        .streak(streak)
+                        .tag(tag)
+                        .build();
+                streakInfos.add(streakInfo);
+            }
+
+            streak.changeStreakInfoList(streakInfos);
+
+        }else{
+            return false;
+        }
+
+        return true;
     }
 }

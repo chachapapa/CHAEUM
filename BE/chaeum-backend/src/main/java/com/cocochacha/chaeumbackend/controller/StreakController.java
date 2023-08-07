@@ -2,6 +2,7 @@ package com.cocochacha.chaeumbackend.controller;
 
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
+import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import com.cocochacha.chaeumbackend.service.StreakService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import java.util.List;
@@ -50,6 +51,22 @@ public class StreakController {
 
     }
 
+    /**
+     * 스트릭을 수정합니다.
+     *
+     * @param modifyStreakRequest
+     * @return
+     */
+    @PatchMapping("/modification")
+    public ResponseEntity<?> modifyStreak(@RequestBody ModifyStreakRequest modifyStreakRequest){
+
+        if(streakService.modifyStreak(modifyStreakRequest)){
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
+        }
+    }
 
     /**
      * 헤더에서 UserId를 추출하는 함수
