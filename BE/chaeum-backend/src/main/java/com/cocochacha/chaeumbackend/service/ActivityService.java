@@ -3,9 +3,11 @@ package com.cocochacha.chaeumbackend.service;
 import com.cocochacha.chaeumbackend.domain.Activity;
 import com.cocochacha.chaeumbackend.domain.Streak;
 import com.cocochacha.chaeumbackend.dto.AddActivityRequest;
+import com.cocochacha.chaeumbackend.dto.AddActivityResponse;
 import com.cocochacha.chaeumbackend.dto.EndActivityRequest;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
@@ -22,16 +24,45 @@ public class ActivityService {
     @Autowired
     private final StreakRepository streakRepository;
 
-    public void createActivity(AddActivityRequest addActivityRequest) {
+    /**
+     * 활동을 시작하면 필요한 정보를 가공해서 Controller에 넘겨주는 메소드
+     * 필요한 정보는, DB에 들어가는 값과 최근 14일 간 누적 시간
+     *
+     * @param addActivityRequest 스트릭 ID와 시작 시간
+     * @return 스트릭 ID와 시작 시간, 누적 시간
+     */
+    public AddActivityResponse createActivity(AddActivityRequest addActivityRequest) {
+        if ((Integer) addActivityRequest.getStreakId() == null) {
+            throw new NoSuchElementException("값 없음");
+        }
+
         // streakId 가져오기
         Streak streakId = streakRepository.findById(addActivityRequest.getStreakId()).orElse(null);
+        if (streakId == null) {
+            // 해당 streakID는 streak Table에 없는 값!
+            throw new NullPointerException("없는 값!");
+        }
 
         Activity activity = Activity.builder()
                 .streakId(streakId)
                 .build();
 
         activity.changeStartTime(addActivityRequest.getDate());
+
         activityRepository.save(activity);
+
+        // 누적 시간 구하기
+        List<List<String>> accumulate = activityRepository.accumulateQuery(
+                addActivityRequest.getStreakId()).orElse(null);
+
+        AddActivityResponse addActivityResponse = AddActivityResponse.builder()
+                .activityId(activity.getId())
+                .streakId(addActivityRequest.getStreakId())
+                .date(addActivityRequest.getDate())
+                .accumulate(accumulate)
+                .build();
+
+        return addActivityResponse;
     }
 
     /**
@@ -56,6 +87,7 @@ public class ActivityService {
             Streak streakId = streakRepository.findById(endActivityRequest.getStreakId()).orElse(null);
 
             if (streakId == null) {
+                // 해당 streakID는 streak Table에 없는 값!
                 throw new NullPointerException("없는 값!");
             }
 
