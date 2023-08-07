@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/activity")
+@RequestMapping("/api/activity")
 public class ActivityController {
 
     @Autowired
@@ -53,6 +53,12 @@ public class ActivityController {
 
     }
 
+    /**
+     * 활동 시작시 멘트를 받기 위한 요청에 대한 응답을 주는 메소드
+     *
+     * @param startMessageRequest userId, categoryId
+     * @return 시작시 사용자가 보게될 멘트 목록
+     */
     @GetMapping("/message/starting")
     public ResponseEntity<?> startMent(@RequestBody StartMessageRequest startMessageRequest) {
         // 시작시 받는 멘트

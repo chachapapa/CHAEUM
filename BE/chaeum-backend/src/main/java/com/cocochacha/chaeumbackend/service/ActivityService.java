@@ -102,6 +102,12 @@ public class ActivityService {
         }
     }
 
+    /**
+     * 활동 시작시 사용자가 받는 목록을 만들어 주는 메소드
+     *
+     * @param startMessageRequest userId, categoryId
+     * @return 시작시 사용자가 받는 멘트 목록
+     */
     public StartMessageResponse startMessage(StartMessageRequest startMessageRequest) {
         List<String> sentences = createSentence("일단은 확인하기");
         StartMessageResponse startMessageResponsege = StartMessageResponse.builder()
@@ -112,6 +118,12 @@ public class ActivityService {
 
     }
 
+    /**
+     * Bard API를 이용해서 문장을 만들어 주는 메소드
+     *
+     * @param prompt AI한테 줄 문장
+     * @return AI가 생성한 문장의 목록
+     */
     public List<String> createSentence(String prompt) {
         /*
             여기는 AI 모델이 보내는 값을 보고, 그에 맞게 고쳐쓸 것
