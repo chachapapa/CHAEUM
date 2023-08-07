@@ -2,6 +2,7 @@ package com.cocochacha.chaeumbackend.service;
 
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
+import com.cocochacha.chaeumbackend.dto.DeactivateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 
@@ -27,4 +28,11 @@ public interface StreakService {
      * @return 스트릭이 삭제 되었다면 true, 아니라면 false
      */
     boolean deleteStreak(DeleteStreakRequest deleteStreakRequest);
+
+    /**
+     * 스트릭을 비활성화 하는 함수
+     * @param deactivateStreakRequest 스트릭_id
+     * @return 스트릭 비활성화가 되었다면 true, 아니라면 false
+     */
+    boolean deactivateStreak(DeactivateStreakRequest deactivateStreakRequest);
 }
