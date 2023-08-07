@@ -1,9 +1,6 @@
 package com.cocochacha.chaeumbackend.controller;
 
-import com.cocochacha.chaeumbackend.dto.AddActivityRequest;
-import com.cocochacha.chaeumbackend.dto.AddActivityResponse;
-import com.cocochacha.chaeumbackend.dto.EndActivityRequest;
-import com.cocochacha.chaeumbackend.dto.StartMessageRequest;
+import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.service.ActivityService;
 import jakarta.transaction.Transactional;
 import java.util.NoSuchElementException;
@@ -13,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/activity")
+@RequestMapping("/activity")
 public class ActivityController {
 
     @Autowired
@@ -60,8 +57,8 @@ public class ActivityController {
     public ResponseEntity<?> startMent(@RequestBody StartMessageRequest startMessageRequest) {
         // 시작시 받는 멘트
         // 유저의 정보를 기반으로 메세지를 보내줄 것
-        activityService.startMessage(startMessageRequest);
-        return null;
+        StartMessageResponse startMessageResponse = activityService.startMessage(startMessageRequest);
+        return new ResponseEntity<>(startMessageResponse, HttpStatus.OK);
     }
 }
 

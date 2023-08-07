@@ -2,10 +2,7 @@ package com.cocochacha.chaeumbackend.service;
 
 import com.cocochacha.chaeumbackend.domain.Activity;
 import com.cocochacha.chaeumbackend.domain.Streak;
-import com.cocochacha.chaeumbackend.dto.AddActivityRequest;
-import com.cocochacha.chaeumbackend.dto.AddActivityResponse;
-import com.cocochacha.chaeumbackend.dto.EndActivityRequest;
-import com.cocochacha.chaeumbackend.dto.StartMessageRequest;
+import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 
 import java.util.ArrayList;
@@ -105,12 +102,14 @@ public class ActivityService {
         }
     }
 
-    public void startMessage(StartMessageRequest startMessageRequest) {
+    public StartMessageResponse startMessage(StartMessageRequest startMessageRequest) {
         List<String> sentences = createSentence("일단은 확인하기");
+        StartMessageResponse startMessageResponsege = StartMessageResponse.builder()
+                .sentences(sentences)
+                .build();
 
-        for (String sentence : sentences) {
-            System.out.println(sentence);
-        }
+        return startMessageResponsege;
+
     }
 
     public List<String> createSentence(String prompt) {
