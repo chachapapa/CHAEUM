@@ -8,7 +8,7 @@ import {
 
 export const ChaeumNav = () => {
   return (
-    <div className="fixed bottom-0 left-0 flex flex-row justify-around items-center w-screen h-14 bg-white">
+    <div className="sticky bottom-0 left-0 flex flex-row justify-around py-2 items-center w-full h-14 bg-white">
       <FontAwesomeIcon icon={faRectangleList} className="text-4xl" />
       <FontAwesomeIcon icon={faGrip} className="text-4xl" />
       <FontAwesomeIcon icon={faUser} className="text-4xl" />
