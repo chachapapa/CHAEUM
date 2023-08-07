@@ -11,7 +11,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://i9a810.p.ssafy.io:3306/coco_chacha?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
-    password: seoula810
+    password: rladmlsusrhkzhzhdhkckckdmldnawlrdlsmstja
   security:
     oauth2:
       client:
