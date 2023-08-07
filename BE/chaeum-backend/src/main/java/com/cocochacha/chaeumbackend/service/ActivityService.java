@@ -3,9 +3,11 @@ package com.cocochacha.chaeumbackend.service;
 import com.cocochacha.chaeumbackend.domain.Activity;
 import com.cocochacha.chaeumbackend.domain.Streak;
 import com.cocochacha.chaeumbackend.dto.AddActivityRequest;
+import com.cocochacha.chaeumbackend.dto.AddActivityResponse;
 import com.cocochacha.chaeumbackend.dto.EndActivityRequest;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
@@ -22,7 +24,11 @@ public class ActivityService {
     @Autowired
     private final StreakRepository streakRepository;
 
-    public void createActivity(AddActivityRequest addActivityRequest) {
+    public AddActivityResponse createActivity(AddActivityRequest addActivityRequest) {
+        if ((Integer) addActivityRequest.getStreakId() == null) {
+            throw new NoSuchElementException("값 없음");
+        }
+
         // streakId 가져오기
         Streak streakId = streakRepository.findById(addActivityRequest.getStreakId()).orElse(null);
 
@@ -31,7 +37,21 @@ public class ActivityService {
                 .build();
 
         activity.changeStartTime(addActivityRequest.getDate());
+
         activityRepository.save(activity);
+
+        // 누적 시간 구하기
+        List<List<String>> accumulate = activityRepository.accumulateQuery(
+                addActivityRequest.getStreakId()).orElse(null);
+
+        AddActivityResponse addActivityResponse = AddActivityResponse.builder()
+                .activityId(activity.getId())
+                .streakId(addActivityRequest.getStreakId())
+                .date(addActivityRequest.getDate())
+                .accumulate(accumulate)
+                .build();
+
+        return addActivityResponse;
     }
 
     /**

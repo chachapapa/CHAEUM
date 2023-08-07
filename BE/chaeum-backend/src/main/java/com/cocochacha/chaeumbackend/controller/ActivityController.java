@@ -1,6 +1,7 @@
 package com.cocochacha.chaeumbackend.controller;
 
 import com.cocochacha.chaeumbackend.dto.AddActivityRequest;
+import com.cocochacha.chaeumbackend.dto.AddActivityResponse;
 import com.cocochacha.chaeumbackend.dto.EndActivityRequest;
 import com.cocochacha.chaeumbackend.service.ActivityService;
 import jakarta.transaction.Transactional;
@@ -23,8 +24,13 @@ public class ActivityController {
 
     @PostMapping("")
     public ResponseEntity<?> createActivity(@RequestBody AddActivityRequest addActivityRequest) {
-        activityService.createActivity(addActivityRequest);
-        return null;
+        // DB에 값을 저장하고, Front End에게 누적 값 주기
+        try {
+            AddActivityResponse addActivityResponse = activityService.createActivity(addActivityRequest);
+            return new ResponseEntity<>(addActivityResponse, HttpStatus.OK);
+        } catch (NoSuchElementException NSEE) {
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
