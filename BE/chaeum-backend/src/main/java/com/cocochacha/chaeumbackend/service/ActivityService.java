@@ -2,6 +2,7 @@ package com.cocochacha.chaeumbackend.service;
 
 import com.cocochacha.chaeumbackend.domain.Activity;
 import com.cocochacha.chaeumbackend.domain.Streak;
+import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 
@@ -105,10 +106,10 @@ public class ActivityService {
     /**
      * 활동 시작시 사용자가 받는 목록을 만들어 주는 메소드
      *
-     * @param startMessageRequest userId, categoryId
+     * @param startMessageRequest categoryId, userPersonalInfo로 유저의 정보
      * @return 시작시 사용자가 받는 멘트 목록
      */
-    public StartMessageResponse startMessage(StartMessageRequest startMessageRequest) {
+    public StartMessageResponse startMessage(StartMessageRequest startMessageRequest, UserPersonalInfo userPersonalInfo) {
         List<String> sentences = createSentence("일단은 확인하기");
         StartMessageResponse startMessageResponsege = StartMessageResponse.builder()
                 .sentences(sentences)

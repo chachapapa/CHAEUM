@@ -8,6 +8,5 @@ import lombok.ToString;
 @Setter
 @ToString
 public class StartMessageRequest {
-    private long userId;
     private int categoryId;
 }
