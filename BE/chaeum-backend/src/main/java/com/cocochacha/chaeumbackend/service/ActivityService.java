@@ -24,6 +24,13 @@ public class ActivityService {
     @Autowired
     private final StreakRepository streakRepository;
 
+    /**
+     * 활동을 시작하면 필요한 정보를 가공해서 Controller에 넘겨주는 메소드
+     * 필요한 정보는, DB에 들어가는 값과 최근 14일 간 누적 시간
+     *
+     * @param addActivityRequest 스트릭 ID와 시작 시간
+     * @return 스트릭 ID와 시작 시간, 누적 시간
+     */
     public AddActivityResponse createActivity(AddActivityRequest addActivityRequest) {
         if ((Integer) addActivityRequest.getStreakId() == null) {
             throw new NoSuchElementException("값 없음");
@@ -31,6 +38,10 @@ public class ActivityService {
 
         // streakId 가져오기
         Streak streakId = streakRepository.findById(addActivityRequest.getStreakId()).orElse(null);
+        if (streakId == null) {
+            // 해당 streakID는 streak Table에 없는 값!
+            throw new NullPointerException("없는 값!");
+        }
 
         Activity activity = Activity.builder()
                 .streakId(streakId)
@@ -76,6 +87,7 @@ public class ActivityService {
             Streak streakId = streakRepository.findById(endActivityRequest.getStreakId()).orElse(null);
 
             if (streakId == null) {
+                // 해당 streakID는 streak Table에 없는 값!
                 throw new NullPointerException("없는 값!");
             }
 

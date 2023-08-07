@@ -22,13 +22,19 @@ public class ActivityController {
     @Autowired
     private ActivityService activityService;
 
+    /**
+     * 활동 시작에 대한 요청에 대한 응답을 해주는 메소드
+     *
+     * @param addActivityRequest 스트릭 ID, 시작 시간
+     * @return DB에 저장되는 값과 HTTP 응답 코드
+     */
     @PostMapping("")
     public ResponseEntity<?> createActivity(@RequestBody AddActivityRequest addActivityRequest) {
         // DB에 값을 저장하고, Front End에게 누적 값 주기
         try {
             AddActivityResponse addActivityResponse = activityService.createActivity(addActivityRequest);
             return new ResponseEntity<>(addActivityResponse, HttpStatus.OK);
-        } catch (NoSuchElementException NSEE) {
+        } catch (NoSuchElementException | NullPointerException NSEE) {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }
