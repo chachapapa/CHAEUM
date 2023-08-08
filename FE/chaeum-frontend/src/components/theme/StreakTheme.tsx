@@ -1,4 +1,4 @@
-import type { ColorPropsType } from '../Types';
+import type { ColorPropsType, WaveColorPropsType } from '../Types';
 
 type ColorNameType = {
   [key in string]: string;
@@ -143,4 +143,17 @@ const StreakColor = ({ color, weight }: ColorPropsType) => {
   return ColorNameList[newcolor + newweight];
 };
 
-export { StreakColor };
+const WaveBottomColor = ({
+  color,
+  weight2,
+  weight3,
+  weight4,
+}: WaveColorPropsType) => {
+  //type narrowing
+  const newcolor = typeof color !== 'undefined' ? color : 'default';
+  const newweight = weight2 ? 'w2' : weight3 ? 'w3' : 'w4';
+
+  return ColorNameList[newcolor + newweight];
+};
+
+export { StreakColor, WaveBottomColor };

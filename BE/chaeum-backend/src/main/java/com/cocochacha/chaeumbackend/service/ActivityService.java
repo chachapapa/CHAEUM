@@ -1,13 +1,17 @@
 package com.cocochacha.chaeumbackend.service;
 
 import com.cocochacha.chaeumbackend.domain.Activity;
+import com.cocochacha.chaeumbackend.domain.Category;
 import com.cocochacha.chaeumbackend.domain.Streak;
-import com.cocochacha.chaeumbackend.dto.AddActivityRequest;
-import com.cocochacha.chaeumbackend.dto.EndActivityRequest;
+import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.cocochacha.chaeumbackend.repository.CategoryRepository;
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +25,48 @@ public class ActivityService {
     private final ActivityRepository activityRepository;
     @Autowired
     private final StreakRepository streakRepository;
+    @Autowired
+    private final CategoryRepository categoryRepository;
 
-    public void createActivity(AddActivityRequest addActivityRequest) {
+    /**
+     * 활동을 시작하면 필요한 정보를 가공해서 Controller에 넘겨주는 메소드
+     * 필요한 정보는, DB에 들어가는 값과 최근 14일 간 누적 시간
+     *
+     * @param addActivityRequest 스트릭 ID와 시작 시간
+     * @return 스트릭 ID와 시작 시간, 누적 시간
+     */
+    public AddActivityResponse createActivity(AddActivityRequest addActivityRequest) {
+        if ((Integer) addActivityRequest.getStreakId() == null) {
+            throw new NoSuchElementException("값 없음");
+        }
+
         // streakId 가져오기
         Streak streakId = streakRepository.findById(addActivityRequest.getStreakId()).orElse(null);
+        if (streakId == null) {
+            // 해당 streakID는 streak Table에 없는 값!
+            throw new NullPointerException("없는 값!");
+        }
 
         Activity activity = Activity.builder()
                 .streakId(streakId)
                 .build();
 
         activity.changeStartTime(addActivityRequest.getDate());
+
         activityRepository.save(activity);
+
+        // 누적 시간 구하기
+        List<List<String>> accumulate = activityRepository.accumulateQuery(
+                addActivityRequest.getStreakId()).orElse(null);
+
+        AddActivityResponse addActivityResponse = AddActivityResponse.builder()
+                .activityId(activity.getId())
+                .streakId(addActivityRequest.getStreakId())
+                .date(addActivityRequest.getDate())
+                .accumulate(accumulate)
+                .build();
+
+        return addActivityResponse;
     }
 
     /**
@@ -56,6 +91,7 @@ public class ActivityService {
             Streak streakId = streakRepository.findById(endActivityRequest.getStreakId()).orElse(null);
 
             if (streakId == null) {
+                // 해당 streakID는 streak Table에 없는 값!
                 throw new NullPointerException("없는 값!");
             }
 
@@ -70,5 +106,75 @@ public class ActivityService {
             return endActivityRequest;
         }
     }
+
+    /**
+     * 활동 시작시 사용자가 받는 목록을 만들어 주는 메소드
+     *
+     * @param startMessageRequest categoryId, userPersonalInfo로 유저의 정보
+     * @return 시작시 사용자가 받는 멘트 목록
+     */
+    public StartMessageResponse startMessage(StartMessageRequest startMessageRequest, UserPersonalInfo userPersonalInfo) {
+        List<String> sentences = createSentence("일단은 확인하기");
+        StartMessageResponse startMessageResponsege = StartMessageResponse.builder()
+                .sentences(sentences)
+                .build();
+
+        return startMessageResponsege;
+
+    }
+
+    /**
+     * 활동 중에 받는 메세지를 만들어 주는 메소드
+     *
+     * @param doingMessageRequest categoryId, activityId
+     * @param userPersonalInfo user의 정보
+     * @return 활동 중 받는 메세지의 목록
+     */
+    public DoingMessageResponse doMessage(DoingMessageRequest doingMessageRequest, UserPersonalInfo userPersonalInfo) {
+        Activity activity = activityRepository.findById(doingMessageRequest.getActivityId()).orElse(null);
+
+        // 스트릭 아이디
+        int streakId = activity.getStreakId().getStreakId();
+
+        // 카테고리 아이디
+        int categoryId = doingMessageRequest.getCategoryId();
+
+        // 카테고리 아이디를 이용해서 카테고리에 대한 정보를 다 가져옵니다.
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+
+        // 위에 있는 정보를 이용해서 프롬프트를 생성 한 후, 프롬프트를 만들어서 문장을 생성 후, 값을 넘겨주면 됨
+        List<String> sentences = createSentence("여기에 프롬프트를 만들어서 넘겨야함");
+
+        DoingMessageResponse doingMessageResponse = DoingMessageResponse.builder()
+                .sentences(sentences)
+                .build();
+        return doingMessageResponse;
+    }
+
+    /**
+     * Bard API를 이용해서 문장을 만들어 주는 메소드
+     *
+     * @param prompt AI한테 줄 문장
+     * @return AI가 생성한 문장의 목록
+     */
+    public List<String> createSentence(String prompt) {
+        /*
+            여기는 AI 모델이 보내는 값을 보고, 그에 맞게 고쳐쓸 것
+            지금 포맷을 정하는 것은 너무 도박적인 일임
+            파싱하는 과정은 어렵지 않으니 그냥 아무거나 넘기는 것으로 할 것
+         */
+
+//        AIClient client = new GoogleBardClient("ZgjP_v4J5GQyCQWfzgTnY582o6rgDGYbjeTHHhAVjfGmDBJWxYN-AfZSU7uT7tBrBidvRg.");
+//        Answer answer = client.ask("오늘 저녁 추천해줘");
+
+        List<String> sentences = new ArrayList<>();
+        sentences.add("모든게 그대론데");
+        sentences.add("우리는 변해있네");
+        sentences.add("헤어지지 못하는 여자");
+        sentences.add("떠나가지 못하는 남자");
+
+        return sentences;
+    }
+
 }
 

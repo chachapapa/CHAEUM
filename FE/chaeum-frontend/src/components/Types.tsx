@@ -39,12 +39,12 @@ export interface ColorPropsType {
 }
 
 export interface WaveColorPropsType {
-  color? : string;
-  weight1? : 'w1';
-  weight2? : 'w2';
-  weight3? : 'w3';
-  weight4? : 'w4';
-  weight5? : 'w5';
+  color?: string;
+  weight1?: 'w1';
+  weight2?: 'w2';
+  weight3?: 'w3';
+  weight4?: 'w4';
+  weight5?: 'w5';
 }
 
 type ColorNameType = {
@@ -70,3 +70,18 @@ export type {
   ColorForSelection,
   ColorNameType,
 };
+
+export interface StreakInfoType {
+  info?: { date: string; activetime: number }[];
+  color?: string;
+}
+
+export interface StreakCardProps extends StreakInfoType {
+  title: string;
+  tags: string[];
+  className?: string;
+}
+
+export interface StreakCardInfoType extends StreakCardProps {
+  category: string;
+}
