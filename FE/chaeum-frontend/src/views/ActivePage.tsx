@@ -5,7 +5,7 @@ import { Outlet } from 'react-router';
 const ActivePage = () => {
   return (
     <div className="w-[452px] h-[932px] bg-white outline outline-1 relative flex justify-center">
-      <DraggableScreen></DraggableScreen>
+      {/* <DraggableScreen></DraggableScreen> */}
 
       {/* 라우팅 규칙 
 
@@ -15,7 +15,7 @@ const ActivePage = () => {
           <Route path="result" element={<ResultPage />}></Route>
         </Route> */}
 
-      {/* <Outlet></Outlet> */}
+      <Outlet></Outlet>
     </div>
   );
 };

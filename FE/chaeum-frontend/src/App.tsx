@@ -15,6 +15,7 @@ import ChatRoomPage from './views/ChatRoomPage';
 import ProfilePage from './views/ProfilePage';
 
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import DraggableScreen from './components/active/DraggableScreen';
 
 function App() {
   const [isLogedin, setIsLogedin] = useState(false);
@@ -28,7 +29,6 @@ function App() {
     }
   }, [location.pathname]);
 
-
   console.log(isLogedin);
   return (
     <div className="App">
@@ -38,11 +38,17 @@ function App() {
         <Route path="/main" element={<MainPage />}></Route>
         <Route
           path="/"
-          element={isLogedin ? <Navigate to="/main" /> : <Navigate to="/entrance" />}
+          element={
+            isLogedin ? <Navigate to="/active" /> : <Navigate to="/entrance" />
+          }
         />
         <Route path="/active" element={<ActivePage />}>
+          <Route index element={<DraggableScreen />}></Route>
           <Route path="result" element={<ResultPage />}></Route>
         </Route>
+        {/* <Route path="/active" element={<ActivePage />}>
+          <Route path="result" element={<ResultPage />}></Route>
+        </Route> */}
         <Route path="/feed" element={<FeedPage />}>
           <Route path="write" element={<FeedWritePage />}></Route>
           <Route path="detail" element={<FeedDetailPage />}></Route>

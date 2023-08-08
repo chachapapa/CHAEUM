@@ -45,7 +45,7 @@ const ActiveTotalBubble = (props: Props) => {
   };
 
   return (
-    <div>
+    <div className="z-10 w-[452px] h-[932px]">
       <div className="z-0 absolute top-1/4 left-2/3 custom-scale-250">
         <ActiveBubble70
           name="chacha"
@@ -155,9 +155,6 @@ const ActiveTotalBubble = (props: Props) => {
           </div>
         </div>
       )}
-      <div>
-        <img src="../icon/gray_bar.png" alt="회색 바" />
-      </div>
     </div>
   );
 };

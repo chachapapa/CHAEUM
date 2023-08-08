@@ -71,20 +71,15 @@ const DraggableScreen = () => {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
-      <div className="h-screen flex items-center justify-center">
-        {/* <img src="../icon/gray_bar.png" alt="회색 바" /> */}
-      </div>
       <div className={getScreenClassName()}>
         {screenType === ScreenType.SMALL && (
           <div className="w-full h-screen flex items-center justify-center">
             <ActiveTotalBubble size="small" startMent={ments} />
-            {/* <img src="../icon/gray_bar.png" alt="회색 바" /> */}
           </div>
         )}
         {screenType === ScreenType.MEDIUM && (
           <div className="w-full h-screen flex items-center justify-center z-20">
             <ActiveTotalBubble size="medium" startMent={ments} />
-            {/* <img src="../icon/gray_bar.png" alt="회색 바" /> */}
           </div>
         )}
         {screenType === ScreenType.FULL && (
