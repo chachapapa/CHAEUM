@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.cocochacha.chaeumbackend.repository.CategoryRepository;
+import com.cocochacha.chaeumbackend.repository.ReplyRepository;
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class ActivityService {
     private final StreakRepository streakRepository;
     @Autowired
     private final CategoryRepository categoryRepository;
+    @Autowired
+    private final ReplyRepository replyRepository;
 
     /**
      * 활동을 시작하면 필요한 정보를 가공해서 Controller에 넘겨주는 메소드
@@ -148,12 +151,23 @@ public class ActivityService {
         return doingMessageResponse;
     }
 
-    public void cheeringComent(CheeringComentRequest cheeringComentRequest) {
+    public CheeringComentResponse cheeringComent(CheeringComentRequest cheeringComentRequest) {
         Activity activity = activityRepository.findById(cheeringComentRequest.getActivityId()).orElse(null);
         if (activity == null) {
             throw new NullPointerException("null 값!");
         }
-        System.out.println(activity.getId());
+
+        List<Reply> reply = replyRepository.findAllByActivityId(activity).orElse(null);
+        List<String> replyList = new ArrayList<>();
+
+        // reply의 content부분 replyList에 넣어주기
+        for (int i = 0; i < reply.size(); i++) {
+            replyList.add(reply.get(i).getContent());
+        }
+
+        return CheeringComentResponse.builder()
+                .coments(replyList)
+                .build();
     }
 
     /**
