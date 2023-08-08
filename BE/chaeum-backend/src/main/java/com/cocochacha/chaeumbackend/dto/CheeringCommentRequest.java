@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class CheeringComentRequest {
+public class CheeringCommentRequest {
     private int activityId;
 }

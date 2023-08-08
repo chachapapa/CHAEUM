@@ -8,11 +8,11 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CheeringComentResponse {
-    List<String> coments;
+public class CheeringCommentResponse {
+    List<String> comments;
 
     @Builder
-    public CheeringComentResponse(List<String> coments) {
-        this.coments = coments;
+    public CheeringCommentResponse(List<String> comments) {
+        this.comments = comments;
     }
 }

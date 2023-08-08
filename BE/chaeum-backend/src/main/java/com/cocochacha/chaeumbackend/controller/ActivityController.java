@@ -95,10 +95,10 @@ public class ActivityController {
      * @return 응원글의 목록
      */
     @GetMapping("/message/cheering")
-    public ResponseEntity<?> cheeringComent(@RequestBody CheeringComentRequest cheeringComentRequest) {
+    public ResponseEntity<?> cheeringComment(@RequestBody CheeringCommentRequest cheeringCommentRequest) {
         try {
-            CheeringComentResponse cheeringComentResponse = activityService.cheeringComent(cheeringComentRequest);
-            return new ResponseEntity<>(cheeringComentResponse, HttpStatus.OK);
+            CheeringCommentResponse cheeringCommentResponse = activityService.cheeringComment(cheeringCommentRequest);
+            return new ResponseEntity<>(cheeringCommentResponse, HttpStatus.OK);
         } catch (NullPointerException NPE) {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }

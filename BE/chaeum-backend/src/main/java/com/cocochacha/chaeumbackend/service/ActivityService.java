@@ -157,8 +157,8 @@ public class ActivityService {
      * @param cheeringComentRequest activityId
      * @return 응원글 목록
      */
-    public CheeringComentResponse cheeringComent(CheeringComentRequest cheeringComentRequest) {
-        Activity activity = activityRepository.findById(cheeringComentRequest.getActivityId()).orElse(null);
+    public CheeringCommentResponse cheeringComment(CheeringCommentRequest cheeringCommentRequest) {
+        Activity activity = activityRepository.findById(cheeringCommentRequest.getActivityId()).orElse(null);
         if (activity == null) {
             throw new NullPointerException("null 값!");
         }
@@ -171,8 +171,8 @@ public class ActivityService {
             replyList.add(reply.get(i).getContent());
         }
 
-        return CheeringComentResponse.builder()
-                .coments(replyList)
+        return CheeringCommentResponse.builder()
+                .comments(replyList)
                 .build();
     }
 
