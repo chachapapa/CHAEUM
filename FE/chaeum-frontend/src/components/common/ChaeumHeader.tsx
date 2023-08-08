@@ -7,12 +7,11 @@ interface HeaderPropsType {
   isLogo: boolean;
 }
 
-export const ChaeumHeader = ({title, isLogo}: HeaderPropsType) => {
+export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
   const location = useLocation();
 
-
   return (
-    <div className="flex flex-row justify-between items-center sticky top-0 left-0 w-100% min-h-[56px] bg-white">
+    <div className="flex flex-row justify-between items-center sticky top-0 left-0 z-10 w-full min-h-[56px] bg-white">
       <div>
         {isLogo ? (
           <LogoText height="auto" width="10rem" className="px-2" />
@@ -27,7 +26,7 @@ export const ChaeumHeader = ({title, isLogo}: HeaderPropsType) => {
           <div className="w-[70px] flex flex-row-reverse justify-between">
             <i className="fa-regular fa-pen-to-square text-2xl text-chaeum-blue-500"></i>
           </div>
-        ) : location.pathname  === '/feed' ? (
+        ) : location.pathname === '/feed' ? (
           <div className="w-[70px] flex flex-row-reverse justify-between">
             <Link to={'write'}>
               <i className="fa-regular fa-pen-to-square text-2xl text-chaeum-blue-500"></i>
