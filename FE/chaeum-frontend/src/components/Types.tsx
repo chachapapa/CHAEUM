@@ -33,6 +33,8 @@ type ColorForSelection = {
   hoverColor: string;
 };
 
+type ColorVariation = 'emerald' | 'indigo' | 'yellow' | 'slate' | 'red' | 'orange' | 'amber' | 'lime' | 'green' | 'teal' | 'cyan' | 'sky' | 'blue' | 'violet' | 'fuchsia' | 'pink' | 'rose' | 'chaeum-blue';
+
 export interface ColorPropsType {
   color?: string;
   weight?: 'w1' | 'w2' | 'w3' | 'w4' | 'w5';
@@ -68,4 +70,5 @@ export type {
   Article,
   ColorForSelection,
   ColorNameType,
+  ColorVariation
 };

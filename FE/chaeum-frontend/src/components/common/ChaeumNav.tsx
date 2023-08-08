@@ -32,7 +32,7 @@ export const ChaeumNav = () => {
 
   return (
 
-    <div className="sticky bottom-0 left-0 flex flex-row justify-around items-center w-full h-14 bg-white">
+    <div className="sticky bottom-0 left-0 flex flex-row justify-around items-center w-full min-h-[56px] bg-white">
       {currentTab === 0 ? (
         <i
           className="fa-solid fa-square-poll-horizontal text-2xl text-chaeum-blue-500"

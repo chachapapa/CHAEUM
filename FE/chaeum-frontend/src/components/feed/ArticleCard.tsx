@@ -138,14 +138,14 @@ const ArticleCard = () => {
   };
 
   return (
-    <div className="bg-gray-100 mt-5">
+    <div className="bg-gray-100 mt-3">
       {!isLoading && !isFadingOut ? (
         <div className="max-w-7xl">
           <div className="w-full">
             {exampleList.map(post => (
               <article
                 key={post.id}
-                className="flex p-3 w-full flex-col items-start justify-between mb-5 bg-white"
+                className="flex p-3 w-full flex-col items-start justify-between mb-3 bg-white"
               >
                 <div className='flex justify-between w-full'>
                   <div className="relative flex items-center gap-x-4">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AnimatedLogo from '../components/common/AnimatedLogo';
 import TextButton from '../components/common/TextButton';
 import { ChaeumHeader } from '../components/common/ChaeumHeader';
@@ -7,6 +7,7 @@ import ArticleCard from '../components/feed/ArticleCard';
 import { ChaeumNav } from '../components/common/ChaeumNav';
 import NewStoryCard from '../components/feed/NewStoryCard';
 import LoadingPage from '../components/common/LoadingPage';
+import { Outlet, useLocation } from 'react-router-dom';
 
 /*
   feature/#256
@@ -14,23 +15,29 @@ import LoadingPage from '../components/common/LoadingPage';
 */
 
 const FeedPage = () => {
+
+  const location = useLocation();
+  const [icon, setIcon] = useState<string>();
+  const [isLogo, setIsLogo] = useState<boolean>(false);
+
+  useEffect(() => {
+    if(location.pathname === '/feed') {
+      setIsLogo(true);
+      setIcon('alarm&chat');
+    }else if(location.pathname === '/feed/write'){
+      setIcon('write');
+
+    }
+  },[]);
+  
+  
+
+
   return (
     <div className="flex flex-col w-full h-full bg-gray-100 outline outline-1">
-      <ChaeumHeader isLogo icon='alarm&chat'></ChaeumHeader>
+      {isLogo? <ChaeumHeader isLogo icon={icon}></ChaeumHeader> : <ChaeumHeader isLogo={false} title='게시글 작성' icon={icon}></ChaeumHeader>}
 
-      <div className="h-2/3 overflow-auto flex-grow">
-        <div className="bg-white p-5 mt-5">
-          <NewStoryCard
-            nickname="chacha"
-            title="제목길게에에에에에에"
-            img="../chacha2.png"
-            color="yellow"
-            tag={['#클라이밍', '#빨주노초파남']}
-            time={15}
-          />
-        </div>
-        <ArticleCard></ArticleCard>
-      </div>
+      <Outlet/>
       
       <ChaeumNav></ChaeumNav>
     </div>

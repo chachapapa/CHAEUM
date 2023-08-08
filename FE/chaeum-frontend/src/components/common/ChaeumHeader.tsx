@@ -9,12 +9,12 @@ interface HeaderPropsType {
 
 export const ChaeumHeader = ({ title, isLogo, icon }: HeaderPropsType) => {
   return (
-    <div className="flex flex-row justify-between items-center sticky top-0 left-0 w-100% h-14 bg-white">
+    <div className="flex flex-row justify-between items-center sticky top-0 left-0 w-100% min-h-[56px] bg-white">
       <div>
         {isLogo ? (
           <LogoText height="auto" width="10rem" className="px-2" />
         ) : (
-          <span className="px-4 text-3xl font-extrabold text-chaeum-gray-900">
+          <span className="px-4 text-2xl font-environmentR font-semibold text-chaeum-gray-900">
             {title}
           </span>
         )}
