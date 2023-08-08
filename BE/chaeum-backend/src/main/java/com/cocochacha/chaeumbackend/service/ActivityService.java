@@ -123,7 +123,7 @@ public class ActivityService {
 
     }
 
-    public void doMessage(DoingMessageRequest doingMessageRequest, UserPersonalInfo userPersonalInfo) {
+    public DoingMessageResponse doMessage(DoingMessageRequest doingMessageRequest, UserPersonalInfo userPersonalInfo) {
         Activity activity = activityRepository.findById(doingMessageRequest.getActivityId()).orElse(null);
 
         // 스트릭 아이디
@@ -133,9 +133,13 @@ public class ActivityService {
         int categoryId = doingMessageRequest.getCategoryId();
         Category category = categoryRepository.findById(categoryId).orElse(null);
 
-        System.out.println(streakId);
-        System.out.println(category.getCategoryMain());
-        System.out.println(category.getCategoryMiddle());
+        // 위에 있는 정보를 이용해서 프롬프트를 생성 한 후, 프롬프트를 만들어서 문장을 생성 후, 값을 넘겨주면 됨
+        List<String> sentences = createSentence("여기에 프롬프트를 만들어서 넘겨야함");
+
+        DoingMessageResponse doingMessageResponse = DoingMessageResponse.builder()
+                .sentences(sentences)
+                .build();
+        return doingMessageResponse;
     }
 
     /**

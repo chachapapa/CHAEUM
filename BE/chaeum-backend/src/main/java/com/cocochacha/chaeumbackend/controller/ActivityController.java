@@ -76,9 +76,10 @@ public class ActivityController {
     }
 
     @GetMapping("/message/doing")
-    public void doMent(@RequestBody DoingMessageRequest doingMessageRequest) {
+    public ResponseEntity<?> doMent(@RequestBody DoingMessageRequest doingMessageRequest) {
         UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
-        activityService.doMessage(doingMessageRequest, userPersonalInfo);
+        DoingMessageResponse doingMessageResponse = activityService.doMessage(doingMessageRequest, userPersonalInfo);
+        return new ResponseEntity<>(doingMessageResponse, HttpStatus.OK);
     }
 
     /**
