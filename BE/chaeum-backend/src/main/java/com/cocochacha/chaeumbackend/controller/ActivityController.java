@@ -89,6 +89,22 @@ public class ActivityController {
     }
 
     /**
+     * 활동 중 응원글 목록
+     *
+     * @param cheeringCommentRequest activityId
+     * @return 응원글의 목록
+     */
+    @GetMapping("/message/cheering")
+    public ResponseEntity<?> cheeringComment(@RequestBody CheeringCommentRequest cheeringCommentRequest) {
+        try {
+            CheeringCommentResponse cheeringCommentResponse = activityService.cheeringComment(cheeringCommentRequest);
+            return new ResponseEntity<>(cheeringCommentResponse, HttpStatus.OK);
+        } catch (NullPointerException NPE) {
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
      * 헤더에서 UserId를 추출하는 함수
      *
      * @return UserId

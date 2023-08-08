@@ -1,9 +1,6 @@
 package com.cocochacha.chaeumbackend.service;
 
-import com.cocochacha.chaeumbackend.domain.Activity;
-import com.cocochacha.chaeumbackend.domain.Category;
-import com.cocochacha.chaeumbackend.domain.Streak;
-import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import com.cocochacha.chaeumbackend.domain.*;
 import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 
@@ -12,6 +9,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.cocochacha.chaeumbackend.repository.CategoryRepository;
+import com.cocochacha.chaeumbackend.repository.ReplyRepository;
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,8 @@ public class ActivityService {
     private final StreakRepository streakRepository;
     @Autowired
     private final CategoryRepository categoryRepository;
+    @Autowired
+    private final ReplyRepository replyRepository;
 
     /**
      * 활동을 시작하면 필요한 정보를 가공해서 Controller에 넘겨주는 메소드
@@ -149,6 +149,31 @@ public class ActivityService {
                 .sentences(sentences)
                 .build();
         return doingMessageResponse;
+    }
+
+    /**
+     * 활동 중에 받는 응원글 목록을 뽑아주는 메소드
+     *
+     * @param cheeringCommentRequest activityId
+     * @return 응원글 목록
+     */
+    public CheeringCommentResponse cheeringComment(CheeringCommentRequest cheeringCommentRequest) {
+        Activity activity = activityRepository.findById(cheeringCommentRequest.getActivityId()).orElse(null);
+        if (activity == null) {
+            throw new NullPointerException("null 값!");
+        }
+
+        List<Reply> reply = replyRepository.findAllByActivityId(activity).orElse(null);
+        List<String> replyList = new ArrayList<>();
+
+        // reply의 content부분 replyList에 넣어주기
+        for (int i = 0; i < reply.size(); i++) {
+            replyList.add(reply.get(i).getContent());
+        }
+
+        return CheeringCommentResponse.builder()
+                .comments(replyList)
+                .build();
     }
 
     /**
