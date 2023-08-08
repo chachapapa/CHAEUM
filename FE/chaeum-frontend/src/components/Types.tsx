@@ -83,3 +83,18 @@ export type {
   ColorVariation,
   Story
 };
+
+export interface StreakInfoType {
+  info?: { date: string; activetime: number }[];
+  color?: string;
+}
+
+export interface StreakCardProps extends StreakInfoType {
+  title: string;
+  tags: string[];
+  className?: string;
+}
+
+export interface StreakCardInfoType extends StreakCardProps {
+  category: string;
+}

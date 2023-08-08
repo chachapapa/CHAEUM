@@ -16,6 +16,7 @@ import ProfilePage from './views/ProfilePage';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import FeedMain from './components/feed/FeedMain';
 import FeedWritePage from './components/feed/write/FeedWritePage';
+import DraggableScreen from './components/active/DraggableScreen';
 
 function App() {
   const [isLogedin, setIsLogedin] = useState(false);
@@ -29,8 +30,8 @@ function App() {
     }
   }, [location.pathname]);
 
-
   console.log('라우팅 시 로그인 여부' + isLogedin);
+
   return (
     <div className="App">
       <Routes>
@@ -39,11 +40,17 @@ function App() {
         <Route path="/main" element={<MainPage />}></Route>
         <Route
           path="/"
-          element={isLogedin ? <Navigate to="/main" /> : <Navigate to="/entrance" />}
+          element={
+            isLogedin ? <Navigate to="/main" /> : <Navigate to="/entrance" />
+          }
         />
         <Route path="/active" element={<ActivePage />}>
+          <Route index element={<DraggableScreen />}></Route>
           <Route path="result" element={<ResultPage />}></Route>
         </Route>
+        {/* <Route path="/active" element={<ActivePage />}>
+          <Route path="result" element={<ResultPage />}></Route>
+        </Route> */}
         <Route path="/feed" element={<FeedPage />}>
           <Route index element={<FeedMain/>}/>
           <Route path="write" element={<FeedWritePage streakColor='blue'/>}></Route>

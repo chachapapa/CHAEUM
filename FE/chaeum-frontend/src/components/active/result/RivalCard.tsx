@@ -1,6 +1,6 @@
 import React from 'react';
-import { ReactComponent as CardFrame } from '../assets/rectangle.svg';
-import './styles/cardwave.css';
+import { ReactComponent as CardFrame } from '../../../assets/rectangle.svg';
+import '../../styles/cardwave.css';
 import { RivalPropsType } from '../../Types';
 
 export const RivalCard = ({ name, tag, profile }: RivalPropsType) => {

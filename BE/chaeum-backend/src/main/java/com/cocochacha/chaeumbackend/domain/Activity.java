@@ -1,14 +1,6 @@
 package com.cocochacha.chaeumbackend.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,16 +12,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Activity {
+
     @Id
     @Column(name = "activity_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    //    @ManyToOne(cascade = CascadeType.ALL)
-////    @JoinColumn(name="streak_id", referencedColumnName = "streak_id") // 이거 만약에 에러나면 의심하기
-    @Column(name = "streak_id")
-    private int streakId;
-//    private Streak streakId; // 이것을 쓸 것!
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "streak_id", referencedColumnName = "streak_id")
+    private Streak streakId;
 
     @Column(name = "activity_start_time")
     private String activityStartTime;
@@ -40,12 +31,15 @@ public class Activity {
     @Column(name = "activity_time")
     private int activityTime;
 
+    @Column(name = "activity_is_post")
+    private boolean activityIsPost;
+
     @Builder
-    public Activity(int streakId) {
+    public Activity(Streak streakId) {
         this.streakId = streakId;
     }
 
-    public void changeStreakId(int streakId) {
+    public void changeStreakId(Streak streakId) {
         this.streakId = streakId;
     }
 
@@ -55,6 +49,10 @@ public class Activity {
 
     public void changeEndTime(String activityEndTime) {
         this.activityEndTime = activityEndTime;
+    }
+
+    public void changeActivityIsPost(boolean activityIsPost) {
+        this.activityIsPost = activityIsPost;
     }
 }
 
