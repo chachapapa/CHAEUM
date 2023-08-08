@@ -38,5 +38,6 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     'array-callback-return': 'off',
     'no-lone-blocks': 'off',
+    'no-useless-escape': 'off',
   },
 };

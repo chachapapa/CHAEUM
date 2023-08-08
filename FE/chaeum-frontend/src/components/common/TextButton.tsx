@@ -16,9 +16,12 @@ interface InputProps {
   // 배경색
   type: 'kakao' | 'naver' | 'google' | 'primary' | 'white' | 'gray' | 'warning';
   // 버튼 크기
-  size: 'small' | 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large';
   // 버튼 내부 텍스트
   label: string;
+
+  callback?(): void;
+  className?: string;
 }
 
 // 아이콘 타입
@@ -54,14 +57,22 @@ const TextButton = ({
   label,
   ...props
 }: InputProps) => {
-  const classNames = ButtonType[type] + ' ' + ButtonSize[size];
+  const classNames =
+    ButtonType[type] +
+    ' ' +
+    ButtonSize[size] +
+    ' ' +
+    (props.className === 'undefined' ? '' : props.className);
 
   let iconType;
   if (icon) iconType = IconType[icon];
 
   return (
-    <div className="flex justify-center h-14 w-full">
-      <div className={`flex w-full items-center justify-center ${classNames}`}>
+    <div className="flex justify-center h-14 w-full ">
+      <div
+        className={`flex w-full items-center justify-center ${classNames}`}
+        onClick={props.callback}
+      >
         <div
           className={
             icon
