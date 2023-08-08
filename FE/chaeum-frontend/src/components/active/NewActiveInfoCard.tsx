@@ -23,8 +23,8 @@ type Props = {
 };
 
 const NewActiveInfoCard = (props: Props) => {
-  const waveFirst = WaveColor({ color: 'chaeumblue', weight: 'w4' });
-  const waveSecond = WaveColor({ color: 'chaeumblue', weight: 'w3' });
+  const waveFirst = WaveColor({ color: 'chaeumblue' });
+  const waveSecond = WaveColor({ color: 'chaeumblue' });
 
   const [time, setTime] = useState(props.time);
 
