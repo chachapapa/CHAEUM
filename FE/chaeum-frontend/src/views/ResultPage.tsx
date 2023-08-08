@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Card, Carousel, Typography } from '@material-tailwind/react';
+import {
+  Avatar,
+  Button,
+  Card,
+  Carousel,
+  Typography,
+} from '@material-tailwind/react';
 import { Tag } from '../components/common/Tag';
 import CommentList from '../components/feed/CommentList';
 import { RivalCard } from '../components/active/result/RivalCard';
@@ -21,6 +27,17 @@ type Props = {
   activityTime: string;
 };
 
+type User = {
+  nickName: string;
+  profileImage: string;
+};
+
+type Comment = {
+  commentId: number;
+  user: User;
+  content: string;
+};
+
 const ResultPage = () => {
   // 임시 작성 =====================
   const tags = [
@@ -38,6 +55,29 @@ const ResultPage = () => {
     },
   ];
 
+  const commentListExample: Comment[] = [
+    {
+      commentId: 1,
+      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
+      content: '댓글 1',
+    },
+    {
+      commentId: 2,
+      user: { nickName: 'lulu', profileImage: '../chacha1.jpg' },
+      content: '댓글 2',
+    },
+    {
+      commentId: 3,
+      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
+      content: '댓글 3',
+    },
+    {
+      commentId: 4,
+      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
+      content: '댓글 4',
+    },
+  ];
+
   const startTime = '2023-08-02 14:03:21';
   const endTime = '2023-08-02 14:07:21';
   const activityTime = '00:04:00';
@@ -51,6 +91,11 @@ const ResultPage = () => {
   const goToShare = () => {
     console.log('go to feed write page');
     navigate('/feed/write');
+  };
+
+  const goToMain = () => {
+    console.log('go to main write page');
+    navigate('/main');
   };
 
   return (
@@ -76,16 +121,16 @@ const ResultPage = () => {
             size="lg"
             onClick={goToShare}
           >
-            공유하기
+            활동공유
           </Button>
           <Button
             className="m-4 float-left; w-40"
             variant="filled"
             ripple={true}
             size="lg"
-            onClick={goToShare}
+            onClick={goToMain}
           >
-            수정하기
+            활동완료
           </Button>
         </div>
       </div>
@@ -104,7 +149,38 @@ const ResultPage = () => {
         <div className="text-2xl pt-12">친구의 응원글</div>
         <div className="mx-auto flex justify-center pt-4">
           <Card className="w-[300px] h-[200px]">
-            <CommentList></CommentList>
+            <div className=" w-[360px] p-1 pl-2 my-3">
+              {commentListExample.map(comment => (
+                <div
+                  className="relative w-full h-10 mb-1"
+                  key={comment.commentId}
+                >
+                  <div className="absolute h-full w-full grid justify-items-start items-center ">
+                    <div className="flex h-full">
+                      <Avatar
+                        src={comment.user.profileImage}
+                        alt="avatar"
+                        size="sm"
+                        className="mr-2"
+                      />
+
+                      <div className="text-center self-center">
+                        <Typography
+                          variant="lead"
+                          color="text-chaeum-gray-900"
+                          className="opacity-80 text-sm"
+                        >
+                          <span className="font-bold mr-2">
+                            {comment.user.nickName}
+                          </span>
+                          <span>{comment.content}</span>
+                        </Typography>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </Card>
         </div>
 
@@ -128,16 +204,16 @@ const ResultPage = () => {
             ripple={true}
             onClick={goToShare}
           >
-            공유하기
+            활동공유
           </Button>
           <Button
             className="m-4 float-left; w-40"
             variant="filled"
             size="lg"
             ripple={true}
-            onClick={goToShare}
+            onClick={goToMain}
           >
-            수정하기
+            활동완료
           </Button>
         </div>
       </div>
