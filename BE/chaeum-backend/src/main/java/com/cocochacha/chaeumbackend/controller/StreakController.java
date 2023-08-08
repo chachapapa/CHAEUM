@@ -83,7 +83,11 @@ public class StreakController {
     @PatchMapping("/modification")
     public ResponseEntity<?> modifyStreak(@RequestBody ModifyStreakRequest modifyStreakRequest) {
 
-        if (streakService.modifyStreak(modifyStreakRequest)) {
+        // 수정하는 유저와 스트릭의 관계가 유효한지 확인하기 위해 user 가져오기.
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
+
+        if (streakService.modifyStreak(modifyStreakRequest, userPersonalInfo)) {
             return new ResponseEntity<>(true, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
@@ -98,7 +102,12 @@ public class StreakController {
      */
     @PatchMapping("/deletion")
     public ResponseEntity<?> deleteStreak(@RequestBody DeleteStreakRequest deleteStreakRequest) {
-        if (streakService.deleteStreak(deleteStreakRequest)) {
+
+        // 삭제하는 유저와 스트릭의 관계가 유효한지 확인하기 위해 user 가져오기.
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
+
+        if (streakService.deleteStreak(deleteStreakRequest, userPersonalInfo)) {
             return new ResponseEntity<>("true", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("false", HttpStatus.NO_CONTENT);
@@ -115,7 +124,11 @@ public class StreakController {
     public ResponseEntity<?> deactivateStreak(
             @RequestBody DeactivateStreakRequest deactivateStreakRequest) {
 
-        if (streakService.deactivateStreak(deactivateStreakRequest)) {
+        // 비활성화하는 유저와 스트릭의 관계가 유효한지 확인하기 위해 user 가져오기.
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
+
+        if (streakService.deactivateStreak(deactivateStreakRequest, userPersonalInfo)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
