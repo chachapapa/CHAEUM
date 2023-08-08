@@ -1,7 +1,5 @@
 package com.cocochacha.chaeumbackend.config;
 
-// import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
-
 import com.cocochacha.chaeumbackend.config.jwt.TokenProvider;
 import com.cocochacha.chaeumbackend.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.cocochacha.chaeumbackend.config.oauth.OAuth2SuccessHandler;
@@ -44,10 +42,9 @@ public class WebOAuthSecurityConfig implements WebMvcConfigurer {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-//        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080",
-//                "http://i9a810.p.ssafy.io:80", "http://i9a810.p.ssafy.io:8080",
-//                "https://accounts.kakao.com/login"));
-        configuration.addAllowedOriginPattern("*");
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080",
+                "http://i9a810.p.ssafy.io:80", "http://i9a810.p.ssafy.io:8080",
+                "https://accounts.kakao.com/login"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
@@ -62,7 +59,6 @@ public class WebOAuthSecurityConfig implements WebMvcConfigurer {
     @Bean
     public WebSecurityCustomizer configure() {
         return (web) -> web.ignoring()
-                // .requestMatchers(toH2Console())
                 .requestMatchers("/img/**", "/css/**", "/js/**");
     }
 

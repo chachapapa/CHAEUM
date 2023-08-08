@@ -117,7 +117,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .scheme("http")
                 .host("localhost")
                 .port(3000)
-                .path("/main")
+                .path("/signup")
                 .queryParam("token", token)
                 .build()
                 .toUriString();
