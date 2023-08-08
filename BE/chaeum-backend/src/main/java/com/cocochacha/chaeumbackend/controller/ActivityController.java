@@ -88,6 +88,11 @@ public class ActivityController {
         return new ResponseEntity<>(doingMessageResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/message/cheering")
+    public void cheeringComent(@RequestBody CheeringComentRequest cheeringComentRequest) {
+        activityService.cheeringComent(cheeringComentRequest);
+    }
+
     /**
      * 헤더에서 UserId를 추출하는 함수
      *

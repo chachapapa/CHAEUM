@@ -1,9 +1,6 @@
 package com.cocochacha.chaeumbackend.service;
 
-import com.cocochacha.chaeumbackend.domain.Activity;
-import com.cocochacha.chaeumbackend.domain.Category;
-import com.cocochacha.chaeumbackend.domain.Streak;
-import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import com.cocochacha.chaeumbackend.domain.*;
 import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 
@@ -149,6 +146,14 @@ public class ActivityService {
                 .sentences(sentences)
                 .build();
         return doingMessageResponse;
+    }
+
+    public void cheeringComent(CheeringComentRequest cheeringComentRequest) {
+        Activity activity = activityRepository.findById(cheeringComentRequest.getActivityId()).orElse(null);
+        if (activity == null) {
+            throw new NullPointerException("null 값!");
+        }
+        System.out.println(activity.getId());
     }
 
     /**
