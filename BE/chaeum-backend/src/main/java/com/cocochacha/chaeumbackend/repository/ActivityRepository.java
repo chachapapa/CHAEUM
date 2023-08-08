@@ -31,6 +31,17 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
             group by Date(activity_start_time);      
             """;
 
+    String accumulateTimeQuery6Weeks = """
+            select max(activity_start_time) as `start_time` ,max(activity_end_time) as `end_time`, 
+            sum(activity_time) as `sum_time`, max(activity_is_post) as `activity_is_post`
+            from (select * 
+                    from activity
+                    where DATE_SUB(curdate(), INTERVAL 43 Day) <= Date(activity_start_time) 
+                    and streak_id = :streak_id
+                  ) as 42day
+            group by Date(activity_start_time);      
+            """;
+
     Optional<Activity> findById(int id);
 
     /**
@@ -57,6 +68,15 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
             @Param("streak_id") int streakId,
             @Param("activity_id") int activityId);
 
+
+    /**
+     * 해당 스트릭의 42일 간의 누적 시간(초)을 구하는 메소드
+     *
+     * @param streakId 구하고 싶은 스트릭 ID
+     * @return [날짜, 누적 시간] 형태의 리스트
+     */
+    @Query(value = accumulateTimeQuery6Weeks, nativeQuery = true)
+    Optional<List<List<String>>> accumulateQuery6Weeks(@Param("streak_id") int streakId);
 }
 
 

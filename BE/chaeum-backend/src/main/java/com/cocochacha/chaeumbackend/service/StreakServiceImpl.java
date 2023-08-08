@@ -7,11 +7,14 @@ import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeactivateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
+import com.cocochacha.chaeumbackend.dto.GetStreakResponse;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
+import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 import com.cocochacha.chaeumbackend.repository.CategoryRepository;
 import com.cocochacha.chaeumbackend.repository.StreakInfoRepository;
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
 import com.cocochacha.chaeumbackend.repository.TagRepository;
+import jakarta.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class StreakServiceImpl implements StreakService{
+public class StreakServiceImpl implements StreakService {
 
     @Autowired
     StreakRepository streakRepository;
@@ -34,17 +37,19 @@ public class StreakServiceImpl implements StreakService{
     @Autowired
     StreakInfoRepository streakInfoRepository;
 
+    @Autowired
+    ActivityRepository activityRepository;
+
     /**
-     * 사용자의 스트릭을 생성한다.
-     * 사용자의 스트릭정보를 생성한다.
-     * 사용자의 태그를 생성한다.
+     * 사용자의 스트릭을 생성한다. 사용자의 스트릭정보를 생성한다. 사용자의 태그를 생성한다.
      *
      * @param createStreakRequest (userId, 대분류, 중분류, 스트릭이름, 스트릭컬러, 태그리스트)
      * @return 새로운 스트릭이 저장이 잘 되었다면 true 아니라면 false
      */
     @Override
     @Transactional
-    public boolean createStreak(CreateStreakRequest createStreakRequest, UserPersonalInfo userPersonalInfo) {
+    public boolean createStreak(CreateStreakRequest createStreakRequest,
+            UserPersonalInfo userPersonalInfo) {
 
         //들어온 createStreakRequest 를 사용해서
         //새로운 Streak 객체를 만들어준다.
@@ -53,7 +58,8 @@ public class StreakServiceImpl implements StreakService{
                 .streakName(createStreakRequest.getStreakName())
                 .streakColor(createStreakRequest.getStreakColor())
                 .category(categoryRepository.findByCategoryMainAndCategoryMiddle(
-                        createStreakRequest.getCategoryMain(), createStreakRequest.getCategoryMiddle()).get())
+                        createStreakRequest.getCategoryMain(),
+                        createStreakRequest.getCategoryMiddle()).get())
                 .userPersonalInfo(userPersonalInfo)
                 .streakActive(true)
                 .build();
@@ -63,16 +69,15 @@ public class StreakServiceImpl implements StreakService{
 
         // 들어온 태그 리스트들을 사용한다.
         // 만약 태그가 저장되어있지 않다면 태그를 새로 저장한다
-        for(String tagName : createStreakRequest.getTagList()){
+        for (String tagName : createStreakRequest.getTagList()) {
             Optional<Tag> optionalTag = tagRepository.findByTagName(tagName);
             Tag tag;
-            if(optionalTag.isEmpty()){
+            if (optionalTag.isEmpty()) {
                 tag = Tag.builder()
                         .tagName(tagName)
                         .build();
                 tagRepository.save(tag);
-            }
-            else{
+            } else {
                 tag = optionalTag.get();
             }
             StreakInfo streakInfo = StreakInfo.builder()
@@ -92,9 +97,10 @@ public class StreakServiceImpl implements StreakService{
     @Override
     @Transactional
     public boolean modifyStreak(ModifyStreakRequest modifyStreakRequest) {
-        Optional<Streak> optionalStreak = streakRepository.findById(modifyStreakRequest.getStreakId());
+        Optional<Streak> optionalStreak = streakRepository.findById(
+                modifyStreakRequest.getStreakId());
 
-        if(optionalStreak.isPresent()){
+        if (optionalStreak.isPresent()) {
             Streak streak = optionalStreak.get();
             streak.changeStreakName(modifyStreakRequest.getStreakName());
             streak.changeStreakColor(modifyStreakRequest.getStreakColor());
@@ -104,16 +110,15 @@ public class StreakServiceImpl implements StreakService{
 
             // 들어온 태그 리스트들을 사용한다.
             // 만약 태그가 저장되어있지 않다면 태그를 새로 저장한다
-            for(String tagName : modifyStreakRequest.getTagList()){
+            for (String tagName : modifyStreakRequest.getTagList()) {
                 Optional<Tag> optionalTag = tagRepository.findByTagName(tagName);
                 Tag tag;
-                if(optionalTag.isEmpty()){
+                if (optionalTag.isEmpty()) {
                     tag = Tag.builder()
                             .tagName(tagName)
                             .build();
                     tagRepository.save(tag);
-                }
-                else{
+                } else {
                     tag = optionalTag.get();
                 }
                 StreakInfo streakInfo = StreakInfo.builder()
@@ -126,7 +131,7 @@ public class StreakServiceImpl implements StreakService{
             // 스트릭에 스트릭 정보를 넣어준다.
             streak.changeStreakInfoList(streakInfos);
 
-        }else{
+        } else {
             return false;
         }
 
@@ -138,18 +143,21 @@ public class StreakServiceImpl implements StreakService{
     @Transactional
     public boolean deleteStreak(DeleteStreakRequest deleteStreakRequest) {
         // deleteStreakRequest의 StreakId를 이용해서 streak을 뽑아낸다.
-        Optional<Streak> optionalStreak = streakRepository.findById(deleteStreakRequest.getStreakId());
+        Optional<Streak> optionalStreak = streakRepository.findById(
+                deleteStreakRequest.getStreakId());
 
         // StreakId에 해당하는 streak이 존재한다면
-        if(optionalStreak.isPresent()){
+        if (optionalStreak.isPresent()) {
             Streak streak = optionalStreak.get();
             // deleted를 true로 만드는 형태로 스트릭을 삭제 처리 한다.
             streak.changeStreakDeleted(true);
 
-            if(!streak.isStreakDeleted()) return false;
+            if (!streak.isStreakDeleted()) {
+                return false;
+            }
         }
         // 존재하지 않는다면 false 리턴
-        else{
+        else {
             return false;
         }
 
@@ -159,17 +167,54 @@ public class StreakServiceImpl implements StreakService{
     @Override
     @Transactional
     public boolean deactivateStreak(DeactivateStreakRequest deactivateStreakRequest) {
-        Optional<Streak> optionalStreak = streakRepository.findById(deactivateStreakRequest.getStreakId());
+        Optional<Streak> optionalStreak = streakRepository.findById(
+                deactivateStreakRequest.getStreakId());
 
-        if(optionalStreak.isPresent()){
+        if (optionalStreak.isPresent()) {
             Streak streak = optionalStreak.get();
             streak.changeStreakActive(false);
 
-            if(streak.isStreakActive()) return false;
-        }else{
+            if (streak.isStreakActive()) {
+                return false;
+            }
+        } else {
             return false;
         }
 
         return true;
+    }
+
+    @Override
+    public List<GetStreakResponse> getStreak(UserPersonalInfo userPersonalInfo) {
+
+        List<GetStreakResponse> streakResponseList = new ArrayList<>();
+
+        Optional<List<Streak>> optionalStreakList = streakRepository.findStreaksByUserPersonalInfoAndStreakDeletedIsFalse(
+                userPersonalInfo);
+
+        if (optionalStreakList.isPresent()) {
+            List<Streak> streakList = optionalStreakList.get();
+            for (Streak streak : streakList) {
+                // 6주간의 데이터를 저장
+                List<List<String>> activityList = activityRepository.accumulateQuery6Weeks(
+                        streak.getStreakId()).orElse(null);
+                GetStreakResponse streakResponse = GetStreakResponse.builder()
+                        .streakId(streak.getStreakId())
+                        .streakDeleted(streak.isStreakDeleted())
+                        .streakActive(streak.isStreakActive())
+                        .streakColor(streak.getStreakColor())
+                        .streakName(streak.getStreakName())
+                        .categoryId(streak.getCategory().getCategoryId())
+                        .activeHistoryList(activityList)
+                        .continueDays(0)
+                        .build();
+
+                streakResponseList.add(streakResponse);
+            }
+        } else {
+            return null;
+        }
+
+        return streakResponseList;
     }
 }
