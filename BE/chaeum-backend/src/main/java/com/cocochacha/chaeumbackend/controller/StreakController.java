@@ -4,6 +4,7 @@ import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeactivateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
+import com.cocochacha.chaeumbackend.dto.GetStreakResponse;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import com.cocochacha.chaeumbackend.service.StreakService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
@@ -33,41 +34,58 @@ public class StreakController {
     UserPersonalInfoService userPersonalInfoService;
 
     /**
-     * 사용자의 스트릭을 생성한다.
-     * 사용자의 스트릭정보를 생성한다.
-     * 사용자의 태그를 생성한다.
+     * 사용자의 스트릭을 생성한다. 사용자의 스트릭정보를 생성한다. 사용자의 태그를 생성한다.
      *
      * @param createStreakRequest (userId, 대분류, 중분류, 스트릭이름, 스트릭컬러, 태그리스트)
      * @return 생성이 잘 되었는지 반환
      */
     @PostMapping("")
-    public ResponseEntity<?> createStreak(@RequestBody CreateStreakRequest createStreakRequest){
+    public ResponseEntity<?> createStreak(@RequestBody CreateStreakRequest createStreakRequest) {
 
-        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
 
-        if(streakService.createStreak(createStreakRequest, userPersonalInfo)){
+        if (streakService.createStreak(createStreakRequest, userPersonalInfo)) {
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
     }
 
     /**
-     * 사용자의 스트릭을 수정합니다.
-     * 사용자의 태그를 수정합니다.
-     * 스트릭 정보 테이블을 수정합니다.
+     * 사용자의 스트릭의 목록을 반환한다.
+     *
+     * @return 스트릭에 6주 활동에 대한 목록
+     */
+    @GetMapping("")
+    public ResponseEntity<?> getStreak() {
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
+
+        // userPersonalInfo에 대한 6주치 활동내역 리스트 가져오기
+        List<GetStreakResponse> streakResponseList = streakService.getStreak(userPersonalInfo);
+
+        if (streakResponseList != null) {
+            return new ResponseEntity<>(streakResponseList, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
+        }
+    }
+
+    /**
+     * 사용자의 스트릭을 수정합니다. 사용자의 태그를 수정합니다. 스트릭 정보 테이블을 수정합니다.
      *
      * @param modifyStreakRequest
      * @return
      */
     @PatchMapping("/modification")
-    public ResponseEntity<?> modifyStreak(@RequestBody ModifyStreakRequest modifyStreakRequest){
+    public ResponseEntity<?> modifyStreak(@RequestBody ModifyStreakRequest modifyStreakRequest) {
 
-        if(streakService.modifyStreak(modifyStreakRequest)){
+        if (streakService.modifyStreak(modifyStreakRequest)) {
             return new ResponseEntity<>(true, HttpStatus.OK);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
         }
     }
@@ -79,12 +97,11 @@ public class StreakController {
      * @return
      */
     @PatchMapping("/deletion")
-    public ResponseEntity<?> deleteStreak(@RequestBody DeleteStreakRequest deleteStreakRequest){
-        if(streakService.deleteStreak(deleteStreakRequest)){
+    public ResponseEntity<?> deleteStreak(@RequestBody DeleteStreakRequest deleteStreakRequest) {
+        if (streakService.deleteStreak(deleteStreakRequest)) {
             return new ResponseEntity<>("true", HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>("false",HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>("false", HttpStatus.NO_CONTENT);
         }
     }
 
@@ -95,12 +112,14 @@ public class StreakController {
      * @return
      */
     @PatchMapping("/deactivation")
-    public ResponseEntity<?> deactivateStreak(@RequestBody DeactivateStreakRequest deactivateStreakRequest){
+    public ResponseEntity<?> deactivateStreak(
+            @RequestBody DeactivateStreakRequest deactivateStreakRequest) {
 
-        if(streakService.deactivateStreak(deactivateStreakRequest)){
+        if (streakService.deactivateStreak(deactivateStreakRequest)) {
             return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        else return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
