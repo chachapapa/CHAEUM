@@ -76,6 +76,19 @@ public class ActivityController {
     }
 
     /**
+     * 활동 중 멘트를 받기 위한 요청에 대한 응답을 주는 메소드
+     *
+     * @param doingMessageRequest categoryId, activityId
+     * @return 활동 중 받는 멘트의 리스트
+     */
+    @GetMapping("/message/doing")
+    public ResponseEntity<?> doMent(@RequestBody DoingMessageRequest doingMessageRequest) {
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+        DoingMessageResponse doingMessageResponse = activityService.doMessage(doingMessageRequest, userPersonalInfo);
+        return new ResponseEntity<>(doingMessageResponse, HttpStatus.OK);
+    }
+
+    /**
      * 헤더에서 UserId를 추출하는 함수
      *
      * @return UserId

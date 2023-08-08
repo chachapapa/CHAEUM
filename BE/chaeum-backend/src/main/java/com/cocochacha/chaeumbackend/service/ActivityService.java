@@ -1,6 +1,7 @@
 package com.cocochacha.chaeumbackend.service;
 
 import com.cocochacha.chaeumbackend.domain.Activity;
+import com.cocochacha.chaeumbackend.domain.Category;
 import com.cocochacha.chaeumbackend.domain.Streak;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.*;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.cocochacha.chaeumbackend.repository.CategoryRepository;
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ public class ActivityService {
     private final ActivityRepository activityRepository;
     @Autowired
     private final StreakRepository streakRepository;
+    @Autowired
+    private final CategoryRepository categoryRepository;
 
     /**
      * 활동을 시작하면 필요한 정보를 가공해서 Controller에 넘겨주는 메소드
@@ -117,6 +121,34 @@ public class ActivityService {
 
         return startMessageResponsege;
 
+    }
+
+    /**
+     * 활동 중에 받는 메세지를 만들어 주는 메소드
+     *
+     * @param doingMessageRequest categoryId, activityId
+     * @param userPersonalInfo user의 정보
+     * @return 활동 중 받는 메세지의 목록
+     */
+    public DoingMessageResponse doMessage(DoingMessageRequest doingMessageRequest, UserPersonalInfo userPersonalInfo) {
+        Activity activity = activityRepository.findById(doingMessageRequest.getActivityId()).orElse(null);
+
+        // 스트릭 아이디
+        int streakId = activity.getStreakId().getStreakId();
+
+        // 카테고리 아이디
+        int categoryId = doingMessageRequest.getCategoryId();
+
+        // 카테고리 아이디를 이용해서 카테고리에 대한 정보를 다 가져옵니다.
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+
+        // 위에 있는 정보를 이용해서 프롬프트를 생성 한 후, 프롬프트를 만들어서 문장을 생성 후, 값을 넘겨주면 됨
+        List<String> sentences = createSentence("여기에 프롬프트를 만들어서 넘겨야함");
+
+        DoingMessageResponse doingMessageResponse = DoingMessageResponse.builder()
+                .sentences(sentences)
+                .build();
+        return doingMessageResponse;
     }
 
     /**
