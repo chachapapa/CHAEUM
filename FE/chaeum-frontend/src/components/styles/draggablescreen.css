@@ -21,3 +21,15 @@
   width: 100%;
   height: 100vh;
 }
+
+.custom-scale-250 {
+  transform: scale(2.5); /* 250% scale */
+}
+
+.custom-scale-200 {
+  transform: scale(2); /* 250% scale */
+}
+
+.swiper-container {
+  height: 300px;
+}

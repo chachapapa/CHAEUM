@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@material-tailwind/react';
+import { Button, Card, Carousel } from '@material-tailwind/react';
 import ActiveInfoCard from './ActiveInfoCard';
+import PhraseCard from './PhraseCard';
+import { useNavigate } from 'react-router';
+import { Tag } from '../common/Tag';
 
 /*
   사용 예시
@@ -13,7 +16,7 @@ const ActiveFullScreen = () => {
   const [time, setTime] = useState(0);
 
   // state to check stopwatch running or not
-  const [isRunning, setIsRunning] = useState(false);
+  const [isRunning, setIsRunning] = useState(true);
 
   useEffect(() => {
     let intervalId: string | number | NodeJS.Timeout | undefined;
@@ -41,6 +44,15 @@ const ActiveFullScreen = () => {
     console.log('현재 시간 타입입니다 : ' + typeof currentTimer());
   };
 
+  const navigate = useNavigate();
+  const goResult = () => {
+    navigate('/active/result');
+  };
+
+  const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
   const currentTimer = () => {
     const now = new Date();
     const year = String(now.getFullYear());
@@ -52,29 +64,62 @@ const ActiveFullScreen = () => {
     return `${year}-${months}-${days} ${hours}:${minutes}:${seconds}`;
   };
 
-  // Method to reset timer back to 0
-  const reset = () => {
-    setTime(0);
-  };
+  const tags = [
+    {
+      id: 1,
+      tag: '클라이밍',
+    },
+    {
+      id: 3,
+      tag: '열심히',
+    },
+    {
+      id: 2,
+      tag: '운동',
+    },
+  ];
   return (
     <div className="z-10 stopwatch-container bg-chaeum-blue-300 w-[452px] h-[932px]">
-      {/* <div className="z-50 stopwatch-container bg-white w-[452px] h-[400px] flex justify-center items-center">
-        <img src="../icon/gray_bar.png" alt="회색 바"></img>
-        <div className="text-2xl pt-20"> 채움 중</div>
-        <h1 className="stopwatch-time text-2xl">
-          {hours.toString().padStart(2, '0')}:
-          {minutes.toString().padStart(2, '0')}:
-          {seconds.toString().padStart(2, '0')}
-        </h1>
-        <div className="stopwatch-buttons">
-          <Button className="stopwatch-button m-4" onClick={startAndStop}>
-            {isRunning ? '일시정지' : '계속하기'}
+      <div className="max-w-[452px] mx-auto overflow-hidden">
+        <div className="text-5xl mt-5"> 채움 중 ...</div>
+        <div className="mt-5">
+          {tags.map(tag => (
+            <Tag tag={tag.tag} key={tag.id} color="blue"></Tag>
+          ))}
+        </div>
+        <div className="text-5xl mt-10">{formattedTime}</div>
+        <div className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center">
+          <Card>
+            <PhraseCard title="친구의 응원글" ment={'응원글'}></PhraseCard>
+          </Card>
+        </div>
+        <div className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center">
+          <Card>
+            <PhraseCard title="동기부여멘트" ment={'동기부여멘트'}></PhraseCard>
+          </Card>
+        </div>
+        <div className="mx-auto flex justify-center place-items-center pt-7">
+          <Button
+            className=" m-4 float-left; w-40"
+            variant="filled"
+            color="gray"
+            size="lg"
+            ripple={true}
+            onClick={startAndStop}
+          >
+            {isRunning ? <div>일시중지</div> : <div>다시시작</div>}
           </Button>
-          <Button className="stopwatch-button m-4" onClick={reset}>
-            그만두기
+          <Button
+            className="m-4 float-left; w-40"
+            variant="filled"
+            size="lg"
+            ripple={true}
+            onClick={goResult}
+          >
+            활동종료
           </Button>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

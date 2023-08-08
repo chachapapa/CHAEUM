@@ -40,12 +40,11 @@ const ActiveTotalBubble = (props: Props) => {
   };
 
   const goResult = () => {
-    // navigate('/active/result');
-    navigate('/result');
+    navigate('/active/result');
   };
 
   return (
-    <div className="z-10 w-[452px] h-[932px]">
+    <div>
       <div className="z-0 absolute top-1/4 left-2/3 custom-scale-250">
         <ActiveBubble70
           name="chacha"
@@ -129,7 +128,14 @@ const ActiveTotalBubble = (props: Props) => {
                   </div>
                 ))}
               </Carousel>
-
+              <div className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center">
+                <Card>
+                  <PhraseCard
+                    title="친구의 응원글"
+                    ment={'응원글'}
+                  ></PhraseCard>
+                </Card>
+              </div>
               <div className="mx-auto flex justify-center place-items-center pt-7">
                 <Button
                   className=" m-4 float-left; w-40"
