@@ -5,10 +5,9 @@ import { Link, useLocation } from 'react-router-dom';
 interface HeaderPropsType {
   title?: string;
   isLogo: boolean;
-  icon?: string;
 }
 
-export const ChaeumHeader = ({ title, isLogo, icon }: HeaderPropsType) => {
+export const ChaeumHeader = ({title, isLogo}: HeaderPropsType) => {
   const location = useLocation();
 
 

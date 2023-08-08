@@ -17,25 +17,20 @@ import { Outlet, useLocation } from 'react-router-dom';
 const FeedPage = () => {
 
   const location = useLocation();
-  const [icon, setIcon] = useState<string>();
   const [isLogo, setIsLogo] = useState<boolean>(false);
 
   useEffect(() => {
     if(location.pathname === '/feed') {
       setIsLogo(true);
-      setIcon('alarm&write');
-    }else if(location.pathname === '/feed/write'){
-      setIcon('write');
-
     }
-  },[]);
+  },[location.pathname]);
   
   
 
 
   return (
     <div className="flex flex-col w-full h-full bg-gray-100 outline outline-1">
-      {isLogo? <ChaeumHeader isLogo icon={icon}></ChaeumHeader> : <ChaeumHeader isLogo={false} title='게시글 작성' icon={icon}></ChaeumHeader>}
+      {isLogo? <ChaeumHeader isLogo></ChaeumHeader> : <ChaeumHeader isLogo={false} title='게시글 작성'></ChaeumHeader>}
 
       <Outlet/>
       
