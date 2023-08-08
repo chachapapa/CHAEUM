@@ -36,5 +36,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     'react/no-unescaped-entities': 'off',
     '@typescript-eslint/no-var-requires': 'off',
+    'array-callback-return': 'off',
+    'no-lone-blocks': 'off',
   },
 };

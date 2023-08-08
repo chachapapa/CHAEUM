@@ -30,8 +30,8 @@ const ArticleCard = () => {
       '../chacha1.jpg',
     ],
     encourageMessageList: [
-      { user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      { user: { nickName: 'coco', profileImage: '코코' }, content: '응원글 1' },
+      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '응원글 2' },
     ],
     commentList: [
       { user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
@@ -93,7 +93,7 @@ const ArticleCard = () => {
     useState<boolean>(false);
   const [detailedArticle, setDetailedArticle] = useState<boolean>(false);
   const [focusedArticle, setFocusedArticle] = useState<number>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFadingOut, setIsFadingOut] = useState<boolean>(false);
 
   //로딩스크린 페이드아웃을 만들어보자...
@@ -105,22 +105,22 @@ const ArticleCard = () => {
   //최종적으로 isLoading과 isFadingOut이 둘다 false가 되면
   //페이지 이동.
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsFadingOut(true);
-      setIsLoading(false);
-      console.log('애니메이션시작');
-    }, 5000);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsFadingOut(true);
+  //     setIsLoading(false);
+  //     console.log('애니메이션시작');
+  //   }, 5000);
+  // }, []);
 
-  useEffect(() => {
-    if (isFadingOut) {
-      setTimeout(() => {
-        setIsFadingOut(false);
-        console.log('화면전환');
-      }, 700);
-    }
-  }, [isFadingOut]);
+  // useEffect(() => {
+  //   if (isFadingOut) {
+  //     setTimeout(() => {
+  //       setIsFadingOut(false);
+  //       console.log('화면전환');
+  //     }, 700);
+  //   }
+  // }, [isFadingOut]);
 
   const onPlusButtonClicked = (id: number) => {
     setIsPlusButtonClicked(!isPlusButtonClicked);
@@ -138,50 +138,53 @@ const ArticleCard = () => {
   };
 
   return (
-    <div className="bg-gray-100 py-24 sm:py-32">
+    <div className="bg-gray-100 mt-3">
       {!isLoading && !isFadingOut ? (
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto w-max">
+        <div className="max-w-7xl">
+          <div className="w-full">
             {exampleList.map(post => (
               <article
                 key={post.id}
-                className="flex p-3 max-w-sm flex-col items-start justify-between mb-5 bg-white"
+                className="flex p-3 w-full flex-col items-start justify-between mb-3 bg-white"
               >
-                <div className="relative flex items-center gap-x-4">
-                  <img
-                    src={post.user.profileImage}
-                    alt=""
-                    className="h-16 w-16 rounded-full bg-gray-50"
-                  />
-                  <div className="text-lg leading-6">
-                    <p className="text-chaeum-gray-900 text-left">
-                      {post.user.nickName}
-                    </p>
-                    <div
-                      className={`text-sm ${post.activityInfo.color} rounded-md py-0.5 px-1 w-fit`}
-                    >
-                      <p className="text-white text-left">
-                        #{post.activityInfo.category}
+                <div className='flex justify-between w-full'>
+                  <div className="relative flex items-center gap-x-4">
+                    <img
+                      src={post.user.profileImage}
+                      alt=""
+                      className="h-16 w-16 rounded-full bg-gray-50"
+                    />
+                    <div className="text-lg leading-6">
+                      <p className="text-chaeum-gray-900 text-left">
+                        {post.user.nickName}
                       </p>
-                      <p className="text-white text-left">
-                        {post.activityInfo.time}시간
-                      </p>
+                      <div
+                        className={`text-sm ${post.activityInfo.color} rounded-md py-0.5 px-1 w-fit`}
+                      >
+                        <p className="text-white text-left">
+                          #{post.activityInfo.category}
+                        </p>
+                        <p className="text-white text-left">
+                          {post.activityInfo.time}시간
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="place-self-end absolute ">
-                  <time
-                    dateTime={post.dateTime}
-                    className="text-chaeum-gray-900"
-                  >
-                    {post.date}
-                  </time>
 
-                  <div className="text-right text-chaeum-gray-900">
-                    <i className="fa-regular fa-heart mr-0.5 " />
-                    {post.likeCount}
-                    <i className="fa-regular fa-comment ml-2 mr-0.5" />
-                    {post.commentCount}
+                  <div>
+                    <time
+                      dateTime={post.dateTime}
+                      className="text-chaeum-gray-900"
+                    >
+                      {post.date}
+                    </time>
+
+                    <div className="text-right text-chaeum-gray-900">
+                      <i className="fa-regular fa-heart mr-0.5 " />
+                      {post.likeCount}
+                      <i className="fa-regular fa-comment ml-2 mr-0.5" />
+                      {post.commentCount}
+                    </div>
                   </div>
                 </div>
                 <div className="group relative">
@@ -191,7 +194,7 @@ const ArticleCard = () => {
                 </div>
                 {/* 이미지 미리보기 / 상세 */}
                 {detailedArticle && focusedArticle === post.id ? (
-                  <div className="mt-5 flex flex-row w-[360px] h-[360px] overflow-auto mb-5 snap-x">
+                  <div className="my-5 flex flex-row overflow-auto snap-x">
                     {post.imageList.map((image, key) => (
                       <img
                         src={image}
@@ -202,7 +205,7 @@ const ArticleCard = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="mt-5 flex flex-row w-[360px] overflow-auto mb-5">
+                  <div className="mt-5 flex flex-row overflow-auto mb-5">
                     {post.imageList.map((image, key) => (
                       <img
                         src={image}
@@ -215,14 +218,14 @@ const ArticleCard = () => {
                 )}
 
                 {/* 응원글 미리보기 / 상세 */}
-                {isPlusButtonClicked ? (
+                {isPlusButtonClicked && focusedArticle === post.id? (
                   <EncourageMessageDetail
-                    onPlusButtonClicked={onPlusButtonClicked}
+                    onPlusButtonClicked={() => onPlusButtonClicked(post.id)}
                     articleId={post.id}
                   />
                 ) : (
                   <EncourageMessageCarousel
-                    onPlusButtonClicked={onPlusButtonClicked}
+                    onPlusButtonClicked={() => onPlusButtonClicked(post.id)}
                     articleId={post.id}
                   />
                 )}
@@ -235,8 +238,10 @@ const ArticleCard = () => {
                     <CommentList />
                   </div>
                 ) : (
+
+
                   <span onClick={() => onMoreCommentClicked(post.id)}>
-                    댓글 모두보기
+                    게시글 상세보기
                   </span>
                 )}
               </article>

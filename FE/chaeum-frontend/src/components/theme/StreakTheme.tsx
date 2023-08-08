@@ -143,17 +143,14 @@ const StreakColor = ({ color, weight }: ColorPropsType) => {
   return ColorNameList[newcolor + newweight];
 };
 
-const WaveBottomColor = ({
-  color,
-  weight2,
-  weight3,
-  weight4,
-}: WaveColorPropsType) => {
+
+const WaveBottomColor = ({ color, weight2, weight3, weight4 }: WaveColorPropsType) => {
   //type narrowing
   const newcolor = typeof color !== 'undefined' ? color : 'default';
-  const newweight = weight2 ? 'w2' : weight3 ? 'w3' : 'w4';
+  const newweight = weight2?'w2':weight3?'w3':'w4';
 
   return ColorNameList[newcolor + newweight];
 };
+
 
 export { StreakColor, WaveBottomColor };

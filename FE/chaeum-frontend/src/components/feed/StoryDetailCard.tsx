@@ -12,7 +12,7 @@ import {
   Avatar,
 } from '@material-tailwind/react';
 import { ChevronDownIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
-import { Article, ColorForSelection } from '../Types';
+import { Article, ColorForSelection, Story } from '../Types';
 import InputTag from '../common/InputTag';
 import CustomIconButton from '../common/CustomIconButton';
 
@@ -27,7 +27,11 @@ type Comment = {
   content: string;
 };
 
-const StoryDetailCard = () => {
+type Props = {
+  story : Story;
+}
+
+const StoryDetailCard = ({story}:Props) => {
   const commentListExample: Comment[] = [
     {
       commentId: 1,
@@ -52,18 +56,19 @@ const StoryDetailCard = () => {
   ];
 
   return (
-    <div className="">
+    <div className="opacity-100">
       <Card className="flex p-3 max-w-sm flex-col items-center justify-between mb-5 bg-white w-96 h-96">
         <div className="relative flex items-center gap-x-4">
           <img
-            src="../chacha1.jpg"
+            src={story.img}
             alt=""
             className="h-16 w-16 rounded-full bg-gray-50"
           />
           <div className="text-lg leading-6">
-            <p className="text-chaeum-gray-900 text-left">coco</p>
-            <p className="text-black text-left">#클라이밍</p>
-            <p className="text-black text-left">#운동</p>
+            <p className="text-chaeum-gray-900 text-left">{story.nickname}</p>
+            {story.tag.map((tag,index) => (
+              <p className="text-black text-left" key={index}>{tag}</p>
+            ))}
           </div>
         </div>
 

@@ -33,18 +33,29 @@ type ColorForSelection = {
   hoverColor: string;
 };
 
+type ColorVariation = 'emerald' | 'indigo' | 'yellow' | 'slate' | 'red' | 'orange' | 'amber' | 'lime' | 'green' | 'teal' | 'cyan' | 'sky' | 'blue' | 'violet' | 'fuchsia' | 'pink' | 'rose' | 'chaeum-blue';
+
+type Story = {
+  id: number;
+  nickname: string;
+  title: string;
+  img: string;
+  color: ColorVariation;
+  tag: string[];
+  time: number;
+};
+
 export interface ColorPropsType {
   color?: string;
   weight?: 'w1' | 'w2' | 'w3' | 'w4' | 'w5';
 }
 
 export interface WaveColorPropsType {
-  color?: string;
-  weight1?: 'w1';
-  weight2?: 'w2';
-  weight3?: 'w3';
-  weight4?: 'w4';
-  weight5?: 'w5';
+  color? : string;
+  weight2? : 'w2';
+  weight3? : 'w3';
+  weight4? : 'w4';
+
 }
 
 type ColorNameType = {
@@ -69,6 +80,8 @@ export type {
   Article,
   ColorForSelection,
   ColorNameType,
+  ColorVariation,
+  Story
 };
 
 export interface StreakInfoType {

@@ -11,7 +11,7 @@ import LoadingPage from '../components/common/LoadingPage';
 const SignupPage = () => {
   const navigate = useNavigate();
   const [isStarted, setIsStarted] = useState<boolean>(false);
-  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [currentStep, setCurrentStep] = useState<number>(1);
 
   const onClickNext = () => {
     if (currentStep < 3) {

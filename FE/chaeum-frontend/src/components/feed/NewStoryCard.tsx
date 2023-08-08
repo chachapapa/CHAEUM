@@ -3,6 +3,7 @@ import '../styles/activecardwave.css';
 import { WaveColor } from '../theme/WaveColorTheme';
 import { WaveBottomColor } from '../theme/StreakTheme';
 import { Avatar } from '@material-tailwind/react';
+import { ColorVariation, Story } from '../Types';
 
 /*
   사용법
@@ -10,7 +11,6 @@ import { Avatar } from '@material-tailwind/react';
     color='yellow' 
     img='../chacha2.png' 
     nickname='코코' 
-    title='클라이밍'
     tag={['tag1', 'tag2', 'tag3']} 
     time={15}>
   </StoryCard>
@@ -25,27 +25,22 @@ import { Avatar } from '@material-tailwind/react';
 */
 
 type Props = {
-  color: 'blue' | 'yellow' | 'lime' | 'navy' | 'gray';
-  img: string;
-  nickname: string;
-  title: string;
-  tag: string[];
-  // 렌더링 문제로 string이 아닌 number로 넘겨서 계산해야 합니다.
-  time: number;
+  story: Story;
+  onStoryClicked : ()=>void;
 };
 
-const NewStoryCard = (props: Props) => {
+const NewStoryCard = ({story, onStoryClicked}: Props) => {
   const weight2 = 'w2';
   const weight3 = 'w3';
   const weight4 = 'w4';
-  const waveFirst = WaveColor({ color: props.color, weight: weight4 });
-  const waveSecond = WaveColor({ color: props.color, weight: weight3 });
-  const waveThird = WaveColor({ color: props.color, weight: weight2 });
-  const BottomFirst = WaveBottomColor({ color: props.color, weight4 });
-  const BottomSecond = WaveBottomColor({ color: props.color, weight3 });
-  const BottomThird = WaveBottomColor({ color: props.color, weight2 });
+  const waveFirst = WaveColor({ color: story.color, weight4 });
+  const waveSecond = WaveColor({ color: story.color, weight3 });
+  const waveThird = WaveColor({ color: story.color, weight2 });
+  const BottomFirst = WaveBottomColor({ color: story.color, weight4 });
+  const BottomSecond = WaveBottomColor({ color: story.color, weight3 });
+  const BottomThird = WaveBottomColor({ color: story.color, weight2 });
 
-  const [time, setTime] = useState(props.time);
+  const [time, setTime] = useState(story.time);
 
   useEffect(() => {
     // Update time every second
@@ -71,28 +66,28 @@ const NewStoryCard = (props: Props) => {
     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
   return (
-    <div className="relative w-[230px] h-[150px] flex overflow-auto rounded-lg shadow-xl">
+    <div className="bg-gray-50 relative min-w-[230px] min-h-[150px] flex overflow-auto rounded-lg shadow-xl mr-10" onClick={onStoryClicked}>
       <div className="flex flex-col justify-around w-full m-2">
         <div className="relative flex items-center gap-x-1">
           <img
-            src={props.img}
+            src={story.img}
             alt=""
             className="h-16 w-16 rounded-full bg-gray-50"
           />
-          <div className="text-lg leading-6">
-            <p className="text-chaeum-gray-900 text-left">{props.nickname}</p>
+          <div className="text-base leading-6">
+            <p className="text-chaeum-gray-900 text-left">{story.nickname}</p>
             <div
               className={`text-xs ${BottomSecond} rounded-md py-0.5 px-1 w-fit`}
               style={{ display: 'flex', flexWrap: 'wrap' }}
             >
-              <p className="font-bold text-left text-sm">{props.title}</p>
+              <p className="font-bold text-left text-sm">{story.title}</p>
             </div>
 
             <div
-              className="text-xs rounded-md py-0.5 px-1 w-fit"
+              className='text-xs rounded-md py-0.5 px-1 w-fit'
               style={{ display: 'flex', flexWrap: 'wrap', minWidth: '120px' }}
             >
-              {props.tag.map((tagItem, index) => (
+              {story.tag.map((tagItem, index) => (
                 <div key={index} style={{ marginRight: '5px' }}>
                   <p className="text-chaeum-gray-900 text-left">{tagItem}</p>
                 </div>

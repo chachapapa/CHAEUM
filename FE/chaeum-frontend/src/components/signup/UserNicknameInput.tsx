@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TextBox from '../common/TextBox';
 import TextButton from '../common/TextButton';
 import CommentInputBox from '../common/CommentInputBox';
+import axios from 'axios';
 
 type Props = {
   currentStep: number;
@@ -9,20 +10,30 @@ type Props = {
   onClickBefore: () => void;
 };
 
+const DUPLICATION_CHECK_URL =
+  'http://i9a810.p.ssafy.io:8080/api/user/duplication-check';
+
 const UserNicknameInput = ({
   currentStep,
   onClickNext,
   onClickBefore,
 }: Props) => {
+  const [nickName, setNickName] = useState<string>('기본값');
   const [isDuplicationTested, setIsDuplicationTested] = useState<number>(0);
-  const resp = true;
 
   const onClickTest = () => {
-    if (resp) {
-      setIsDuplicationTested(1);
-    }else{
-      setIsDuplicationTested(2);
-    }
+    axios
+      .get(`${DUPLICATION_CHECK_URL}`, { params: { nickname: nickName } })
+      .then(res => {
+        console.log(res);
+        if (res.data === 'SUCCESS') {
+          setIsDuplicationTested(1);
+          return true;
+        } else {
+          setIsDuplicationTested(2);
+          return false;
+        }
+      });
   };
 
   return (
@@ -39,8 +50,11 @@ const UserNicknameInput = ({
           <br /> 당신의 이름은 무엇인가요?
         </div>
 
-        <TextBox inputPlaceholder="닉네임을 입력해주세요." height="h-16" isDuplicationTested={isDuplicationTested}/>
-        
+        <TextBox
+          inputPlaceholder="닉네임을 입력해주세요."
+          height="h-16"
+          isDuplicationTested={isDuplicationTested}
+        />
       </div>
 
       <div className="w-10/12 mb-10">
