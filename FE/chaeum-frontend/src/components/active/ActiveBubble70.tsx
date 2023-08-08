@@ -51,7 +51,6 @@ const ActiveBubble = ({
   const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
     .toString()
     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
   return (
     <div>
       <svg
@@ -69,7 +68,7 @@ const ActiveBubble = ({
       >
         <defs>
           <pattern
-            id="water90_1"
+            id="water70_1"
             width=".25"
             height="1.1"
             patternContentUnits="objectBoundingBox"
@@ -80,7 +79,7 @@ const ActiveBubble = ({
             />
           </pattern>
           <pattern
-            id="water90_2"
+            id="water70_2"
             width=".25"
             height="1.1"
             patternContentUnits="objectBoundingBox"
@@ -165,7 +164,7 @@ const ActiveBubble = ({
           <rect
             className="water-fill1"
             mask="url(#bubble_mask)"
-            fill="url(#water90_1)"
+            fill="url(#water70_1)"
             x="-400"
             y="0"
             width="1600"
@@ -176,7 +175,7 @@ const ActiveBubble = ({
           <rect
             className="water-fill2"
             mask="url(#bubble_mask)"
-            fill="url(#water90_2)"
+            fill="url(#water70_2)"
             x="-400"
             y="0"
             width="1600"
