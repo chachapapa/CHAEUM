@@ -1,6 +1,7 @@
 package com.cocochacha.chaeumbackend.service;
 
 import com.cocochacha.chaeumbackend.domain.Activity;
+import com.cocochacha.chaeumbackend.domain.Category;
 import com.cocochacha.chaeumbackend.domain.Streak;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.*;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.cocochacha.chaeumbackend.repository.CategoryRepository;
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ public class ActivityService {
     private final ActivityRepository activityRepository;
     @Autowired
     private final StreakRepository streakRepository;
+    @Autowired
+    private final CategoryRepository categoryRepository;
 
     /**
      * 활동을 시작하면 필요한 정보를 가공해서 Controller에 넘겨주는 메소드
@@ -117,6 +121,21 @@ public class ActivityService {
 
         return startMessageResponsege;
 
+    }
+
+    public void doMessage(DoingMessageRequest doingMessageRequest, UserPersonalInfo userPersonalInfo) {
+        Activity activity = activityRepository.findById(doingMessageRequest.getActivityId()).orElse(null);
+
+        // 스트릭 아이디
+        int streakId = activity.getStreakId().getStreakId();
+
+        // 카테고리 아이디
+        int categoryId = doingMessageRequest.getCategoryId();
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+
+        System.out.println(streakId);
+        System.out.println(category.getCategoryMain());
+        System.out.println(category.getCategoryMiddle());
     }
 
     /**

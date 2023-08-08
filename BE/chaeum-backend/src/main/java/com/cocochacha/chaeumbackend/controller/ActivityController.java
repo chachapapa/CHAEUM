@@ -75,6 +75,12 @@ public class ActivityController {
         return new ResponseEntity<>(startMessageResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/message/doing")
+    public void doMent(@RequestBody DoingMessageRequest doingMessageRequest) {
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+        activityService.doMessage(doingMessageRequest, userPersonalInfo);
+    }
+
     /**
      * 헤더에서 UserId를 추출하는 함수
      *
