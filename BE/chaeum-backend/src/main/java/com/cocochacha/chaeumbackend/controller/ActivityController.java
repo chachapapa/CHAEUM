@@ -88,6 +88,12 @@ public class ActivityController {
         return new ResponseEntity<>(doingMessageResponse, HttpStatus.OK);
     }
 
+    /**
+     * 활동 중 응원글 목록
+     *
+     * @param cheeringComentRequest activityId
+     * @return 응원글의 목록
+     */
     @GetMapping("/message/cheering")
     public ResponseEntity<?> cheeringComent(@RequestBody CheeringComentRequest cheeringComentRequest) {
         try {

@@ -8,6 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
+
+    /**
+     * ActivityId에 해당하는 모든 댓글을 구해주는 메소드
+     *
+     * @param activityId activityId
+     * @return 댓글 목록
+     */
     Optional<List<Reply>> findAllByActivityId(Activity activityId);
 }
 

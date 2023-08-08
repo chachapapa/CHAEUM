@@ -151,6 +151,12 @@ public class ActivityService {
         return doingMessageResponse;
     }
 
+    /**
+     * 활동 중에 받는 응원글 목록을 뽑아주는 메소드
+     *
+     * @param cheeringComentRequest activityId
+     * @return 응원글 목록
+     */
     public CheeringComentResponse cheeringComent(CheeringComentRequest cheeringComentRequest) {
         Activity activity = activityRepository.findById(cheeringComentRequest.getActivityId()).orElse(null);
         if (activity == null) {
