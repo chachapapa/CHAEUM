@@ -60,7 +60,7 @@ const TextButton = ({
   if (icon) iconType = IconType[icon];
 
   return (
-    <div className="flex justify-center h-14 ">
+    <div className="flex justify-center h-14 w-full">
       <div className={`flex w-full items-center justify-center ${classNames}`}>
         <div
           className={

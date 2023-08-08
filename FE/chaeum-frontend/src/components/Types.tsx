@@ -35,6 +35,16 @@ type ColorForSelection = {
 
 type ColorVariation = 'emerald' | 'indigo' | 'yellow' | 'slate' | 'red' | 'orange' | 'amber' | 'lime' | 'green' | 'teal' | 'cyan' | 'sky' | 'blue' | 'violet' | 'fuchsia' | 'pink' | 'rose' | 'chaeum-blue';
 
+type Story = {
+  id: number;
+  nickname: string;
+  title: string;
+  img: string;
+  color: ColorVariation;
+  tag: string[];
+  time: number;
+};
+
 export interface ColorPropsType {
   color?: string;
   weight?: 'w1' | 'w2' | 'w3' | 'w4' | 'w5';
@@ -70,5 +80,6 @@ export type {
   Article,
   ColorForSelection,
   ColorNameType,
-  ColorVariation
+  ColorVariation,
+  Story
 };

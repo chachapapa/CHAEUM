@@ -23,7 +23,7 @@ const FeedPage = () => {
   useEffect(() => {
     if(location.pathname === '/feed') {
       setIsLogo(true);
-      setIcon('alarm&chat');
+      setIcon('alarm&write');
     }else if(location.pathname === '/feed/write'){
       setIcon('write');
 

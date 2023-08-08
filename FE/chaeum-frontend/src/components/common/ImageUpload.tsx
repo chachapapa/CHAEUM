@@ -53,11 +53,6 @@ const ImageUpload = () => {
 
   return (
     <>
-      {/* <input
-        type="file"
-        onChange={fileUploadValidHandler}
-        className="w-10/12 h-10/12 bg-gray-100 rounded-lg"
-      /> */}
       <div className="w-full flex overflow-auto">
         <input
           type="file"
