@@ -12,13 +12,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Activity {
+
     @Id
     @Column(name = "activity_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name="streak_id", referencedColumnName = "streak_id")
+    @JoinColumn(name = "streak_id", referencedColumnName = "streak_id")
     private Streak streakId;
 
     @Column(name = "activity_start_time")
@@ -29,6 +30,9 @@ public class Activity {
 
     @Column(name = "activity_time")
     private int activityTime;
+
+    @Column(name = "activity_is_post")
+    private boolean activityIsPost;
 
     @Builder
     public Activity(Streak streakId) {
@@ -45,6 +49,10 @@ public class Activity {
 
     public void changeEndTime(String activityEndTime) {
         this.activityEndTime = activityEndTime;
+    }
+
+    public void changeActivityIsPost(boolean activityIsPost) {
+        this.activityIsPost = activityIsPost;
     }
 }
 

@@ -32,10 +32,11 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
             """;
 
     String accumulateTimeQuery6Weeks = """
-            select Date(activity_start_time) as `start_time` ,sum(activity_time) as `sum_time`
+            select max(activity_start_time) as `start_time` ,max(activity_end_time) as `end_time`, 
+            sum(activity_time) as `sum_time`, max(activity_is_post) as `activity_is_post`
             from (select * 
                     from activity
-                    where DATE_SUB(curdate(), INTERVAL 15 Day) <= Date(activity_start_time) 
+                    where DATE_SUB(curdate(), INTERVAL 43 Day) <= Date(activity_start_time) 
                     and streak_id = :streak_id
                   ) as 42day
             group by Date(activity_start_time);      
