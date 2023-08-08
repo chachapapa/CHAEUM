@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 type Props = {
   color: string;
-  hoverColor: string;
+  hoverColor?: string;
 };
 
 //상위 컴포넌트에서 매핑하는 형태
@@ -27,7 +27,6 @@ const ColorContainer = (props: Props) => {
   };
 
   return (
-
     <Radio
       name="type"
       ripple={false}

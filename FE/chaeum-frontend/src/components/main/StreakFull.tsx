@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { StreakDay } from './StreakDay';
-import { type } from 'os';
 import { StreakInfoType } from '../Types';
 
 // 시작 날짜 구하기
@@ -36,7 +35,6 @@ export const StreakFull = ({ info, color }: StreakInfoType) => {
   }
 
   const sDate = new Date(prevYear, prevMonth - 1, operation); // 시작날짜
-  console.log('시작' + sDate);
   let currDate = sDate;
   // const [currDate, setCurrDate] = useState(sDate);
 
