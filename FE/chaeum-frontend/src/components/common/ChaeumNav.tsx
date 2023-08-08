@@ -18,7 +18,7 @@ export const ChaeumNav = () => {
     // setTabNumber(value);
     dispatch(setCurrentTab(value));
 
-    console.log('디스패치와 라우팅 사이'+ currentTab);
+    console.log('디스패치와 라우팅 사이' + currentTab);
 
     if (value === 0) {
       navigate('/feed');
@@ -31,8 +31,7 @@ export const ChaeumNav = () => {
   };
 
   return (
-
-    <div className="sticky bottom-0 left-0 flex flex-row justify-around items-center w-full min-h-[56px] bg-white">
+    <div className="sticky bottom-0 left-0 flex flex-row justify-around items-center z-10 w-full min-h-[56px] bg-white">
       {currentTab === 0 ? (
         <i
           className="fa-solid fa-square-poll-horizontal text-2xl text-chaeum-blue-500"
@@ -69,33 +68,5 @@ export const ChaeumNav = () => {
         ></i>
       )}
     </div>
-
-
-  // <div className="sticky bottom-0 left-0 flex flex-row justify-around items-center w-full h-14 bg-white">
-  //   {currentTab === 0 ? (
-  //     <AnimatedIcon icon="feed" onTabClick={() => onTabClick(0)} />
-  //   ) : (
-  //     <i
-  //       className="fa-solid fa-square-poll-horizontal text-2xl text-chaeum-gray-900"
-  //       onClick={() => onTabClick(0)}
-  //     ></i>
-  //   )}
-  //   {currentTab === 1 ? (
-  //     <AnimatedIcon icon="main" onTabClick={() => onTabClick(1)} />
-  //   ) : (
-  //     <i
-  //       className="fa-regular fa-square text-2xl text-chaeum-gray-900"
-  //       onClick={() => onTabClick(1)}
-  //     ></i>
-  //   )}
-  //   {currentTab === 1 ? (
-  //     <AnimatedIcon icon="profile" onTabClick={() => onTabClick(1)} />
-  //   ) : (
-  //     <i
-  //       className="fa-regular fa-user text-2xl text-chaeum-gray-900"
-  //       onClick={() => onTabClick(2)}
-  //     ></i>
-  //   )}
-  // </div>
   );
 };
