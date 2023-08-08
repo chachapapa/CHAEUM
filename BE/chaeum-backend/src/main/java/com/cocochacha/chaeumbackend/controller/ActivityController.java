@@ -91,7 +91,7 @@ public class ActivityController {
     /**
      * 활동 중 응원글 목록
      *
-     * @param cheeringComentRequest activityId
+     * @param cheeringCommentRequest activityId
      * @return 응원글의 목록
      */
     @GetMapping("/message/cheering")

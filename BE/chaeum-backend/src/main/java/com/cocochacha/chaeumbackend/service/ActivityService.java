@@ -154,7 +154,7 @@ public class ActivityService {
     /**
      * 활동 중에 받는 응원글 목록을 뽑아주는 메소드
      *
-     * @param cheeringComentRequest activityId
+     * @param cheeringCommentRequest activityId
      * @return 응원글 목록
      */
     public CheeringCommentResponse cheeringComment(CheeringCommentRequest cheeringCommentRequest) {
