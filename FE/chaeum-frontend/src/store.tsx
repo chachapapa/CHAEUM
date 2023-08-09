@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import TabReducer from './features/tab/tab';     
+import Reducer from './features/states/states';
 
 export const store = configureStore({
   reducer: {
-    tabSetter: TabReducer,
+    stateSetter: Reducer,
   },
 });
 

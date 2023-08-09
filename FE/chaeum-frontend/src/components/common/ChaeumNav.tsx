@@ -1,24 +1,22 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import { setCurrentTab } from '../../features/tab/tab';
+import { setCurrentTab } from '../../features/states/states';
 import AnimatedIcon from './AnimatedIcon';
 
 export const ChaeumNav = () => {
   const navigate = useNavigate();
-  const currentTab = useAppSelector(state => state.tabSetter.tabNumber);
+  const location = useLocation();
+  const currentTab = useAppSelector(state => state.stateSetter.tabNumber);
   const dispatch = useAppDispatch();
 
   console.log('렌더링시 state 내 탭번호' + currentTab);
 
-  // const [tabNumber, setTabNumber] = useState<number>(0);
+  const [currentLocation, setCurrentLocation] = useState<string>('main');
 
-  const onTabClick = (value: number) => {
-    console.log('탭클릭함수  실행');
-    // setTabNumber(value);
+  const onTabClick = (value:number) => {
+    
     dispatch(setCurrentTab(value));
-
-    console.log('디스패치와 라우팅 사이'+ currentTab);
 
     if (value === 0) {
       navigate('/feed');
@@ -30,10 +28,16 @@ export const ChaeumNav = () => {
     }
   };
 
+  useEffect(() => {
+    const tmplocation = location.pathname.split('/');
+    setCurrentLocation(tmplocation[1]);
+  },[location.pathname]);
+  
+
   return (
 
     <div className="sticky bottom-0 left-0 flex flex-row justify-around items-center w-full min-h-[56px] bg-white">
-      {currentTab === 0 ? (
+      {currentLocation === 'feed' ? (
         <i
           className="fa-solid fa-square-poll-horizontal text-2xl text-chaeum-blue-500"
           onClick={() => onTabClick(0)}
@@ -45,7 +49,7 @@ export const ChaeumNav = () => {
         ></i>
       )}
 
-      {currentTab === 1 ? (
+      {currentLocation === 'main' ? (
         <i
           className="fa-regular fa-square text-2xl text-chaeum-blue-500"
           onClick={() => onTabClick(1)}
@@ -57,7 +61,7 @@ export const ChaeumNav = () => {
         ></i>
       )}
 
-      {currentTab === 2 ? (
+      {currentLocation === 'profile' ? (
         <i
           className="fa-regular fa-user text-2xl text-chaeum-blue-500"
           onClick={() => onTabClick(2)}

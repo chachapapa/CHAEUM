@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TextButton from '../common/TextButton';
 import TextBox from '../common/TextBox';
 import Dropdown from '../common/Dropdown';
 import { Select, Option } from '@material-tailwind/react';
+import { Streak } from '../Types';
 
 type Props = {
   currentStep: number;
@@ -15,6 +16,9 @@ const UserStreakCreationInput = ({
   onClickNext,
   onClickBefore,
 }: Props) => {
+
+  const [anotherStreak, setAnotherStreak] = useState<Streak>({categoryMain:'기타', categoryMiddle: ''});
+
   return (
     <div
       className={
@@ -30,7 +34,7 @@ const UserStreakCreationInput = ({
         </div>
         <Dropdown mainCategory="공부"/>
         <Dropdown mainCategory="운동"/>
-        <TextBox height='h-16' inputPlaceholder='카테고리를 직접 입력하세요!' label='그 외'></TextBox>
+        <TextBox height='h-16' inputPlaceholder='카테고리를 직접 입력하세요!' label='그 외' setAnotherStreak={setAnotherStreak}></TextBox>
         
       </div>
 

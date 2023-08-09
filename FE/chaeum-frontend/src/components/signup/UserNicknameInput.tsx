@@ -3,6 +3,8 @@ import TextBox from '../common/TextBox';
 import TextButton from '../common/TextButton';
 import CommentInputBox from '../common/CommentInputBox';
 import axios from 'axios';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
+import { setFixedNickname } from '../../features/states/states';
 
 type Props = {
   currentStep: number;
@@ -13,28 +15,41 @@ type Props = {
 const DUPLICATION_CHECK_URL =
   'http://i9a810.p.ssafy.io:8080/api/user/duplication-check';
 
+const AccessToken = localStorage.getItem('access_token');
+
 const UserNicknameInput = ({
   currentStep,
   onClickNext,
   onClickBefore,
 }: Props) => {
-  const [nickName, setNickName] = useState<string>('기본값');
+
+  const [nickname, setNickname] = useState<string>(' ');
   const [isDuplicationTested, setIsDuplicationTested] = useState<number>(0);
+  const fixedNickname = useAppSelector(state => state.stateSetter.nickname);
+  const dispatch = useAppDispatch();
+
+ 
+
+  
 
   const onClickTest = () => {
+
     axios
-      .get(`${DUPLICATION_CHECK_URL}`, { params: { nickname: nickName } })
+      .get(`${DUPLICATION_CHECK_URL}`, {
+        params: { nickname: nickname },
+        headers: { Authorization: `Bearer ${AccessToken}` },
+      })
       .then(res => {
         console.log(res);
-        if (res.data === 'SUCCESS') {
+        if (res.data === true) {
+          dispatch(setFixedNickname(nickname));
           setIsDuplicationTested(1);
-          return true;
         } else {
           setIsDuplicationTested(2);
-          return false;
         }
       });
   };
+
 
   return (
     <div
@@ -54,6 +69,7 @@ const UserNicknameInput = ({
           inputPlaceholder="닉네임을 입력해주세요."
           height="h-16"
           isDuplicationTested={isDuplicationTested}
+          setNickname = {setNickname}
         />
       </div>
 

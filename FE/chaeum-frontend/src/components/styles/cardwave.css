@@ -9,6 +9,11 @@
     wave2 1.5s infinite linear,
     fill-up2 8s infinite ease-out alternate;
 }
+.water-steady {
+  animation:
+  wave2 1.5s infinite linear,
+  fill-up2 8s infinite ease-out alternate;
+}
 
 @keyframes wave2 {
   0% {
@@ -16,6 +21,17 @@
   }
   100% {
     x: 0;
+  }
+}
+
+@keyframes steady {
+  0% {
+    height: 120px;
+    y: 100px;
+  }
+  100% {
+    height: 120px;
+    y: 100px;
   }
 }
 
