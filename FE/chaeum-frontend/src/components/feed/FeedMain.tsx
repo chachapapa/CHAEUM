@@ -3,6 +3,8 @@ import ArticleCard from '../../components/feed/ArticleCard';
 import NewStoryCard from '../../components/feed/NewStoryCard';
 import { ColorVariation, Story } from '../Types';
 import StoryDetailCard from './StoryDetailCard';
+import LoadingPage from '../common/LoadingPage';
+import LoadingWave from './LoadingWave';
 
 const storyExample: Story[] = [
   {
@@ -55,6 +57,7 @@ const FeedMain = () => {
         {detailedStory && isStoryOpened ? <StoryDetailCard story={detailedStory}></StoryDetailCard> : null}
       </div>
       <ArticleCard></ArticleCard>
+      <LoadingWave/>
     </div>
   );
 };

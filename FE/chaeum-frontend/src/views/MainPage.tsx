@@ -53,14 +53,6 @@ const MainPage = () => {
 
   // console.log('그냥다큐먼트 내부 쿠키'+ document.cookie);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const token = searchParams.get('token');
-
-  //로컬스토리지에 토큰 저장하기.
-  if (token) {
-    localStorage.setItem('access_token', token);
-  }
-
   // fetch로 streakInfo 받아오기
   // 현재 더미데이터
   const streakInfo: StreakCardInfoType[] = [
@@ -429,8 +421,8 @@ const MainPage = () => {
   return (
     <div className="w-full h-full">
       <div className="w-full flex flex-col items-center outline">
-        <ChaeumHeader isLogo={false} title="Streak" />
-        <div className="w-full h-full flex-grow overflow-auto  flex justify-center items-end flex-col min-h-vh transition-all">
+        <ChaeumHeader isLogo={false} title="Streak"  />
+        <div className="w-full flex-grow overflow-auto  flex justify-center items-end flex-col min-h-vh transition-all z-0">
           <div className="list flex flex-col items-center wrap-scroll w-full h-full mx-auto transition-all ease-out duration-300">
             <div className="category w-full mb-4 transition duration-300 ease-in-out">
               <div className="category-title flex mb-4 flex-row justify-between items-center px-1 transition-all ease-out duration-300">

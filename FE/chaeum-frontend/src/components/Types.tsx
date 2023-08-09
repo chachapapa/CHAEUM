@@ -45,6 +45,14 @@ type Story = {
   time: number;
 };
 
+type Streak = {
+  categoryMain: string;
+  categoryMiddle : string;
+  streakName?: string;
+  streakColor?: string;
+  streakTag? : string[];
+}
+
 export interface ColorPropsType {
   color?: string;
   weight?: 'w1' | 'w2' | 'w3' | 'w4' | 'w5';
@@ -81,7 +89,8 @@ export type {
   ColorForSelection,
   ColorNameType,
   ColorVariation,
-  Story
+  Story,
+  Streak
 };
 
 export interface StreakInfoType {
