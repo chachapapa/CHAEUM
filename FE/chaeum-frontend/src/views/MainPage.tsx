@@ -16,6 +16,9 @@ import Dropdown from '../components/common/Dropdown';
 import { TagInput } from '../components/main/TagInput';
 import ColorContainer from '../components/common/ColorContainer';
 import { Option, Select } from '@material-tailwind/react';
+import { GlobalModal } from '../components/common/GlobalModal';
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../hooks/reduxHooks';
 
 /*
   feature/#256
@@ -297,12 +300,18 @@ const MainPage = () => {
     }
   });
 
+  // 모달 창 열기
+
+  const { isOpen, modalType } = useAppSelector(store => store.modal);
+  const dispatch = useDispatch;
+
   // 스트릭 생성하기
   const [isOpenCreate, setIsOpenCreate] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [goCreate, setGoCreate] = useState(false);
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryList, setCategoryList] = useState<MiddleCategory>([]);
+  const [modalTypeKor, setModalTypeKor] = useState<string>('');
 
   const categoryExercise = [
     { id: 0, main: '운동', name: '수영' },
@@ -333,6 +342,12 @@ const MainPage = () => {
     else setCategoryList(categoryExercise);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryName]);
+
+  useEffect(() => {
+    if (modalType === 'remove') setModalTypeKor('삭제');
+    else if (modalType === 'modify') setModalTypeKor('수정');
+    else if (modalType === 'lock') setModalTypeKor('비활성화');
+  }, [modalType]);
 
   const createStreak = () => {
     // 스트릭을 정보를 디비에 보내고
@@ -468,7 +483,6 @@ const MainPage = () => {
         </div>
         <ChaeumNav />
       </div>
-      {/* <div className="w-[46.15vh] transition-all duration-500 opacity-100"> */}
       {isOpenCreate ? (
         <div className="fixed flex flex-2 justify-center items-center flex-col shrink-0 inset-0 w-full h-full pointer-events-auto z-[9995] bg-chaeum-gray-300 bg-opacity-60 backdrop-blur-lg transition-all duration-300">
           <div className="w-[46.15vh] flex flex-col justify-center items-center">
@@ -561,6 +575,23 @@ const MainPage = () => {
         </div>
       ) : (
         <div className="bg-opacity-0 transition-all duration-500 opacity-0 text-opacity-0 ease-in"></div>
+      )}
+      {isOpen ? (
+        <GlobalModal
+          title={`스트릭 ${modalTypeKor}`}
+          content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
+          button1={`${modalTypeKor}하기`}
+          button2="취소하기"
+          openChk={true}
+        />
+      ) : (
+        <GlobalModal
+          title={`스트릭 ${modalTypeKor}`}
+          content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
+          button1={`${modalTypeKor}하기`}
+          button2="취소하기"
+          openChk={false}
+        />
       )}
     </div>
   );
