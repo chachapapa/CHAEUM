@@ -8,6 +8,8 @@ export type State = {
   initialSportsStreak : Streak;
   initialMyStreak : Streak;
   tabNumber: number;
+  isOpen: boolean;
+  modalType: string;
   
 };
 // 1-1. initial state 객체 생성
@@ -17,6 +19,8 @@ const initialState: State = {
   initialSportsStreak : {categoryMain : '운동', categoryMiddle:'기타'},
   initialMyStreak : {categoryMain : '기타', categoryMiddle:'기타'},
   tabNumber: 0,
+  isOpen: false,
+  modalType: '',
 };
 
 // 2. slice 생성 : createSlice
@@ -44,12 +48,19 @@ const Slice = createSlice({
     setCurrentTab: (state, action: PayloadAction<number>) => {
       state.tabNumber = action.payload;
     },
+    openModal: (state, action) => {
+      state.isOpen = true;
+      state.modalType = action.payload;
+    },
+    closeModal: state => {
+      state.isOpen = false;
+    },
   },
 });
 
 // 3. export
 
 // 3-1. export actions
-export const { setCurrentTab, setFixedNickname, setInitialStudyStreak, setInitialSportsStreak, setInitialMyStreak } = Slice.actions;
+export const { setCurrentTab, setFixedNickname, setInitialStudyStreak, setInitialSportsStreak, setInitialMyStreak, openModal, closeModal } = Slice.actions;
 // 3-2. export default slice.reducer
 export default Slice.reducer;
