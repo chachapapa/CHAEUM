@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import React from 'react';
-import { closeModal } from '../../features/modal/modalSlice';
+import { closeModal } from '../../features/states/states';
 import { Drawer, IconButton, Typography } from '@material-tailwind/react';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import TextButton from './TextButton';
@@ -24,7 +24,7 @@ export const GlobalModal = (props: Props) => {
       <Drawer
         overlayProps={overlayProps}
         placement="bottom"
-        open={useAppSelector(state => state.modal.isOpen)}
+        open={useAppSelector(state => state.stateSetter.isOpen)}
         onClose={() => dispatch(closeModal())}
         className={
           props.openChk
