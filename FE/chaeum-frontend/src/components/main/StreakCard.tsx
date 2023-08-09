@@ -18,6 +18,8 @@ import { TextColor } from '../theme/TextColorTheme';
 import { ActiveColor } from '../theme/ActiveColorTheme';
 import { StreakRank } from './StreakRank';
 import ActiveInformation from './ActiveInformation';
+import { openModal } from '../../features/modal/modalSlice';
+import { useDispatch } from 'react-redux';
 
 export const StreakCard = ({
   title,
@@ -82,6 +84,8 @@ export const StreakCard = ({
     { profile: '../temp3.png', userName: 'rank5', durtime: '01:05:22' },
   ];
 
+  const dispatch = useDispatch();
+
   return (
     <div
       className={`text-chaeum-gray-900 grid gap-x-1 grid-cols-3 grid-rows-3-auto w-full h-full px-4 pt-4 rounded-lg border-2 m-4 mb-10  ${props.className}`}
@@ -94,14 +98,23 @@ export const StreakCard = ({
             <FontAwesomeIcon
               icon={faTrashCan}
               className="text-chaeum-gray-600 text-2xl "
+              onClick={() => {
+                dispatch(openModal('remove'));
+              }}
             />
             <FontAwesomeIcon
               icon={faLock}
               className="text-chaeum-gray-600 text-2xl pl-1.5"
+              onClick={() => {
+                dispatch(openModal('lock'));
+              }}
             />
             <FontAwesomeIcon
               icon={faPen}
               className="text-chaeum-gray-600 text-2xl pl-1.5"
+              onClick={() => {
+                dispatch(openModal('modify'));
+              }}
             />
             <FontAwesomeIcon
               onClick={settingToggle}

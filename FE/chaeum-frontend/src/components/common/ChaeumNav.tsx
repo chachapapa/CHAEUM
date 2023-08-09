@@ -23,8 +23,8 @@ export const ChaeumNav = () => {
     } else if (value === 1) {
       navigate('/main');
     } else {
-      //뒤에 유저 id 넣어야함.
-      navigate('/profile');
+      // 유저 닉네임 넣어야함. (redux 통해서 내 닉네임)
+      navigate('/profile/myNickName');
     }
   };
 
@@ -73,33 +73,5 @@ export const ChaeumNav = () => {
         ></i>
       )}
     </div>
-
-
-  // <div className="sticky bottom-0 left-0 flex flex-row justify-around items-center w-full h-14 bg-white">
-  //   {currentTab === 0 ? (
-  //     <AnimatedIcon icon="feed" onTabClick={() => onTabClick(0)} />
-  //   ) : (
-  //     <i
-  //       className="fa-solid fa-square-poll-horizontal text-2xl text-chaeum-gray-900"
-  //       onClick={() => onTabClick(0)}
-  //     ></i>
-  //   )}
-  //   {currentTab === 1 ? (
-  //     <AnimatedIcon icon="main" onTabClick={() => onTabClick(1)} />
-  //   ) : (
-  //     <i
-  //       className="fa-regular fa-square text-2xl text-chaeum-gray-900"
-  //       onClick={() => onTabClick(1)}
-  //     ></i>
-  //   )}
-  //   {currentTab === 1 ? (
-  //     <AnimatedIcon icon="profile" onTabClick={() => onTabClick(1)} />
-  //   ) : (
-  //     <i
-  //       className="fa-regular fa-user text-2xl text-chaeum-gray-900"
-  //       onClick={() => onTabClick(2)}
-  //     ></i>
-  //   )}
-  // </div>
   );
 };
