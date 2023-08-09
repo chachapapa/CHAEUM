@@ -1,6 +1,7 @@
 package com.cocochacha.chaeumbackend.repository;
 
 import com.cocochacha.chaeumbackend.domain.Activity;
+import com.cocochacha.chaeumbackend.domain.Streak;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -77,6 +78,8 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
      */
     @Query(value = accumulateTimeQuery6Weeks, nativeQuery = true)
     Optional<List<List<String>>> accumulateQuery6Weeks(@Param("streak_id") int streakId);
+
+    Optional<Activity> findTopByStreakIdOrderByActivityStartTimeDesc(Streak streak);
 }
 
 
