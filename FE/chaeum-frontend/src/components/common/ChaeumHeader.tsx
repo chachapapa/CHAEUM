@@ -14,9 +14,11 @@ export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
     <div className="flex flex-row justify-between items-center sticky top-0 left-0 z-10 w-full min-h-[56px] bg-white">
       <div>
         {isLogo ? (
-          <LogoText height="auto" width="10rem" className="px-2" />
+          <Link to={'/main'}>
+            <LogoText height="auto" width="10rem" className="px-2" />
+          </Link>
         ) : (
-          <span className="px-4 text-2xl font-environmentR font-semibold text-chaeum-gray-900">
+          <span className="px-4 text-3xl font-environmentR font-semibold text-chaeum-gray-900">
             {title}
           </span>
         )}

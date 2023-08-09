@@ -18,7 +18,7 @@ import { TextColor } from '../theme/TextColorTheme';
 import { ActiveColor } from '../theme/ActiveColorTheme';
 import { StreakRank } from './StreakRank';
 import ActiveInformation from './ActiveInformation';
-import { openModal } from '../../features/modal/modalSlice';
+import { openModal } from '../../features/states/states';
 import { useDispatch } from 'react-redux';
 
 export const StreakCard = ({

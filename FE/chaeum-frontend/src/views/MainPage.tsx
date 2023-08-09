@@ -19,6 +19,7 @@ import { Option, Select } from '@material-tailwind/react';
 import { GlobalModal } from '../components/common/GlobalModal';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../hooks/reduxHooks';
+import LoadingPage from '../components/common/LoadingPage';
 
 /*
   feature/#256
@@ -52,14 +53,6 @@ const MainPage = () => {
   // const [cookie, setCookie] = useCookies(['__stripe_mid']);
 
   // console.log('그냥다큐먼트 내부 쿠키'+ document.cookie);
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const token = searchParams.get('token');
-
-  //로컬스토리지에 토큰 저장하기.
-  if (token) {
-    localStorage.setItem('access_token', token);
-  }
 
   // fetch로 streakInfo 받아오기
   // 현재 더미데이터
@@ -302,10 +295,12 @@ const MainPage = () => {
 
   // 모달 창 열기
 
-  const { isOpen, modalType } = useAppSelector(store => store.modal);
+  const modalType  = useAppSelector(state => state.stateSetter.modalType);
+  const  isOpen = useAppSelector(state => state.stateSetter.isOpen);
   const dispatch = useDispatch;
 
   // 스트릭 생성하기
+  const [isLoadingOver, setIsLoadingOver] = useState(false);
   const [isOpenCreate, setIsOpenCreate] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [goCreate, setGoCreate] = useState(false);
@@ -426,11 +421,22 @@ const MainPage = () => {
     name: string;
   }[];
 
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const token = searchParams.get('token');
+
+  //로컬스토리지에 토큰 저장하기.
+  if (token) {
+    localStorage.setItem('access_token', token);
+  }
+
+
   return (
+    
     <div className="w-full h-full">
       <div className="w-full flex flex-col items-center outline">
-        <ChaeumHeader isLogo={false} title="Streak" />
-        <div className="w-full h-full flex-grow overflow-auto  flex justify-center items-end flex-col min-h-vh transition-all">
+        <ChaeumHeader isLogo={false} title="Streak"  />
+        <div className="w-full flex-grow overflow-auto  flex justify-center items-end flex-col min-h-vh transition-all z-0">
           <div className="list flex flex-col items-center wrap-scroll w-full h-full mx-auto transition-all ease-out duration-300">
             <div className="category w-full mb-4 transition duration-300 ease-in-out">
               <div className="category-title flex mb-4 flex-row justify-between items-center px-1 transition-all ease-out duration-300">
@@ -483,6 +489,7 @@ const MainPage = () => {
         </div>
         <ChaeumNav />
       </div>
+      
       {isOpenCreate ? (
         <div className="fixed flex flex-2 justify-center items-center flex-col shrink-0 inset-0 w-full h-full pointer-events-auto z-[9995] bg-chaeum-gray-300 bg-opacity-60 backdrop-blur-lg transition-all duration-300">
           <div className="w-[46.15vh] flex flex-col justify-center items-center">
