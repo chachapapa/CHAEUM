@@ -4,10 +4,12 @@ import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeactivateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
+import com.cocochacha.chaeumbackend.dto.GetCategoryResponse;
 import com.cocochacha.chaeumbackend.dto.GetStreakResponse;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import com.cocochacha.chaeumbackend.service.StreakService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +135,14 @@ public class StreakController {
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity<?> getMiddleCategory(){
+
+        List<GetCategoryResponse> getStreakResponseList = streakService.getCategory();
+
+        return new ResponseEntity<>(getStreakResponseList, HttpStatus.OK);
     }
 
     /**
