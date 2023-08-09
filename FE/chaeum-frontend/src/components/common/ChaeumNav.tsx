@@ -25,8 +25,8 @@ export const ChaeumNav = () => {
     } else if (value === 1) {
       navigate('/main');
     } else {
-      //뒤에 유저 id 넣어야함.
-      navigate('/profile');
+      // 유저 닉네임 넣어야함. (redux 통해서 내 닉네임)
+      navigate('/profile/myNickName');
     }
   };
 
