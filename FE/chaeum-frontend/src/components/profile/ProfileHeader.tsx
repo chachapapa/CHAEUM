@@ -1,10 +1,22 @@
 import React from 'react';
 import { ReactComponent as LogoText } from '../../assets/chaeum_logo_text.svg';
+import { openDrawer } from '../../features/states/states';
+import { useDispatch } from 'react-redux';
 
 const ProfileHeader = () => {
+  const dispatch = useDispatch();
+
   const modifyButtonClick = () => {
-    // 아이콘을 클릭했을 때 실행할 코드 작성
-    alert('모달 작업 완료시 진행');
+    // 수정 아이콘을 클릭했을 때 실행할 코드 작성
+    // dispatch(openDrawer('modifyProfile'));
+    alert('마이페이지 수정 구현해야함');
+  };
+
+  const logOutButtonClick = () => {
+    // 로그아웃 or 회원탈퇴 기능
+    console.log('logout button clicked!!');
+    dispatch(openDrawer('logout'));
+    console.log('logout state updated!!');
   };
 
   return (
@@ -18,7 +30,10 @@ const ProfileHeader = () => {
             className="fa-solid fa-user-pen text-2xl text-chaeum-blue-500 cursor-pointer"
             onClick={modifyButtonClick}
           ></i>
-          <i className="fa-regular fa-comments text-2xl text-chaeum-blue-500"></i>
+          <i
+            className="fa-regular fa-comments text-2xl text-chaeum-blue-500"
+            onClick={logOutButtonClick}
+          ></i>
         </div>
       </div>
     </div>
