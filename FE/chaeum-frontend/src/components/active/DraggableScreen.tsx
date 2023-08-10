@@ -66,7 +66,7 @@ const DraggableScreen = () => {
 
   return (
     <div
-      className="h-screen flex flex-col items-center justify-center"
+      className=" h-screen flex flex-col items-center justify-center"
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}

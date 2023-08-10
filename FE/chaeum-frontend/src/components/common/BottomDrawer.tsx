@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
-import React from 'react';
-import { closeModal } from '../../features/states/states';
+import React, { ComponentProps } from 'react';
+import { closeDrawer } from '../../features/states/states';
 import { Drawer, IconButton, Typography } from '@material-tailwind/react';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import TextButton from './TextButton';
@@ -13,7 +13,7 @@ type Props = {
   openChk: boolean;
 };
 
-export const GlobalModal = (props: Props) => {
+export const BottomDrawer = (props: Props) => {
   const dispatch = useDispatch();
 
   const overlayProps = {
@@ -24,12 +24,12 @@ export const GlobalModal = (props: Props) => {
       <Drawer
         overlayProps={overlayProps}
         placement="bottom"
-        open={useAppSelector(state => state.stateSetter.isOpen)}
-        onClose={() => dispatch(closeModal())}
+        open={useAppSelector(state => state.stateSetter.isDrawerOpen)}
+        onClose={() => dispatch(closeDrawer())}
         className={
           props.openChk
-            ? 'p-4 rounded-t-lg sticky flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 '
-            : 'p-4 rounded-t-lg sticky flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 translate-x-0 translate-y-[300px] translate-z-0 '
+            ? 'm-center z-[9997] p-4 rounded-t-lg fixed flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 '
+            : 'm-center z-[9997] p-4 rounded-t-lg fixed flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 translate-x-0 translate-y-[300px] translate-z-0 '
         }
       >
         <div className="mb-6 grid grid-cols-3 items-center justify-between grid-rows-1">
@@ -39,7 +39,7 @@ export const GlobalModal = (props: Props) => {
             className="justify-self-end"
             variant="text"
             color="blue-gray"
-            onClick={() => dispatch(closeModal())}
+            onClick={() => dispatch(closeDrawer())}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -65,14 +65,14 @@ export const GlobalModal = (props: Props) => {
             type="warning"
             size="medium"
             label={props.button1}
-            callback={() => dispatch(closeModal())}
+            callback={() => dispatch(closeDrawer())}
             className="my-1"
           ></TextButton>
           <TextButton
             type="gray"
             size="medium"
             label={props.button2}
-            callback={() => dispatch(closeModal())}
+            callback={() => dispatch(closeDrawer())}
             className="my-1"
           ></TextButton>
         </div>

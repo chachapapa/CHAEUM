@@ -35,7 +35,25 @@ type ColorForSelection = {
   hoverColor: string;
 };
 
-type ColorVariation = 'emerald' | 'indigo' | 'yellow' | 'slate' | 'red' | 'orange' | 'amber' | 'lime' | 'green' | 'teal' | 'cyan' | 'sky' | 'blue' | 'violet' | 'fuchsia' | 'pink' | 'rose' | 'chaeum-blue';
+type ColorVariation =
+  | 'emerald'
+  | 'indigo'
+  | 'yellow'
+  | 'slate'
+  | 'red'
+  | 'orange'
+  | 'amber'
+  | 'lime'
+  | 'green'
+  | 'teal'
+  | 'cyan'
+  | 'sky'
+  | 'blue'
+  | 'violet'
+  | 'fuchsia'
+  | 'pink'
+  | 'rose'
+  | 'chaeum-blue';
 
 type Story = {
   id: number;
@@ -49,11 +67,17 @@ type Story = {
 
 type Streak = {
   categoryMain: string;
-  categoryMiddle : string;
+  categoryMiddle: string;
   streakName?: string;
   streakColor?: string;
-  streakTag? : string[];
-}
+  streakTag?: string[];
+};
+
+type Modal = {
+  isModalOpen: boolean;
+  modalType: 'create' | 'modify' | '';
+  middleCategory: 'exercise' | 'study' | 'others' | '';
+};
 
 export interface ColorPropsType {
   color?: string;
@@ -61,11 +85,10 @@ export interface ColorPropsType {
 }
 
 export interface WaveColorPropsType {
-  color? : string;
-  weight2? : 'w2';
-  weight3? : 'w3';
-  weight4? : 'w4';
-
+  color?: string;
+  weight2?: 'w2';
+  weight3?: 'w3';
+  weight4?: 'w4';
 }
 
 type ColorNameType = {
@@ -92,7 +115,8 @@ export type {
   ColorNameType,
   ColorVariation,
   Story,
-  Streak
+  Streak,
+  Modal,
 };
 
 export interface StreakInfoType {
