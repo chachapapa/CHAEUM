@@ -18,7 +18,7 @@ import { TextColor } from '../theme/TextColorTheme';
 import { ActiveColor } from '../theme/ActiveColorTheme';
 import { StreakRank } from './StreakRank';
 import ActiveInformation from './ActiveInformation';
-import { openModal } from '../../features/states/states';
+import { openDrawer, openModal } from '../../features/states/states';
 import { useDispatch } from 'react-redux';
 
 export const StreakCard = ({
@@ -99,21 +99,27 @@ export const StreakCard = ({
               icon={faTrashCan}
               className="text-chaeum-gray-600 text-2xl "
               onClick={() => {
-                dispatch(openModal('remove'));
+                dispatch(openDrawer('remove'));
               }}
             />
             <FontAwesomeIcon
               icon={faLock}
               className="text-chaeum-gray-600 text-2xl pl-1.5"
               onClick={() => {
-                dispatch(openModal('lock'));
+                dispatch(openDrawer('lock'));
               }}
             />
             <FontAwesomeIcon
               icon={faPen}
               className="text-chaeum-gray-600 text-2xl pl-1.5"
               onClick={() => {
-                dispatch(openModal('modify'));
+                dispatch(
+                  openModal({
+                    isModalOpen: true,
+                    modalType: 'modify',
+                    middleCategory: 'study', // 해당 스트릭의 중분류로 수정
+                  })
+                );
               }}
             />
             <FontAwesomeIcon

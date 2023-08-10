@@ -16,10 +16,11 @@ import Dropdown from '../components/common/Dropdown';
 import { TagInput } from '../components/main/TagInput';
 import ColorContainer from '../components/common/ColorContainer';
 import { Option, Select } from '@material-tailwind/react';
-import { GlobalModal } from '../components/common/GlobalModal';
+import { BottomDrawer } from '../components/common/BottomDrawer';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../hooks/reduxHooks';
 import LoadingPage from '../components/common/LoadingPage';
+import { openModal, closeModal } from '../features/states/states';
 
 /*
   feature/#256
@@ -295,15 +296,16 @@ const MainPage = () => {
 
   // 모달 창 열기
 
-  const modalType = useAppSelector(state => state.stateSetter.modalType);
-  const isOpen = useAppSelector(state => state.stateSetter.isOpen);
-  const dispatch = useDispatch;
+  const drawerType = useAppSelector(state => state.stateSetter.drawerType);
+  const isDrawerOpen = useAppSelector(state => state.stateSetter.isDrawerOpen);
+  const { modalState } = useAppSelector(state => state.stateSetter);
+  const dispatch = useDispatch();
 
   // 스트릭 생성하기
   const [isLoadingOver, setIsLoadingOver] = useState(false);
-  const [isOpenCreate, setIsOpenCreate] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [goCreate, setGoCreate] = useState(false);
+  const [goModify, setGoModify] = useState(false);
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryList, setCategoryList] = useState<MiddleCategory>([]);
   const [modalTypeKor, setModalTypeKor] = useState<string>('');
@@ -324,31 +326,49 @@ const MainPage = () => {
     { id: 4, main: '공부', name: '고시' },
   ];
 
-  const streakPlus = (category: string) => {
+  const streakPlus = (category: 'exercise' | 'study' | 'others' | '') => {
     //스트릭 추가 페이지
-    setIsOpenCreate(!isOpenCreate);
-    setIsOpened(true);
-    setCategoryName(category);
+    if (modalState.isModalOpen) dispatch(closeModal());
+    else
+      dispatch(
+        openModal({
+          isModalOpen: true,
+          modalType: 'modify',
+          middleCategory: category,
+        })
+      );
   };
 
   useEffect(() => {
-    if (categoryName === '기타') setCategoryList([]);
-    else if (categoryName === '공부') setCategoryList(categoryStudy);
+    if (modalState.middleCategory === 'others') setCategoryList([]);
+    else if (modalState.middleCategory === 'study')
+      setCategoryList(categoryStudy);
     else setCategoryList(categoryExercise);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryName]);
+  }, [modalState.middleCategory]);
 
   useEffect(() => {
-    if (modalType === 'remove') setModalTypeKor('삭제');
-    else if (modalType === 'modify') setModalTypeKor('수정');
-    else if (modalType === 'lock') setModalTypeKor('비활성화');
-  }, [modalType]);
+    if (drawerType === 'remove') setModalTypeKor('삭제');
+    else if (drawerType === 'modify') setModalTypeKor('수정');
+    else if (drawerType === 'lock') setModalTypeKor('비활성화');
+  }, [drawerType]);
 
   const createStreak = () => {
     // 스트릭을 정보를 디비에 보내고
     setGoCreate(true);
     setTimeout(() => {
-      setIsOpenCreate(!isOpenCreate);
+      dispatch(closeModal());
+      setGoCreate(false);
+    }, 1500);
+
+    // 창닫기
+  };
+
+  const modifyStreak = () => {
+    // 스트릭을 정보를 디비에 보내고
+    setGoModify(true);
+    setTimeout(() => {
+      dispatch(closeModal());
       setGoCreate(false);
     }, 1500);
 
@@ -445,7 +465,7 @@ const MainPage = () => {
                   colorInput="gray"
                   varient="text"
                   textsize="xl"
-                  callback={() => streakPlus('공부')}
+                  callback={() => streakPlus('study')}
                 />
               </div>
               <StreakCardCarousel activeList={studyActive} />
@@ -461,7 +481,7 @@ const MainPage = () => {
                   colorInput="gray"
                   varient="text"
                   textsize="xl"
-                  callback={() => streakPlus('운동')}
+                  callback={() => streakPlus('exercise')}
                 />
               </div>
               <StreakCardCarousel activeList={exerciseActive} />
@@ -477,7 +497,7 @@ const MainPage = () => {
                   colorInput="gray"
                   varient="text"
                   textsize="xl"
-                  callback={() => streakPlus('기타')}
+                  callback={() => streakPlus('others')}
                 />
               </div>
               <StreakCardCarousel activeList={othersActive} />
@@ -485,10 +505,10 @@ const MainPage = () => {
           </div>
         </div>
         <ChaeumNav />
-        {isOpen ? (
+        {isDrawerOpen ? (
           <div className="visible z-[9999] bg-white">
-            {isOpen ? (
-              <GlobalModal
+            {isDrawerOpen ? (
+              <BottomDrawer
                 title={`스트릭 ${modalTypeKor}`}
                 content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
                 button1={`${modalTypeKor}하기`}
@@ -496,7 +516,7 @@ const MainPage = () => {
                 openChk={true}
               />
             ) : (
-              <GlobalModal
+              <BottomDrawer
                 title={`스트릭 ${modalTypeKor}`}
                 content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
                 button1={`${modalTypeKor}하기`}
@@ -507,8 +527,8 @@ const MainPage = () => {
           </div>
         ) : (
           <div className="invisible transition-all delay-500 z-[9999] bg-white">
-            {isOpen ? (
-              <GlobalModal
+            {isDrawerOpen ? (
+              <BottomDrawer
                 title={`스트릭 ${modalTypeKor}`}
                 content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
                 button1={`${modalTypeKor}하기`}
@@ -516,7 +536,7 @@ const MainPage = () => {
                 openChk={true}
               />
             ) : (
-              <GlobalModal
+              <BottomDrawer
                 title={`스트릭 ${modalTypeKor}`}
                 content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
                 button1={`${modalTypeKor}하기`}
@@ -527,17 +547,26 @@ const MainPage = () => {
           </div>
         )}
       </div>
-      {isOpenCreate ? (
+      {modalState.isModalOpen ? (
         <div className="fixed flex flex-2 justify-center items-center flex-col shrink-0 inset-0 w-full h-full pointer-events-auto z-[9995] bg-chaeum-gray-300 bg-opacity-60 backdrop-blur-lg transition-all duration-300">
           <div className="w-[46.15vh] flex flex-col justify-center items-center">
             <span className="font-bold text-2xl m-8 w-full">
-              스트릭 생성하기
+              {modalState.modalType === 'create'
+                ? '스트릭 생성하기'
+                : '스트릭 수정하기'}
             </span>
             <div className="w-full flex flex-col">
               <span className="text-start m-1 text-sm text-chaeum-gray-700">
                 스트릭 이름
               </span>
-              <InputTag label="스트릭 이름을 입력하세요." width="w-full mb-5" />
+              {modalState.modalType === 'create' ? (
+                <InputTag
+                  label="스트릭 이름을 입력하세요."
+                  width="w-full mb-5"
+                />
+              ) : (
+                <InputTag label="이미 있는 이름 넣기" width="w-full mb-5" />
+              )}
             </div>
 
             {categoryName !== '기타' && (
@@ -579,12 +608,22 @@ const MainPage = () => {
             </div>
             <div className="transition-all duration-300 opacity-100 w-full my-8">
               <div className="buttons flex flex-col w-full justify-center items-center gap-y-5">
-                <TextButton
-                  label="생성하기"
-                  type="warning"
-                  className="h-12 w-full"
-                  callback={createStreak}
-                />
+                {modalState.modalType === 'create' ? (
+                  <TextButton
+                    label="생성하기"
+                    type="warning"
+                    className="h-12 w-full"
+                    callback={createStreak}
+                  />
+                ) : (
+                  <TextButton
+                    label="수정하기"
+                    type="warning"
+                    className="h-12 w-full"
+                    callback={modifyStreak}
+                  />
+                )}
+
                 <TextButton
                   label="취소하기"
                   type="gray"
@@ -592,17 +631,31 @@ const MainPage = () => {
                   callback={() => streakPlus('')}
                 />
               </div>
-              <div className="text-center my-4 p-2 rounded-lg transition-all duration-500 w-full">
-                {goCreate ? (
-                  <span className="bg-chaeum-blue-700 bg-opacity-70 p-2 text-xs text-white rounded-lg transition-all duration-500  w-full">
-                    "공부" 카테고리에 새로운 스트릭을 생성했습니다.
-                  </span>
-                ) : (
-                  <span className="transition-all duration-500 bg-white bg-opacity-0 text-opacity-0 text-white invisible">
-                    "공부" 카테고리에 새로운 스트릭을 생성했습니다.
-                  </span>
-                )}
-              </div>
+              {modalState.modalType === 'create' ? (
+                <div className="text-center my-4 p-2 rounded-lg transition-all duration-500 w-full">
+                  {goCreate ? (
+                    <span className="bg-chaeum-blue-700 bg-opacity-70 p-2 text-xs text-white rounded-lg transition-all duration-500  w-full">
+                      "공부" 카테고리에 새로운 스트릭을 만들었어요!
+                    </span>
+                  ) : (
+                    <span className="transition-all duration-500 bg-white bg-opacity-0 text-opacity-0 text-white invisible">
+                      "공부" 카테고리에 새로운 스트릭을 만들었어요!
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center my-4 p-2 rounded-lg transition-all duration-500 w-full">
+                  {goModify ? (
+                    <span className="bg-chaeum-blue-700 bg-opacity-70 p-2 text-xs text-white rounded-lg transition-all duration-500  w-full">
+                      '스트릭 이름'을 수정했어요!
+                    </span>
+                  ) : (
+                    <span className="transition-all duration-500 bg-white bg-opacity-0 text-opacity-0 text-white invisible">
+                      '스트릭 이름'을 수정했어요!
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

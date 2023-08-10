@@ -1,26 +1,31 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Streak } from '../../components/Types';
+import { Streak, Modal } from '../../components/Types';
 
 // 1. initial state type 생성
 export type State = {
   nickname: string;
-  initialStudyStreak : Streak;
-  initialSportsStreak : Streak;
-  initialMyStreak : Streak;
+  initialStudyStreak: Streak;
+  initialSportsStreak: Streak;
+  initialMyStreak: Streak;
   tabNumber: number;
-  isOpen: boolean;
-  modalType: string;
-  
+
+  // Drawer Control State
+  isDrawerOpen: boolean;
+  drawerType: string;
+
+  // Modal Control State
+  modalState: Modal;
 };
 // 1-1. initial state 객체 생성
 const initialState: State = {
   nickname: '',
-  initialStudyStreak : {categoryMain:'공부', categoryMiddle:'기타'},
-  initialSportsStreak : {categoryMain : '운동', categoryMiddle:'기타'},
-  initialMyStreak : {categoryMain : '기타', categoryMiddle:'기타'},
+  initialStudyStreak: { categoryMain: '공부', categoryMiddle: '기타' },
+  initialSportsStreak: { categoryMain: '운동', categoryMiddle: '기타' },
+  initialMyStreak: { categoryMain: '기타', categoryMiddle: '기타' },
   tabNumber: 0,
-  isOpen: false,
-  modalType: '',
+  isDrawerOpen: false,
+  drawerType: '',
+  modalState: { isModalOpen: false, modalType: '', middleCategory: '' },
 };
 
 // 2. slice 생성 : createSlice
@@ -48,12 +53,22 @@ const Slice = createSlice({
     setCurrentTab: (state, action: PayloadAction<number>) => {
       state.tabNumber = action.payload;
     },
-    openModal: (state, action) => {
-      state.isOpen = true;
-      state.modalType = action.payload;
+
+    openDrawer: (state, action) => {
+      state.isDrawerOpen = true;
+      state.drawerType = action.payload;
     },
+
+    closeDrawer: state => {
+      state.isDrawerOpen = false;
+    },
+
+    openModal: (state, action: PayloadAction<Modal>) => {
+      state.modalState = action.payload;
+    },
+
     closeModal: state => {
-      state.isOpen = false;
+      state.modalState.isModalOpen = false;
     },
   },
 });
@@ -61,6 +76,16 @@ const Slice = createSlice({
 // 3. export
 
 // 3-1. export actions
-export const { setCurrentTab, setFixedNickname, setInitialStudyStreak, setInitialSportsStreak, setInitialMyStreak, openModal, closeModal } = Slice.actions;
+export const {
+  setCurrentTab,
+  setFixedNickname,
+  setInitialStudyStreak,
+  setInitialSportsStreak,
+  setInitialMyStreak,
+  openDrawer,
+  closeDrawer,
+  openModal,
+  closeModal,
+} = Slice.actions;
 // 3-2. export default slice.reducer
 export default Slice.reducer;
