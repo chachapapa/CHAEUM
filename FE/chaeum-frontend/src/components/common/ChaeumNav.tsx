@@ -10,12 +10,11 @@ export const ChaeumNav = () => {
   const currentTab = useAppSelector(state => state.stateSetter.tabNumber);
   const dispatch = useAppDispatch();
 
-  console.log('렌더링시 state 내 탭번호' + currentTab);
+  // console.log('렌더링시 state 내 탭번호' + currentTab);
 
   const [currentLocation, setCurrentLocation] = useState<string>('main');
 
-  const onTabClick = (value:number) => {
-    
+  const onTabClick = (value: number) => {
     dispatch(setCurrentTab(value));
 
     if (value === 0) {
@@ -31,11 +30,9 @@ export const ChaeumNav = () => {
   useEffect(() => {
     const tmplocation = location.pathname.split('/');
     setCurrentLocation(tmplocation[1]);
-  },[location.pathname]);
-  
+  }, [location.pathname]);
 
   return (
-
     <div className="sticky bottom-0 left-0 flex flex-row justify-around items-center w-full min-h-[56px] bg-white">
       {currentLocation === 'feed' ? (
         <i
