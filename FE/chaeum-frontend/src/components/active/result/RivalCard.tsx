@@ -13,7 +13,7 @@ export const RivalCard = ({ name, tag, profile }: RivalPropsType) => {
         xmlnsXlink="http://www.w3.org/1999/xlink"
         x="0px"
         y="0px"
-        width="430"
+        width="330"
         height="vh"
         viewBox="0 0 430 190"
         enableBackground="new 0 0 574.558 120"
