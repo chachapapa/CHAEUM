@@ -12,7 +12,7 @@ const ProfileHeader = () => {
       <LogoText height="auto" width="10rem" className="px-2" />
 
       <div className="px-2">
-        <div className="w-[70px] ml-40 flex flex-row-reverse justify-between">
+        <div className="w-[70px] ml-12 flex flex-row-reverse justify-between">
           {/* 추후 icon button 모달로 수정 */}
           <i
             className="fa-solid fa-user-pen text-2xl text-chaeum-blue-500 cursor-pointer"

@@ -42,7 +42,9 @@ const ButtonApp = () => {
       <TabsHeader>
         {but.map(({ label, value }) => (
           <Tab key={value} value={value}>
-            <div className="flex items-center gap-2 font-bold">{label}</div>
+            <div className="flex items-center gap-2 font-bold text-sm">
+              {label}
+            </div>
           </Tab>
         ))}
       </TabsHeader>
