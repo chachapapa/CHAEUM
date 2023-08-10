@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Carousel } from '@material-tailwind/react';
+import {
+  Avatar,
+  Button,
+  Card,
+  Carousel,
+  Typography,
+} from '@material-tailwind/react';
 import ActiveInfoCard from './ActiveInfoCard';
 import PhraseCard from './PhraseCard';
 import { useNavigate } from 'react-router';
@@ -10,7 +16,16 @@ import { Tag } from '../common/Tag';
 
   <Timer></Timer>
 */
+type User = {
+  nickName: string;
+  profileImage: string;
+};
 
+type Comment = {
+  commentId: number;
+  user: User;
+  content: string;
+};
 const ActiveFullScreen = () => {
   // state to store time
   const [time, setTime] = useState(0);
@@ -78,9 +93,32 @@ const ActiveFullScreen = () => {
       tag: '운동',
     },
   ];
+
+  const commentListExample: Comment[] = [
+    {
+      commentId: 1,
+      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
+      content: '댓글 1',
+    },
+    {
+      commentId: 2,
+      user: { nickName: 'lulu', profileImage: '../chacha1.jpg' },
+      content: '댓글 2',
+    },
+    {
+      commentId: 3,
+      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
+      content: '댓글 3',
+    },
+    {
+      commentId: 4,
+      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
+      content: '댓글 4',
+    },
+  ];
   return (
-    <div className="z-10 stopwatch-container bg-chaeum-blue-300 w-[452px] h-[932px]">
-      <div className="max-w-[452px] mx-auto overflow-hidden">
+    <div className="z-10 stopwatch-container bg-chaeum-blue-300 w-[307.16px] h-full">
+      <div className="max-w-[307.16px] mx-auto overflow-hidden">
         <div className="text-5xl mt-5"> 채움 중 ...</div>
         <div className="mt-5">
           {tags.map(tag => (
@@ -89,8 +127,39 @@ const ActiveFullScreen = () => {
         </div>
         <div className="text-5xl mt-10">{formattedTime}</div>
         <div className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center">
-          <Card>
-            <PhraseCard title="친구의 응원글" ment={'응원글'}></PhraseCard>
+          <Card className="w-full h-[200px] border-x-4">
+            <div className=" w-[360px] p-1 pl-2 my-3">
+              {commentListExample.map(comment => (
+                <div
+                  className="relative w-full h-10 mb-1"
+                  key={comment.commentId}
+                >
+                  <div className="absolute h-full w-full grid justify-items-start items-center ">
+                    <div className="flex h-full">
+                      <Avatar
+                        src={comment.user.profileImage}
+                        alt="avatar"
+                        size="sm"
+                        className="mr-2"
+                      />
+
+                      <div className="text-center self-center">
+                        <Typography
+                          variant="lead"
+                          color="text-chaeum-gray-900"
+                          className="opacity-80 text-sm"
+                        >
+                          <span className="font-bold mr-2">
+                            {comment.user.nickName}
+                          </span>
+                          <span>{comment.content}</span>
+                        </Typography>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </Card>
         </div>
         <div className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center">
@@ -98,7 +167,7 @@ const ActiveFullScreen = () => {
             <PhraseCard title="동기부여멘트" ment={'동기부여멘트'}></PhraseCard>
           </Card>
         </div>
-        <div className="mx-auto flex justify-center place-items-center pt-7">
+        <div className="mx-auto flex justify-center place-items-center ">
           <Button
             className=" m-4 float-left; w-40"
             variant="filled"

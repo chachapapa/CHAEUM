@@ -4,7 +4,7 @@ import { Outlet } from 'react-router';
 
 const ActivePage = () => {
   return (
-    <div className="w-[452px] h-[932px] bg-white outline outline-1 relative flex justify-center">
+    <div className="w-[307.16px] bg-white outline outline-4 relative flex justify-center">
       {/* <DraggableScreen></DraggableScreen> */}
 
       {/* 라우팅 규칙 
