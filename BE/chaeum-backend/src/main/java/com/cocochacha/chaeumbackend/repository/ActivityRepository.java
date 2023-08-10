@@ -40,7 +40,8 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
                     where DATE_SUB(curdate(), INTERVAL 43 Day) <= Date(activity_start_time) 
                     and streak_id = :streak_id
                   ) as 42day
-            group by Date(activity_start_time);      
+            group by Date(activity_start_time)
+            order by `start_time` desc;      
             """;
 
     Optional<Activity> findById(int id);

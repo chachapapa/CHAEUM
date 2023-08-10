@@ -18,6 +18,8 @@ import com.cocochacha.chaeumbackend.repository.StreakRepository;
 import com.cocochacha.chaeumbackend.repository.TagRepository;
 import jakarta.validation.constraints.Null;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -209,15 +211,19 @@ public class StreakServiceImpl implements StreakService {
     }
 
     @Override
-    public List<GetStreakResponse> getStreak(UserPersonalInfo userPersonalInfo) {
+    public List<List<GetStreakResponse>> getStreak(UserPersonalInfo userPersonalInfo) {
 
-        List<GetStreakResponse> streakResponseList = new ArrayList<>();
+        List<List<GetStreakResponse>> streakResponseList = new ArrayList<>();
 
         Optional<List<Streak>> optionalStreakList = streakRepository.findStreaksByUserPersonalInfoAndStreakDeletedIsFalse(
                 userPersonalInfo);
 
         if (optionalStreakList.isPresent()) {
             List<Streak> streakList = optionalStreakList.get();
+            List<GetStreakResponse> exerciseStreak = new ArrayList<>();
+            List<GetStreakResponse> studyStreak = new ArrayList<>();
+            List<GetStreakResponse> etcStreak = new ArrayList<>();
+
             for (Streak streak : streakList) {
                 // 6주간의 데이터를 저장
                 List<List<String>> activityList = activityRepository.accumulateQuery6Weeks(
@@ -233,8 +239,66 @@ public class StreakServiceImpl implements StreakService {
                         .continueDays(0)
                         .build();
 
-                streakResponseList.add(streakResponse);
+                // 태그 리스트 받아오기
+                List<String> tagList = new ArrayList<>();
+
+                List<StreakInfo> streakInfos = streakInfoRepository.findAllByStreak(streak)
+                        .orElse(null);
+
+                for (StreakInfo streakInfo : streakInfos) {
+                    tagList.add(streakInfo.getTag().getTagName());
+                }
+
+                streakResponse.setTagList(tagList);
+
+                // streak을 활동별로 구분
+                if (streak.getCategory().getCategoryMain().equals("운동")) {
+                    exerciseStreak.add(streakResponse);
+                } else if (streak.getCategory().getCategoryMain().equals("공부")) {
+                    studyStreak.add(streakResponse);
+                } else {
+                    etcStreak.add(streakResponse);
+                }
             }
+
+            Collections.sort(exerciseStreak, (o1, o2) -> {
+                if (o1.isStreakActive() == o2.isStreakActive()) {
+                    return o1.getStreakId() - o2.getStreakId();
+                } else {
+                    if (o1.isStreakActive()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+            Collections.sort(studyStreak, (o1, o2) -> {
+                if (o1.isStreakActive() == o2.isStreakActive()) {
+                    return o1.getStreakId() - o2.getStreakId();
+                } else {
+                    if (o1.isStreakActive()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+            Collections.sort(etcStreak, (o1, o2) -> {
+                if (o1.isStreakActive() == o2.isStreakActive()) {
+                    return o1.getStreakId() - o2.getStreakId();
+                } else {
+                    if (o1.isStreakActive()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+
+            streakResponseList.add(exerciseStreak);
+            streakResponseList.add(studyStreak);
+            streakResponseList.add(etcStreak);
+
         } else {
             return null;
         }
@@ -253,11 +317,12 @@ public class StreakServiceImpl implements StreakService {
         List<GetCategoryResponse> categoryResponseList = new ArrayList<>();
         String[] strings = {"운동", "공부", "기타"};
 
-        for(String str : strings){
+        for (String str : strings) {
             GetCategoryResponse categoryResponse = new GetCategoryResponse();
-            List<Category> categoryList  = categoryRepository.findAllByCategoryMain(str).orElse(null);
+            List<Category> categoryList = categoryRepository.findAllByCategoryMain(str)
+                    .orElse(null);
             List<String> categoryString = new ArrayList<>();
-            for(Category category: categoryList){
+            for (Category category : categoryList) {
                 categoryString.add(category.getCategoryMiddle());
             }
             categoryResponse.setCategoryMiddleList(categoryString);

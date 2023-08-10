@@ -22,5 +22,6 @@ public class GetStreakResponse {
     private boolean streakDeleted;
     private int categoryId;
     private int continueDays;
+    private List<String> tagList;
     private List<List<String>> activeHistoryList;
 }

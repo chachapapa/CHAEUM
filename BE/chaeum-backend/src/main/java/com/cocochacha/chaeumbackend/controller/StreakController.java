@@ -67,7 +67,7 @@ public class StreakController {
                 getUserIDFromAuthentication());
 
         // userPersonalInfo에 대한 6주치 활동내역 리스트 가져오기
-        List<GetStreakResponse> streakResponseList = streakService.getStreak(userPersonalInfo);
+        List<List<GetStreakResponse>> streakResponseList = streakService.getStreak(userPersonalInfo);
 
         if (streakResponseList != null) {
             return new ResponseEntity<>(streakResponseList, HttpStatus.OK);
