@@ -2,12 +2,13 @@
 const colors = require('tailwindcss/colors');
 const withMT = require('@material-tailwind/react/utils/withMT');
 
-
-
 module.exports = withMT({
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      margin: {
+        center: '0 auto',
+      },
       fontFamily: {
         environmentR: ['EnvironmentR'],
       },
@@ -66,8 +67,8 @@ module.exports = withMT({
       'chaeum-gray-600': '#989caf',
       'chaeum-gray-700': '#696d80',
       'chaeum-gray-900': '#45495b',
-      'kakao-yellow' : '#fee500',
-      'naver-green' : '#06bd34',
+      'kakao-yellow': '#fee500',
+      'naver-green': '#06bd34',
     },
   },
   plugins: [],

@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { closeModal } from '../../features/states/states';
 import { Drawer, IconButton, Typography } from '@material-tailwind/react';
 import { useAppSelector } from '../../hooks/reduxHooks';
@@ -28,8 +28,8 @@ export const GlobalModal = (props: Props) => {
         onClose={() => dispatch(closeModal())}
         className={
           props.openChk
-            ? 'p-4 rounded-t-lg sticky flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 '
-            : 'p-4 rounded-t-lg sticky flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 translate-x-0 translate-y-[300px] translate-z-0 '
+            ? 'm-center z-[9997] p-4 rounded-t-lg fixed flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 '
+            : 'm-center z-[9997] p-4 rounded-t-lg fixed flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 translate-x-0 translate-y-[300px] translate-z-0 '
         }
       >
         <div className="mb-6 grid grid-cols-3 items-center justify-between grid-rows-1">
