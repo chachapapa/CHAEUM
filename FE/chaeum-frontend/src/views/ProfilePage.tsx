@@ -25,7 +25,7 @@ const EnterancePage = () => {
       {/* header nav 제외한 중앙 영역 */}
       <div className="w-full relative justify-center overflow-hidden item-center">
         {/* 프로필 카드는 absolute 로 높이 설정 */}
-        <div className="z-10 absolute w-full flex justify-center items-center  h-3/4">
+        <div className="z-10 absolute w-full flex justify-center items-center h-2/3">
           <MyProfileCard
             name="코코"
             longest={300}

@@ -9,10 +9,10 @@ const ScreenThree = () => {
       {/* 검색창 */}
       <div className="mt-3 flex items-center justify-center">
         <InputTag label="친구 검색"></InputTag>
-        <CustomIconButton
+        {/* <CustomIconButton
           callback={() => alert('검색하기')}
           iconType="magnifying-glass"
-        ></CustomIconButton>
+        ></CustomIconButton> */}
       </div>
       <div className="mt-3 ml-3">
         <MyProfileCard name="coco" mbti="ESFJ" age={21}></MyProfileCard>
