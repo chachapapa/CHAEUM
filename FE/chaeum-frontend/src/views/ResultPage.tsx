@@ -99,125 +99,128 @@ const ResultPage = () => {
   };
 
   return (
-    <Carousel className="rounded-xl w-[452px] h-[932px]">
-      <div className="w-[452px] h-[932px] bg-chaeum-blue-300 outline outline-1">
-        {/* 태그 */}
-        <div className="pt-40">
-          {tags.map(tag => (
-            <Tag tag={tag.tag} key={tag.id} color="blue"></Tag>
-          ))}
-        </div>
-        <div className="text-5xl pt-12">채움 완료</div>
-        <div className="text-2xl pt-4">
-          {sTime} ~ {eTime}
-        </div>
-        <div className="text-5xl pt-36">{activityTime}</div>
-        <div className="mx-auto flex justify-center place-items-center pt-60">
-          <Button
-            className=" m-4 float-left; w-40"
-            variant="filled"
-            color="gray"
-            ripple={true}
-            size="lg"
-            onClick={goToShare}
-          >
-            활동공유
-          </Button>
-          <Button
-            className="m-4 float-left; w-40"
-            variant="filled"
-            ripple={true}
-            size="lg"
-            onClick={goToMain}
-          >
-            활동완료
-          </Button>
-        </div>
-      </div>
+    <div className="w-full flex flex-col items-center outline">
+      <Carousel className="w-[307px] h-full">
+        <div className=" bg-chaeum-blue-300 outline outline-1 h-full">
+          {/* 태그 */}
+          <div className="pt-20">
+            {tags.map(tag => (
+              <Tag tag={tag.tag} key={tag.id} color="blue"></Tag>
+            ))}
+          </div>
+          <div className="text-5xl pt-12">채움 완료</div>
+          <div className="text-2xl pt-4">
+            {sTime} ~ {eTime}
+          </div>
+          <div className="text-5xl pt-16">{activityTime}</div>
 
-      <div className="w-[452px] h-[932px] bg-chaeum-blue-300 outline outline-1">
-        <div className="text-4xl pt-20">채움 완료</div>
-
-        {/* 태그 */}
-        <div className="pt-2">
-          {tags.map(tag => (
-            <Tag tag={tag.tag} key={tag.id} color="blue"></Tag>
-          ))}
+          <div className="flex justify-center place-items-center">
+            <div className="float-left; ml-12 w-24">
+              <RivalCard name="coco" tag="#코딩"></RivalCard>
+            </div>
+            <div className="float-left; w-24">
+              <RivalCard name="rulu" tag="#음주"></RivalCard>
+            </div>
+            <div className="float-left; w-48">
+              <RivalCard name="맥주" tag="#콸콸콸"></RivalCard>
+            </div>
+          </div>
+          <div className="mx-auto flex justify-center place-items-center pt-10">
+            <Button
+              className=" m-4 float-left; w-40"
+              variant="filled"
+              color="gray"
+              ripple={true}
+              size="lg"
+              onClick={goToShare}
+            >
+              활동공유
+            </Button>
+            <Button
+              className="m-4 float-left; w-40"
+              variant="filled"
+              ripple={true}
+              size="lg"
+              onClick={goToMain}
+            >
+              활동완료
+            </Button>
+          </div>
         </div>
-        <div className="text-5xl pt-4">{activityTime}</div>
 
-        <div className="text-2xl pt-12">친구의 응원글</div>
-        <div className="mx-auto flex justify-center pt-4">
-          <Card className="w-[300px] h-[200px]">
-            <div className=" w-[360px] p-1 pl-2 my-3">
-              {commentListExample.map(comment => (
-                <div
-                  className="relative w-full h-10 mb-1"
-                  key={comment.commentId}
-                >
-                  <div className="absolute h-full w-full grid justify-items-start items-center ">
-                    <div className="flex h-full">
-                      <Avatar
-                        src={comment.user.profileImage}
-                        alt="avatar"
-                        size="sm"
-                        className="mr-2"
-                      />
+        <div className="bg-chaeum-blue-300 outline outline-1 h-full">
+          <div className="text-4xl pt-10">채움 완료</div>
 
-                      <div className="text-center self-center">
-                        <Typography
-                          variant="lead"
-                          color="text-chaeum-gray-900"
-                          className="opacity-80 text-sm"
-                        >
-                          <span className="font-bold mr-2">
-                            {comment.user.nickName}
-                          </span>
-                          <span>{comment.content}</span>
-                        </Typography>
+          {/* 태그 */}
+          <div className="pt-2">
+            {tags.map(tag => (
+              <Tag tag={tag.tag} key={tag.id} color="blue"></Tag>
+            ))}
+          </div>
+          <div className="text-5xl pt-4">{activityTime}</div>
+
+          <div className="text-2xl pt-10">친구의 응원글</div>
+          <div className="mx-auto flex justify-center pt-4">
+            <Card className="w-full h-[200px] border-x-4">
+              <div className=" w-[360px] p-1 pl-2 my-3">
+                {commentListExample.map(comment => (
+                  <div
+                    className="relative w-full h-10 mb-1"
+                    key={comment.commentId}
+                  >
+                    <div className="absolute h-full w-full grid justify-items-start items-center ">
+                      <div className="flex h-full">
+                        <Avatar
+                          src={comment.user.profileImage}
+                          alt="avatar"
+                          size="sm"
+                          className="mr-2"
+                        />
+
+                        <div className="text-center self-center">
+                          <Typography
+                            variant="lead"
+                            color="text-chaeum-gray-900"
+                            className="opacity-80 text-sm"
+                          >
+                            <span className="font-bold mr-2">
+                              {comment.user.nickName}
+                            </span>
+                            <span>{comment.content}</span>
+                          </Typography>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+                ))}
+              </div>
+            </Card>
+          </div>
 
-        <div className="flex justify-center place-items-center">
-          <div className="m-4 float-left; w-24">
-            <RivalCard name="coco" tag="#코딩"></RivalCard>
-          </div>
-          <div className="m-4 float-left; w-24">
-            <RivalCard name="rulu" tag="#음주"></RivalCard>
-          </div>
-          <div className="m-4 float-left; w-48">
-            <RivalCard name="맥주" tag="#콸콸콸"></RivalCard>
+          <div className="mx-auto flex justify-center place-items-center pt-20 mt-1">
+            <Button
+              className=" m-4 float-left; w-40"
+              variant="filled"
+              color="gray"
+              size="lg"
+              ripple={true}
+              onClick={goToShare}
+            >
+              활동공유
+            </Button>
+            <Button
+              className="m-4 float-left; w-40"
+              variant="filled"
+              size="lg"
+              ripple={true}
+              onClick={goToMain}
+            >
+              활동완료
+            </Button>
           </div>
         </div>
-        <div className="mx-auto flex justify-center place-items-center pt-7">
-          <Button
-            className=" m-4 float-left; w-40"
-            variant="filled"
-            color="gray"
-            size="lg"
-            ripple={true}
-            onClick={goToShare}
-          >
-            활동공유
-          </Button>
-          <Button
-            className="m-4 float-left; w-40"
-            variant="filled"
-            size="lg"
-            ripple={true}
-            onClick={goToMain}
-          >
-            활동완료
-          </Button>
-        </div>
-      </div>
-    </Carousel>
+      </Carousel>
+    </div>
   );
 };
 

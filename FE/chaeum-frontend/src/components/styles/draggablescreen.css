@@ -22,6 +22,14 @@
   height: 100vh;
 }
 
+.custom-scale-350 {
+  transform: scale(3.5); /* 250% scale */
+}
+
+.custom-scale-300 {
+  transform: scale(3); /* 250% scale */
+}
+
 .custom-scale-250 {
   transform: scale(2.5); /* 250% scale */
 }
