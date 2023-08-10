@@ -4,6 +4,7 @@ import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeactivateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
+import com.cocochacha.chaeumbackend.dto.GetCategoryResponse;
 import com.cocochacha.chaeumbackend.dto.GetStreakResponse;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import java.util.List;
@@ -53,8 +54,15 @@ public interface StreakService {
      * 42일간의 스트릭 목록을 반환 하는 함수
      *
      * @param userPersonalInfo
-     * @return getStreakResponse (스트릭_id, 스트릭_이름, 스트릭_컬러, 스트릭_active, 스트릭_deleted, 카테고리,
-     * list<list<String>> )
+     * @return List<GetStreakResponse ( 스트릭_id, 스트릭_이름, 스트릭_컬러, 스트릭_active, 스트릭_deleted, 카테고리, list
+            * < list < String>>) >
      */
     List<GetStreakResponse> getStreak(UserPersonalInfo userPersonalInfo);
+
+    /**
+     * 카테고리 중분류를 모두 모두 반환 해주는 함수
+     *
+     * @return List<GetCategoryResponse ( List < String> 중분류 카테고리 리스트) >
+     */
+    List<GetCategoryResponse> getCategory();
 }
