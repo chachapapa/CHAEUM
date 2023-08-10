@@ -11,7 +11,9 @@ type Activity = {
 
 type Comment = {
   user: User;
+  postId : number;
   content: string;
+  replyId?: number; 
 };
 
 type Article = {

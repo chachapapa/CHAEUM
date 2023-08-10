@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ArticleCard from '../../components/feed/ArticleCard';
 import NewStoryCard from '../../components/feed/NewStoryCard';
-import { ColorVariation, Story } from '../Types';
+import { Article, ColorVariation, Story } from '../Types';
 import StoryDetailCard from './StoryDetailCard';
 import LoadingPage from '../common/LoadingPage';
-import LoadingWave from './LoadingWave';
+import FeedLoadingWave from './FeedLoadingWave';
+import axios from 'axios';
 
 const storyExample: Story[] = [
   {
@@ -27,20 +28,69 @@ const storyExample: Story[] = [
   },
 ];
 
-const FeedMain = () => {
 
+const ARTICLE_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/sns';
+const AccessToken = localStorage.getItem('access_token');
+
+const FeedMain = () => {
   const [detailedStory, setDetailedStory] = useState<Story>();
   const [isStoryOpened, setIsStoryOpened] = useState<boolean>(false);
+  // const [isArticleLoading, setIsArticleLoading] = useState<boolean>(false);
+  const [articleList, setArticleList] = useState<Article[]>([]);
+  let isArticleLoading = false;
 
-  const onStoryClicked = (story:Story) => {
+  
+  
+
+  const onStoryClicked = (story: Story) => {
     setDetailedStory(story);
     setIsStoryOpened(true);
   };
 
-  const CloseStoryDetail = () =>{
+  const CloseStoryDetail = () => {
     setIsStoryOpened(false);
   };
 
+  const target = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (target.current) {
+      observer.observe(target.current);
+    }
+  });
+
+  const options = {
+    threshold: 1.0,
+  };
+
+  const callback = () => {
+    if (isArticleLoading === false) {
+
+      isArticleLoading = true;
+      
+      // 무한스크롤 구현을 위해 10개씩 받아오기. 이를 위해서 인덱스를 변수로 같이 보내서 잘라서 받아와야함.
+      // 선우야 미안해!
+      // axios
+      //   .get(`${ARTICLE_LIST_URL}`, {
+      //     headers: {
+      //       Authorization: `Bearer ${AccessToken}`,
+      //     }, params : {index : articleList.length }
+      //   })
+      //   .then(res => {
+      //     console.log(res);
+      //     if (res.data) {
+      //       setArticleList(prevList => [...prevList,res.data]);
+      //       isArticleLoading=false;
+      //     } else {
+      //       console.log('게시글이 없어용');
+      //     }
+      //   });
+
+    }
+  };
+
+  
+  const observer = new IntersectionObserver(callback, options);
 
   return (
     <div className=" overflow-auto flex-grow">
@@ -49,15 +99,24 @@ const FeedMain = () => {
           <NewStoryCard
             story={story}
             key={story.id}
-            onStoryClicked = {()=>onStoryClicked(story)}
+            onStoryClicked={() => onStoryClicked(story)}
           />
         ))}
       </div>
-      <div className={isStoryOpened? 'flex absolute top-0 left-0 w-full h-full bg-black bg-opacity-30 transition-all z-50 justify-center items-center':'absolute opacity-0 transition-all'} onClick={CloseStoryDetail}>
-        {detailedStory && isStoryOpened ? <StoryDetailCard story={detailedStory}></StoryDetailCard> : null}
+      <div
+        className={
+          isStoryOpened
+            ? 'flex absolute top-0 left-0 w-full h-full bg-black bg-opacity-30 transition-all z-50 justify-center items-center'
+            : 'absolute opacity-0 transition-all'
+        }
+        onClick={CloseStoryDetail}
+      >
+        {detailedStory && isStoryOpened ? (
+          <StoryDetailCard story={detailedStory}></StoryDetailCard>
+        ) : null}
       </div>
       <ArticleCard></ArticleCard>
-      <LoadingWave/>
+      <FeedLoadingWave target={target} />
     </div>
   );
 };

@@ -3,13 +3,16 @@ import React, { useEffect, useState } from 'react';
 import '../styles/cardwave.css';
 import { ReactComponent as Circle } from '../../assets/bubbleFrame.svg';
 
+type Props = {
+  target : React.RefObject<HTMLDivElement>;
+}
 
-const LoadingWave = () => {
+const FeedLoadingWave = ({target} : Props) => {
 
 
 
   return (
-    <div className='w-full h-10'>
+    <div className='w-full h-10' ref={target}>
       <svg
           className='flex items-center mx-auto justify-self-center '
           version="1.1"
@@ -81,4 +84,4 @@ const LoadingWave = () => {
   );
 };
 
-export default LoadingWave;
+export default FeedLoadingWave;

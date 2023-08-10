@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextButton from '../common/TextButton';
 import TextBox from '../common/TextBox';
 import Dropdown from '../common/Dropdown';
@@ -18,11 +18,18 @@ const UserStreakCreationInput = ({
 }: Props) => {
 
   const [anotherStreak, setAnotherStreak] = useState<Streak>({categoryMain:'기타', categoryMiddle: ''});
+  const [isStarted, setIsStarted] = useState<boolean>(false);
+  
+  useEffect(() => {
+    setTimeout(() => {
+      setIsStarted(true);
+    }, 300);
+  },[isStarted]);
 
   return (
     <div
       className={
-        currentStep === 3
+        isStarted
           ? 'flex flex-col w-full h-5/6 items-center gap-8 transition-opacity duration-1000'
           : 'flex flex-col w-full h-5/6 items-center gap-8 opacity-0'
       }

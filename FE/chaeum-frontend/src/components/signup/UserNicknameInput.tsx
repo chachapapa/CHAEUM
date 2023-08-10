@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextBox from '../common/TextBox';
 import TextButton from '../common/TextButton';
 import CommentInputBox from '../common/CommentInputBox';
@@ -17,6 +17,8 @@ const DUPLICATION_CHECK_URL =
 
 const AccessToken = localStorage.getItem('access_token');
 
+
+
 const UserNicknameInput = ({
   currentStep,
   onClickNext,
@@ -25,10 +27,15 @@ const UserNicknameInput = ({
 
   const [nickname, setNickname] = useState<string>(' ');
   const [isDuplicationTested, setIsDuplicationTested] = useState<number>(0);
-  const fixedNickname = useAppSelector(state => state.stateSetter.nickname);
+  const [isStarted, setIsStarted] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
- 
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsStarted(true);
+    }, 300);
+  },[isStarted]);
 
   
 
@@ -54,8 +61,8 @@ const UserNicknameInput = ({
   return (
     <div
       className={
-        currentStep === 2
-          ? 'flex flex-col w-full h-5/6 items-center gap-8 transition-opacity duration-1000'
+        isStarted
+          ? 'flex flex-col w-full h-5/6 items-center gap-8 transition-opacity duration-500'
           : 'flex flex-col w-full h-5/6 items-center gap-8 opacity-0'
       }
     >

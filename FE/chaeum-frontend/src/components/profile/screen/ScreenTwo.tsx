@@ -5,6 +5,7 @@ import EncourageMessageDetail from '../../feed/EncourageMessageDetail';
 import EncourageMessageCarousel from '../../feed/EncourageMessageCarousel';
 import CommentInput from '../../feed/CommentInput';
 import CommentList from '../../feed/CommentList';
+import {Comment} from '../../Types';
 
 const ScreenTwo = () => {
   const example1: Article = {
@@ -23,12 +24,12 @@ const ScreenTwo = () => {
       '../chacha1.jpg',
     ],
     encourageMessageList: [
-      { user: { nickName: 'coco', profileImage: '코코' }, content: '응원글 1' },
-      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '응원글 2' },
+      { postId : 1, replyId: 1, user: { nickName: 'coco', profileImage: '코코' }, content: '응원글 1' },
+      { postId : 1, replyId: 2, user: { nickName: 'lulu', profileImage: '룰루' }, content: '응원글 2' },
     ],
     commentList: [
-      { user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      { postId : 1, replyId: 3, user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
+      { postId : 1, replyId: 4, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
     ],
   };
 
@@ -49,12 +50,12 @@ const ScreenTwo = () => {
       '../chacha1.jpg',
     ],
     encourageMessageList: [
-      { user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      { postId : 2, replyId: 3, user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
+      { postId : 2, replyId: 4, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
     ],
     commentList: [
-      { user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      { postId : 2, replyId: 5, user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
+      { postId : 2, replyId: 6, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
     ],
   };
 
@@ -87,6 +88,7 @@ const ScreenTwo = () => {
   const [focusedArticle, setFocusedArticle] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFadingOut, setIsFadingOut] = useState<boolean>(false);
+  const [commentList, setCommentList] = useState<Comment[]>([]);
 
   const onPlusButtonClicked = (id: number) => {
     setIsPlusButtonClicked(!isPlusButtonClicked);
@@ -205,7 +207,7 @@ const ScreenTwo = () => {
                   <span onClick={() => onCloseButtonClicked(post.id)}>
                     닫기
                   </span>
-                  <CommentList />
+                  <CommentList commentList={commentList} setCommentList={setCommentList}/>
                 </div>
               ) : (
                 <span onClick={() => onMoreCommentClicked(post.id)}>

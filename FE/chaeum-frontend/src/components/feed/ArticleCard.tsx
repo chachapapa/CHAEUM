@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import CommentInput from './CommentInput';
-import ColorContainer from '../common/ColorContainer';
-import Dropdown from '../common/Dropdown';
-import ChatMessage from '../chat/ChatMessage';
 import EncourageMessageCarousel from './EncourageMessageCarousel';
 import EncourageMessageDetail from './EncourageMessageDetail';
 import CommentList from './CommentList';
-import ActiveInformation from '../main/ActiveInformation';
-import ChatPreview from '../chat/ChatPreview';
-import { Article, ColorForSelection } from '../Types';
+import { Article, Comment } from '../Types';
 import LoadingPage from '../common/LoadingPage';
-import { isConstructorDeclaration } from 'typescript';
-import { Avatar } from '@material-tailwind/react';
 
 const ArticleCard = () => {
   const example1: Article = {
@@ -30,12 +23,12 @@ const ArticleCard = () => {
       '../chacha1.jpg',
     ],
     encourageMessageList: [
-      { user: { nickName: 'coco', profileImage: '코코' }, content: '응원글 1' },
-      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '응원글 2' },
+      { postId : 1, user: { nickName: '차차아버님', profileImage: '코코' }, content: '응원글 1' },
+      { postId : 1, user: { nickName: 'lulu', profileImage: '룰루' }, content: '응원글 2' },
     ],
     commentList: [
-      { user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      { postId : 1, user: { nickName: '차차아버님', profileImage: '코코' }, content: '댓글 1' },
+      { postId : 1, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
     ],
   };
 
@@ -56,38 +49,16 @@ const ArticleCard = () => {
       '../chacha1.jpg',
     ],
     encourageMessageList: [
-      { user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      { postId : 2, user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
+      { postId : 2, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
     ],
     commentList: [
-      { user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      { postId : 2, user: { nickName: '차차아버님', profileImage: '코코' }, content: '댓글 1' },
+      { postId : 2, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
     ],
   };
 
   const exampleList = [example1, example2];
-
-  const arr: ColorForSelection[] = [
-    { color: 'bg-slate-400', hoverColor: 'hover:bg-slate-500' },
-    { color: 'bg-red-400', hoverColor: 'hover:bg-red-500' },
-    { color: 'bg-orange-400', hoverColor: 'hover:bg-orange-500' },
-    { color: 'bg-amber-400', hoverColor: 'hover:bg-amber-500' },
-    { color: 'bg-yellow-400', hoverColor: 'hover:bg-yellow-500' },
-    { color: 'bg-lime-400', hoverColor: 'hover:bg-lime-500' },
-    { color: 'bg-green-400', hoverColor: 'hover:bg-green-500' },
-    { color: 'bg-emerald-400', hoverColor: 'hover:bg-emerald-500' },
-    { color: 'bg-teal-400', hoverColor: 'hover:bg-teal-500' },
-    { color: 'bg-chaeum-blue-400', hoverColor: 'hover:bg-chaeum-blue-500' },
-    { color: 'bg-cyan-400', hoverColor: 'hover:bg-cyan-500' },
-    { color: 'bg-sky-400', hoverColor: 'hover:bg-sky-500' },
-    { color: 'bg-blue-400', hoverColor: 'hover:bg-blue-500' },
-    { color: 'bg-indigo-400', hoverColor: 'hover:bg-indigo-500' },
-    { color: 'bg-violet-400', hoverColor: 'hover:bg-violet-500' },
-    { color: 'bg-purple-400', hoverColor: 'hover:bg-purple-500' },
-    { color: 'bg-fuchsia-400', hoverColor: 'hover:bg-fuchsia-500' },
-    { color: 'bg-pink-400', hoverColor: 'hover:bg-pink-500' },
-    { color: 'bg-rose-400', hoverColor: 'hover:bg-rose-500' },
-  ];
 
   const [isPlusButtonClicked, setIsPlusButtonClicked] =
     useState<boolean>(false);
@@ -95,7 +66,7 @@ const ArticleCard = () => {
   const [focusedArticle, setFocusedArticle] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFadingOut, setIsFadingOut] = useState<boolean>(false);
-
+  const [commentList, setCommentList] = useState<Comment[]>([]);
   //로딩스크린 페이드아웃을 만들어보자...
   //페이지 로드가 끝나면
   //isFadingOut true로 바꿔주기
@@ -147,7 +118,7 @@ const ArticleCard = () => {
                 key={post.id}
                 className="flex p-3 w-full flex-col items-start justify-between mb-3 bg-white"
               >
-                <div className='flex justify-between w-full'>
+                <div className="flex justify-between w-full">
                   <div className="relative flex items-center gap-x-4">
                     <img
                       src={post.user.profileImage}
@@ -193,32 +164,24 @@ const ArticleCard = () => {
                   </p>
                 </div>
                 {/* 이미지 미리보기 / 상세 */}
-                {detailedArticle && focusedArticle === post.id ? (
-                  <div className="my-5 flex flex-row overflow-auto snap-x">
-                    {post.imageList.map((image, key) => (
-                      <img
-                        src={image}
-                        key={key}
-                        alt=""
-                        className="flex-none mr-2 h-[330px] w-[330px] rounded-lg snap-center"
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="mt-5 flex flex-row overflow-auto mb-5">
-                    {post.imageList.map((image, key) => (
-                      <img
-                        src={image}
-                        key={key}
-                        alt=""
-                        className="flex-none mr-2 h-[150px] w-[150px] rounded-lg"
-                      />
-                    ))}
-                  </div>
-                )}
+
+                <div className="my-5 flex flex-row overflow-auto snap-x">
+                  {post.imageList.map((image, key) => (
+                    <img
+                      src={image}
+                      key={key}
+                      alt=""
+                      className={
+                        detailedArticle && focusedArticle === post.id
+                          ? 'flex-none mr-2 h-[330px] w-[330px] rounded-lg snap-center transition-all'
+                          : 'flex-none mr-2 h-[150px] w-[150px] rounded-lg snap-center transition-all'
+                      }
+                    />
+                  ))}
+                </div>
 
                 {/* 응원글 미리보기 / 상세 */}
-                {isPlusButtonClicked && focusedArticle === post.id? (
+                {isPlusButtonClicked && focusedArticle === post.id ? (
                   <EncourageMessageDetail
                     onPlusButtonClicked={() => onPlusButtonClicked(post.id)}
                     articleId={post.id}
@@ -229,19 +192,17 @@ const ArticleCard = () => {
                     articleId={post.id}
                   />
                 )}
-                <CommentInput />
+                <CommentInput postId={post.id} setCommentList={setCommentList}/>
                 {detailedArticle && focusedArticle === post.id ? (
-                  <div className="flex flex-col justify-start">
+                  <div className="flex flex-col items-start w-full">
                     <span onClick={() => onCloseButtonClicked(post.id)}>
                       닫기
                     </span>
-                    <CommentList />
+                    <CommentList commentList={post.commentList} setCommentList={setCommentList}/>
                   </div>
                 ) : (
-
-
-                  <span onClick={() => onMoreCommentClicked(post.id)}>
-                    게시글 상세보기
+                  <span onClick={() => onMoreCommentClicked(post.id)} className='text-sm'>
+                    댓글 상세보기
                   </span>
                 )}
               </article>
