@@ -295,8 +295,8 @@ const MainPage = () => {
 
   // 모달 창 열기
 
-  const modalType  = useAppSelector(state => state.stateSetter.modalType);
-  const  isOpen = useAppSelector(state => state.stateSetter.isOpen);
+  const modalType = useAppSelector(state => state.stateSetter.modalType);
+  const isOpen = useAppSelector(state => state.stateSetter.isOpen);
   const dispatch = useDispatch;
 
   // 스트릭 생성하기
@@ -421,7 +421,6 @@ const MainPage = () => {
     name: string;
   }[];
 
-
   const [searchParams, setSearchParams] = useSearchParams();
   const token = searchParams.get('token');
 
@@ -430,12 +429,10 @@ const MainPage = () => {
     localStorage.setItem('access_token', token);
   }
 
-
   return (
-    
     <div className="w-full h-full">
       <div className="w-full flex flex-col items-center outline">
-        <ChaeumHeader isLogo={false} title="Streak"  />
+        <ChaeumHeader isLogo={false} title="Streak" />
         <div className="w-full flex-grow overflow-auto  flex justify-center items-end flex-col min-h-vh transition-all z-0">
           <div className="list flex flex-col items-center wrap-scroll w-full h-full mx-auto transition-all ease-out duration-300">
             <div className="category w-full mb-4 transition duration-300 ease-in-out">
@@ -488,8 +485,48 @@ const MainPage = () => {
           </div>
         </div>
         <ChaeumNav />
+        {isOpen ? (
+          <div className="visible z-[9999] bg-white">
+            {isOpen ? (
+              <GlobalModal
+                title={`스트릭 ${modalTypeKor}`}
+                content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
+                button1={`${modalTypeKor}하기`}
+                button2="취소하기"
+                openChk={true}
+              />
+            ) : (
+              <GlobalModal
+                title={`스트릭 ${modalTypeKor}`}
+                content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
+                button1={`${modalTypeKor}하기`}
+                button2="취소하기"
+                openChk={false}
+              />
+            )}
+          </div>
+        ) : (
+          <div className="invisible transition-all delay-500 z-[9999] bg-white">
+            {isOpen ? (
+              <GlobalModal
+                title={`스트릭 ${modalTypeKor}`}
+                content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
+                button1={`${modalTypeKor}하기`}
+                button2="취소하기"
+                openChk={true}
+              />
+            ) : (
+              <GlobalModal
+                title={`스트릭 ${modalTypeKor}`}
+                content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
+                button1={`${modalTypeKor}하기`}
+                button2="취소하기"
+                openChk={false}
+              />
+            )}
+          </div>
+        )}
       </div>
-      
       {isOpenCreate ? (
         <div className="fixed flex flex-2 justify-center items-center flex-col shrink-0 inset-0 w-full h-full pointer-events-auto z-[9995] bg-chaeum-gray-300 bg-opacity-60 backdrop-blur-lg transition-all duration-300">
           <div className="w-[46.15vh] flex flex-col justify-center items-center">
@@ -515,17 +552,6 @@ const MainPage = () => {
                       'h-10 bg-white w-full bg-opacity-50 border-[1px] focus:border-2 border-chaeum-gray-500/80 focus:border-blue-500'
                     }
                   >
-                    {/* {middleCategory.map(category => (
-                      <Option key={category.id}>{category.name}</Option>
-                    ))} */}
-                    {/* {categoryName === '공부' &&
-                      categoryStudy.map(item => (
-                        <Option key={item.id}>{item.name}</Option>
-                      ))}
-                    {categoryName === '운동' &&
-                      categoryExercise.map(item => (
-                        <Option key={item.id}>{item.name}</Option>
-                      ))} */}
                     {categoryList.map(category => (
                       <Option key={category.id}>{category.name}</Option>
                     ))}
@@ -582,23 +608,6 @@ const MainPage = () => {
         </div>
       ) : (
         <div className="bg-opacity-0 transition-all duration-500 opacity-0 text-opacity-0 ease-in"></div>
-      )}
-      {isOpen ? (
-        <GlobalModal
-          title={`스트릭 ${modalTypeKor}`}
-          content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
-          button1={`${modalTypeKor}하기`}
-          button2="취소하기"
-          openChk={true}
-        />
-      ) : (
-        <GlobalModal
-          title={`스트릭 ${modalTypeKor}`}
-          content={`스트릭을 ${modalTypeKor}하시겠습니까?`}
-          button1={`${modalTypeKor}하기`}
-          button2="취소하기"
-          openChk={false}
-        />
       )}
     </div>
   );
