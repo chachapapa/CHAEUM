@@ -129,6 +129,13 @@ const TextColorList: ColorNameType = {
 
   // default color
   defaultw3: 'active:text-chaeum-gray-300',
+
+  // deactive color
+  deactivew1: 'bg-stone-50',
+  deactivew2: 'bg-stone-200',
+  deactivew3: 'bg-stone-400',
+  deactivew4: 'bg-stone-600',
+  deactivew5: 'bg-stone-800',
 };
 
 export const ActiveColor = ({ color, weight }: ColorPropsType) => {

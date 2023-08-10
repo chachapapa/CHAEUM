@@ -12,6 +12,7 @@ import {
   faMinus,
   faChevronDown,
   faChevronUp,
+  faLockOpen,
 } from '@fortawesome/free-solid-svg-icons';
 import { StreakCardProps } from '../Types';
 import { TextColor } from '../theme/TextColorTheme';
@@ -26,8 +27,14 @@ export const StreakCard = ({
   tags,
   color,
   info,
+  isDeactive = false,
   ...props
 }: StreakCardProps) => {
+  // 비활성화 시 props 정보 바뀍
+  if (isDeactive) {
+    color = 'deactive';
+  }
+
   const [isSettingOpen, setIsSettingOpen] = useState(false);
   const [isListOpen, SetIsListOpen] = useState(false);
 
@@ -91,37 +98,57 @@ export const StreakCard = ({
       className={`text-chaeum-gray-900 grid gap-x-1 grid-cols-3 grid-rows-3-auto w-full h-full px-4 pt-4 rounded-lg border-2 m-4 mb-10  ${props.className}`}
     >
       <div className="card-header col-span-3 flex flex-row items-center justify-between">
-        <span className="title text-xl font-bold mb-2 text-black">{title}</span>
+        {isDeactive ? (
+          <span className="title text-xl font-bold mb-2 text-chaeum-gray-700">
+            {title}
+          </span>
+        ) : (
+          <span className="title text-xl font-bold mb-2 text-black">
+            {title}
+          </span>
+        )}
 
         {isSettingOpen ? (
           <div className="flex flex-row justify-end items-center p-0.5 mb-2">
-            <FontAwesomeIcon
-              icon={faTrashCan}
-              className="text-chaeum-gray-600 text-2xl "
-              onClick={() => {
-                dispatch(openDrawer('remove'));
-              }}
-            />
-            <FontAwesomeIcon
-              icon={faLock}
-              className="text-chaeum-gray-600 text-2xl pl-1.5"
-              onClick={() => {
-                dispatch(openDrawer('lock'));
-              }}
-            />
-            <FontAwesomeIcon
-              icon={faPen}
-              className="text-chaeum-gray-600 text-2xl pl-1.5"
-              onClick={() => {
-                dispatch(
-                  openModal({
-                    isModalOpen: true,
-                    modalType: 'modify',
-                    middleCategory: 'study', // 해당 스트릭의 중분류로 수정
-                  })
-                );
-              }}
-            />
+            {isDeactive ? (
+              <FontAwesomeIcon
+                icon={faLockOpen}
+                className="text-chaeum-gray-600 text-2xl pl-1.5"
+                onClick={() => {
+                  dispatch(openDrawer('unlock'));
+                }}
+              />
+            ) : (
+              <>
+                <FontAwesomeIcon
+                  icon={faTrashCan}
+                  className="text-chaeum-gray-600 text-2xl "
+                  onClick={() => {
+                    dispatch(openDrawer('remove'));
+                  }}
+                />
+                <FontAwesomeIcon
+                  icon={faLock}
+                  className="text-chaeum-gray-600 text-2xl pl-1.5"
+                  onClick={() => {
+                    dispatch(openDrawer('lock'));
+                  }}
+                />
+                <FontAwesomeIcon
+                  icon={faPen}
+                  className="text-chaeum-gray-600 text-2xl pl-1.5"
+                  onClick={() => {
+                    dispatch(
+                      openModal({
+                        isModalOpen: true,
+                        modalType: 'modify',
+                        mainCategory: '공부', // 해당 스트릭의 중분류로 수정
+                      })
+                    );
+                  }}
+                />
+              </>
+            )}
             <FontAwesomeIcon
               onClick={settingToggle}
               icon={faMinus}
@@ -152,12 +179,14 @@ export const StreakCard = ({
         </div>
         <div className="duration text-xl pb-2">{duration()}</div>
         <div onClick={goStreakSetting}>
-          <FontAwesomeIcon
-            icon={faCirclePlay}
-            className={`text-5xl ${TextColor({ color })} ${ActiveColor({
-              color,
-            })}`}
-          />
+          {isDeactive ? null : (
+            <FontAwesomeIcon
+              icon={faCirclePlay}
+              className={`text-5xl ${TextColor({ color })} ${ActiveColor({
+                color,
+              })}`}
+            />
+          )}
         </div>
       </div>
       <div className="col-span-3 pt-4 ">
@@ -165,7 +194,7 @@ export const StreakCard = ({
         <div className="pb-2">
           <FontAwesomeIcon
             onClick={settingList}
-            icon={faChevronUp}
+            icon={isListOpen ? faChevronUp : faChevronDown}
             className="text-chaeum-gray-600 pt-2 text-xl "
           />
           <div className={isListOpen ? OPEN_TYPE.open : OPEN_TYPE.close}>

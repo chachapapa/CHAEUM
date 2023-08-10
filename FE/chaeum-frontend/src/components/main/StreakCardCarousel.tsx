@@ -31,6 +31,7 @@ export const StreakCardCarousel = ({ activeList }: CarouselPropsType) => {
                 tags={obj.tags}
                 color={obj.color}
                 info={obj.info}
+                isDeactive={obj.isDeactive}
                 className="card shrink-0 h-fit"
               />
             </SwiperSlide>

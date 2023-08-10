@@ -74,7 +74,7 @@ type Streak = {
 type Modal = {
   isModalOpen: boolean;
   modalType: 'create' | 'modify' | '';
-  middleCategory: 'exercise' | 'study' | 'others' | '';
+  mainCategory: '운동' | '공부' | '기타' | '';
 };
 
 export interface ColorPropsType {
@@ -120,6 +120,7 @@ export type {
 export interface StreakInfoType {
   info?: { date: string; activetime: number }[];
   color?: string;
+  isDeactive?: boolean;
 }
 
 export interface StreakCardProps extends StreakInfoType {
