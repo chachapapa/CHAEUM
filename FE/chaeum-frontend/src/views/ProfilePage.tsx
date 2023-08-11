@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import React, { useEffect, useState } from 'react';
 import AnimatedLogo from '../components/common/AnimatedLogo';
 import TextButton from '../components/common/TextButton';
@@ -6,6 +7,7 @@ import { MyProfileCard } from '../components/profile/MyProfileCard';
 import { ChaeumHeader } from '../components/common/ChaeumHeader';
 import { ChaeumNav } from '../components/common/ChaeumNav';
 import { useLocation } from 'react-router';
+import { closeDrawer } from '../features/states/states';
 import ButtonApp from '../components/profile/ButtonApp';
 import {
   Card,
@@ -13,6 +15,9 @@ import {
   Option,
   Textarea,
   Input,
+  Drawer,
+  IconButton,
+  Typography,
 } from '@material-tailwind/react';
 import { useAppSelector } from '../hooks/reduxHooks';
 import { BottomDrawer } from '../components/common/BottomDrawer';
@@ -21,6 +26,8 @@ import { ReactComponent as LogoText } from '../assets/chaeum_logo_text.svg';
 
 import { openDrawer, openModal, closeModal } from '../features/states/states';
 import InputTag from '../components/common/InputTag';
+import { useNavigate } from 'react-router-dom';
+import GenderButton from '../components/profile/GenderButton';
 /*
   feature/#256
   EntrancePage.tsx 에서 파일명만 바꿨습니다.
@@ -54,10 +61,13 @@ const EnterancePage = () => {
   const isDrawerOpen = useAppSelector(state => state.stateSetter.isDrawerOpen);
   const { modalState } = useAppSelector(state => state.stateSetter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [modalTypeKor, setModalTypeKor] = useState<string>('');
   const [goMypageModify, setGoMypageModify] = useState(false);
-
+  const overlayProps = {
+    className: 'w-full h-full fixed',
+  };
   const modifyButtonClick = () => {
     // 수정 아이콘을 클릭했을 때 실행할 코드 작성
     // dispatch(openDrawer('modifyProfile'));
@@ -89,6 +99,28 @@ const EnterancePage = () => {
     console.log('logout state updated!!');
   };
 
+  const logout = () => {
+    console.log('로그아웃 버튼클릭');
+    navigate('/entrance');
+    dispatch(closeDrawer());
+  };
+
+  const friendProfile = (nickName: string) => {
+    const des = `/mypage/${nickName}`;
+    navigate(des);
+  };
+
+  // 성별 버튼
+  const [selectedButton, setSelectedButton] = useState<number | null>(null);
+
+  const handleButtonClick = (buttonIndex: number) => {
+    if (selectedButton === buttonIndex) {
+      setSelectedButton(null); // 이미 선택된 버튼을 다시 클릭한 경우 선택 상태를 취소
+    } else {
+      setSelectedButton(buttonIndex);
+    }
+  };
+
   useEffect(() => {
     if (drawerType === 'logout') setModalTypeKor('로그아웃');
     else if (drawerType === 'withdrawal') setModalTypeKor('회원탈퇴');
@@ -110,7 +142,7 @@ const EnterancePage = () => {
               onClick={modifyButtonClick}
             ></i>
             <i
-              className="fa-regular fa-comments text-2xl text-chaeum-blue-500"
+              className="fa-solid fa-right-from-bracket text-2xl text-chaeum-blue-500"
               onClick={logOutButtonClick}
             ></i>
           </div>
@@ -127,6 +159,9 @@ const EnterancePage = () => {
             age={12}
             mbti="ISTJ"
             profile="../chacha1.jpg"
+            onClick={() => {
+              console.log('내 프로필');
+            }}
           ></MyProfileCard>
         </div>
 
@@ -170,6 +205,75 @@ const EnterancePage = () => {
               openChk={true}
             />
           ) : (
+            // BottomDrawer 에는 navigate가 없어서 커스터마이징 하기위해 직접 작성
+            // <Drawer
+            //   overlayProps={overlayProps}
+            //   placement="bottom"
+            //   open={isDrawerOpen}
+            //   onClose={() => dispatch(closeDrawer())}
+            //   className={
+            //     'm-center z-[9997] p-4 rounded-t-lg fixed flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 '
+            //   }
+            // >
+            //   <div className="mb-6 grid grid-cols-3 items-center justify-between grid-rows-1">
+            //     <div></div>
+            //     <span className="text-lg justify-center">로그아웃</span>
+            //     <IconButton
+            //       className="justify-self-end"
+            //       variant="text"
+            //       color="blue-gray"
+            //       onClick={() => dispatch(closeDrawer())}
+            //     >
+            //       <svg
+            //         xmlns="http://www.w3.org/2000/svg"
+            //         fill="none"
+            //         viewBox="0 0 24 24"
+            //         strokeWidth={2}
+            //         stroke="currentColor"
+            //         className="h-5 w-5"
+            //       >
+            //         <path
+            //           strokeLinecap="round"
+            //           strokeLinejoin="round"
+            //           d="M6 18L18 6M6 6l12 12"
+            //         />
+            //       </svg>
+            //     </IconButton>
+            //   </div>
+            //   <Typography variant="h6" color="blue-gray">
+            //     로그아웃 하시겠습니까?
+            //   </Typography>
+            //   <div>
+            //     {/* <TextButton
+            //       type="warning"
+            //       size="medium"
+            //       label="로그아웃"
+            //       callback={() => {
+            //         logout();
+            //       }}
+            //       className="my-1"
+            //     ></TextButton> */}
+
+            //     <div className="flex justify-center h-14 w-full ">
+            //       <div
+            //         className="flex w-full items-center justify-center bg-red-400 hover:bg-red-700 text-white font-bold rounded text-md px-6 py-3 w-64"
+            //         onClick={logout}
+            //       >
+            //         <div className={'flex items-center justify-center gap-x-8'}>
+            //           로그아웃
+            //         </div>
+            //       </div>
+            //     </div>
+
+            //     <TextButton
+            //       type="gray"
+            //       size="medium"
+            //       label="취소하기"
+            //       callback={() => dispatch(closeDrawer())}
+            //       className="my-1"
+            //     ></TextButton>
+            //   </div>
+            // </Drawer>
             <BottomDrawer
               title="로그아웃"
               content="로그아웃 하시겠습니까?"
@@ -216,7 +320,8 @@ const EnterancePage = () => {
             <div className=" flex flex-col w-full mb-5">
               <div className="w-full flex flex-col">
                 <span className="text-start m-1 text-sm text-black">성별</span>
-                <Select
+                {/* Select 방식 성별 */}
+                {/* <Select
                   placeholder="성별을 선택하세요."
                   className={
                     'h-10 bg-white w-full bg-opacity-50 border-[1px] focus:border-2 border-chaeum-gray-500/80 focus:border-blue-500'
@@ -226,7 +331,20 @@ const EnterancePage = () => {
                     <Option key={gender}>{gender}</Option>
                   ))}
                   {}
-                </Select>
+                </Select> */}
+
+                <div className="flex space-x-4 justify-center">
+                  <GenderButton
+                    label="남자"
+                    isSelected={selectedButton === 0}
+                    onClick={() => handleButtonClick(0)}
+                  />
+                  <GenderButton
+                    label="여자"
+                    isSelected={selectedButton === 1}
+                    onClick={() => handleButtonClick(1)}
+                  />
+                </div>
 
                 <span className="text-start m-1 text-sm text-black">MBTI</span>
                 <Select
