@@ -157,7 +157,7 @@ public class ActivityService {
      * @param cheeringCommentRequest activityId
      * @return 응원글 목록
      */
-    public CheeringCommentResponse cheeringComment(CheeringCommentRequest cheeringCommentRequest) {
+    public List<CheeringCommentResponse> cheeringComment(CheeringCommentRequest cheeringCommentRequest) {
         Activity activity = activityRepository.findById(cheeringCommentRequest.getActivityId()).orElse(null);
         if (activity == null) {
             throw new NullPointerException("null 값!");
@@ -165,15 +165,20 @@ public class ActivityService {
 
         List<Reply> reply = replyRepository.findAllByActivityId(activity).orElse(null);
         List<String> replyList = new ArrayList<>();
-
-        // reply의 content부분 replyList에 넣어주기
+        List<CheeringCommentResponse> cheeringCommentResponses = new ArrayList<>();
+        
         for (int i = 0; i < reply.size(); i++) {
-            replyList.add(reply.get(i).getContent());
-        }
+            UserPersonalInfo userInfo = reply.get(i).getUserId();
 
-        return CheeringCommentResponse.builder()
-                .comments(replyList)
-                .build();
+            CheeringCommentResponse cheeringCommentResponse = CheeringCommentResponse.builder()
+                    .comments(reply.get(i).getContent())
+                    .nickname(userInfo.getNickname())
+                    .profileUrl(userInfo.getProfileImageUrl())
+                    .build();
+
+            cheeringCommentResponses.add(cheeringCommentResponse);
+        }
+        return cheeringCommentResponses;
     }
 
     /**

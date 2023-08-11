@@ -5,6 +5,8 @@ import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.service.ActivityService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -97,7 +99,7 @@ public class ActivityController {
     @GetMapping("/message/cheering")
     public ResponseEntity<?> cheeringComment(@RequestBody CheeringCommentRequest cheeringCommentRequest) {
         try {
-            CheeringCommentResponse cheeringCommentResponse = activityService.cheeringComment(cheeringCommentRequest);
+            List<CheeringCommentResponse> cheeringCommentResponse = activityService.cheeringComment(cheeringCommentRequest);
             return new ResponseEntity<>(cheeringCommentResponse, HttpStatus.OK);
         } catch (NullPointerException NPE) {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
