@@ -78,7 +78,7 @@ const EnterancePage = () => {
         openModal({
           isModalOpen: true,
           modalType: 'modify',
-          middleCategory: '',
+          mainCategory: '',
         })
       );
   };
