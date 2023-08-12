@@ -66,7 +66,7 @@ const NewStoryCard = ({story, onStoryClicked}: Props) => {
     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
   return (
-    <div className="bg-gray-50 relative min-w-[230px] min-h-[150px] flex overflow-auto rounded-lg shadow-xl mr-10" onClick={onStoryClicked}>
+    <div className="bg-gray-50 relative min-w-[230px] min-h-[150px] flex overflow-auto rounded-lg shadow-lg mr-10" onClick={onStoryClicked}>
       <div className="flex flex-col justify-around w-full m-2">
         <div className="relative flex items-center gap-x-1">
           <img

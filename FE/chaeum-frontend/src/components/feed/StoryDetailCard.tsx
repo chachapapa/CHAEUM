@@ -1,108 +1,104 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React from 'react';
-import {
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-  Button,
-  Card,
-  Typography,
-  IconButton,
-  Avatar,
-} from '@material-tailwind/react';
+import React, { useEffect, useState } from 'react';
+import { Card, Typography, Avatar } from '@material-tailwind/react';
 import { ChevronDownIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
-import { Article, ColorForSelection, Story } from '../Types';
+import { Article, ColorForSelection, Comment, Story } from '../Types';
 import InputTag from '../common/InputTag';
 import CustomIconButton from '../common/CustomIconButton';
+import CommentInputBox from '../common/CommentInputBox';
+import CommentInput from './CommentInput';
+import StoryActivityInfoCard from './StoryActivityInfoCard';
+import axios from 'axios';
 
 type User = {
   nickName: string;
   profileImage: string;
 };
 
-type Comment = {
-  commentId: number;
-  user: User;
-  content: string;
+type Props = {
+  story: Story;
+  closeStoryDetail: () => void;
 };
 
-type Props = {
-  story : Story;
-}
+const ENCOURAGE_MESSAGE_URL =
+  'http://i9a810.p.ssafy.io:8080/api/activity/message/cheering';
+const AccessToken = localStorage.getItem('access_token');
 
-const StoryDetailCard = ({story}:Props) => {
-  const commentListExample: Comment[] = [
-    {
-      commentId: 1,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 1',
-    },
-    {
-      commentId: 2,
-      user: { nickName: 'lulu', profileImage: '../chacha1.jpg' },
-      content: '댓글 2',
-    },
-    {
-      commentId: 3,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 3',
-    },
-    {
-      commentId: 4,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 4',
-    },
-  ];
+const StoryDetailCard = ({ story, closeStoryDetail }: Props) => {
+  const [encourageMessageList, setEncourageMessageList] = useState<Comment[]>(
+    []
+  );
+
+  useEffect(() => {
+    axios
+      .get(`${ENCOURAGE_MESSAGE_URL}`,{
+        headers: { Authorization: `Bearer ${AccessToken}` },
+        params: { activityId: story.activityId },
+      })
+      .then(res => {
+        console.log(res);
+        if (res) {
+          setEncourageMessageList(prevList => [...prevList, res.data]);
+        } else {
+          console.log('응원글 가져오기 실패');
+        }
+      });
+  });
+
+  //     setEncourageMessageList([
+  //       {
+  //         activityId: 1,
+  //         replyId: 1,
+  //         user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
+  //         content: '댓글 1',
+  //       },
+  //       {
+  //         activityId: 1,
+  //         replyId: 2,
+  //         user: { nickName: 'lulu', profileImage: '../chacha1.jpg' },
+  //         content: '댓글 2',
+  //       },
+  //       {
+  //         activityId: 1,
+  //         replyId: 3,
+  //         user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
+  //         content: '댓글 3',
+  //       },
+  //       {
+  //         activityId: 1,
+  //         replyId: 4,
+  //         user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
+  //         content: '댓글 4',
+  //       },
+  //     ]),
+  //   []
+  // );
 
   return (
-    <div className="opacity-100">
-      <Card className="flex p-3 max-w-sm flex-col items-center justify-between mb-5 bg-white w-96 h-96">
-        <div className="relative flex items-center gap-x-4">
-          <img
-            src={story.img}
-            alt=""
-            className="h-16 w-16 rounded-full bg-gray-50"
-          />
-          <div className="text-lg leading-6">
-            <p className="text-chaeum-gray-900 text-left">{story.nickname}</p>
-            {story.tag.map((tag,index) => (
-              <p className="text-black text-left" key={index}>{tag}</p>
-            ))}
-          </div>
-        </div>
-
-        {/* 스트릭 넣어야함*/}
-
-        <p className="text-black justify-center text-left text-2xl">02:23:21</p>
-
-        {/* 댓글 인풋 & 작성버튼, 좋아요버튼 */}
-        <div className="relative flex items-center gap-x-2">
-          <InputTag label="댓글달기"></InputTag>
-          <CustomIconButton
-            size="sm"
-            textsize="2xl"
-            iconType="comment"
-            colorInput="lime"
-            callback={function (): void {}}
-          ></CustomIconButton>
-          <CustomIconButton
-            size="sm"
-            textsize="2xl"
-            iconType="heart"
-            colorInput="lime"
-            callback={function (): void {}}
-          ></CustomIconButton>
-        </div>
+    <Card className="flex pb-3 flex-col items-center justify-between bg-white w-11/12">
+      <StoryActivityInfoCard
+        color={story.color}
+        story={story}
+        closeStoryDetail={closeStoryDetail}
+      />
+      <div className="w-full px-3">
+        <CommentInput
+          activityId={story.activityId}
+          inputPlaceholder="응원글 입력..."
+          commentOrEncourageMessage="encourageMessage"
+        />
 
         {/* 댓글 목록 */}
-        <div className=" w-[360px] p-1 pl-2 my-3">
-          {commentListExample.map(comment => (
-            <div className="relative w-full h-10 mb-1" key={comment.commentId}>
+        <div className="p-1 pl-2 mt-3 w-full">
+          {encourageMessageList.map(encourageMessage => (
+            <div
+              className="relative w-full h-10 mb-1"
+              key={encourageMessage.replyId}
+            >
               <div className="absolute h-full w-full grid justify-items-start items-center ">
                 <div className="flex h-full">
                   <Avatar
-                    src={comment.user.profileImage}
+                    src={encourageMessage.user.profileImage}
                     alt="avatar"
                     size="sm"
                     className="mr-2"
@@ -115,9 +111,9 @@ const StoryDetailCard = ({story}:Props) => {
                       className="opacity-80 text-sm"
                     >
                       <span className="font-bold mr-2">
-                        {comment.user.nickName}
+                        {encourageMessage.user.nickName}
                       </span>
-                      <span>{comment.content}</span>
+                      <span>{encourageMessage.content}</span>
                     </Typography>
                   </div>
                 </div>
@@ -125,8 +121,8 @@ const StoryDetailCard = ({story}:Props) => {
             </div>
           ))}
         </div>
-      </Card>
-    </div>
+      </div>
+    </Card>
   );
 };
 
