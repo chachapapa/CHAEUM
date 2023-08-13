@@ -1,5 +1,6 @@
 package com.cocochacha.chaeumbackend.service;
 
+import com.cocochacha.chaeumbackend.domain.Streak;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeactivateStreakRequest;
@@ -7,6 +8,7 @@ import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
 import com.cocochacha.chaeumbackend.dto.GetCategoryResponse;
 import com.cocochacha.chaeumbackend.dto.GetStreakResponse;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
+import com.cocochacha.chaeumbackend.dto.RivalListResponse;
 import java.util.List;
 
 public interface StreakService {
@@ -65,4 +67,20 @@ public interface StreakService {
      * @return List<GetCategoryResponse ( List < String> 중분류 카테고리 리스트) >
      */
     List<GetCategoryResponse> getCategory();
+
+    /**
+     * 스트릭 id로 스트릭을 찾아서 반환하는 함수
+     *
+     * @param id
+     * @return
+     */
+    Streak findById(int id);
+
+    /**
+     * 카테고리로 라이벌 스트릭을 찾아서 반환하는 함수
+     *
+     * @param myStreak
+     * @return
+     */
+    RivalListResponse getRivalList(Streak myStreak);
 }

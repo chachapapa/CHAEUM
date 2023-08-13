@@ -11,6 +11,8 @@ import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
 import com.cocochacha.chaeumbackend.dto.GetCategoryResponse;
 import com.cocochacha.chaeumbackend.dto.GetStreakResponse;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
+import com.cocochacha.chaeumbackend.dto.RivalListResponse;
+import com.cocochacha.chaeumbackend.dto.RivalListResponse.Rival;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 import com.cocochacha.chaeumbackend.repository.CategoryRepository;
 import com.cocochacha.chaeumbackend.repository.StreakInfoRepository;
@@ -20,8 +22,12 @@ import jakarta.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -329,5 +335,125 @@ public class StreakServiceImpl implements StreakService {
             categoryResponseList.add(categoryResponse);
         }
         return categoryResponseList;
+    }
+
+    @Override
+    public Streak findById(int id) {
+        return streakRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public RivalListResponse getRivalList(Streak myStreak) {
+        // 요청으로 들어온 스트릭과 카테고리가 같은 중분류인 스트릭id들을 가져와요
+        // 개수가 5개가 안된다면 그냥 스트릭 id를 다 가져와요
+        List<Streak> streakList = streakRepository.findAllByCategory(myStreak.getCategory())
+                .orElse(null);
+        if (streakList.size() < 6) {
+            streakList = streakRepository.findAll();
+        }
+        List<Integer> streakIds = streakList.stream().map(Streak::getStreakId)
+                .collect(Collectors.toList());
+
+        // 각 스트릭의 7일간 누적 시간 합을 가져와요
+        int myTime = 0;
+        HashSet<Integer> hashSet = new HashSet<>();
+        for (Streak streak : streakList) {
+            hashSet.add(streak.getStreakId());
+        }
+
+        // 시간을 키, 스트릭 id를 밸류로 하여 트리셋에 데이터 저장
+        TreeSet<int[]> treeSet = new TreeSet<>((o1, o2) -> {
+            if (o1[1] != o2[1]) {
+                return o1[1] - o2[1];
+            }
+            return o1[0] - o2[0];
+        });
+
+        List<List<Integer>> accumulateWeekTime = activityRepository.accumulateWeekTime(
+                streakIds).orElse(null);
+        if (accumulateWeekTime == null) {
+            return null;
+        }
+        fill: while (accumulateWeekTime.size() < 5) {
+            int tempId = streakIds.get(new Random().nextInt(streakIds.size()));
+            for (List<Integer> idAndTime : accumulateWeekTime) {
+                if (idAndTime.get(0).equals(tempId)) {
+                    continue fill;
+                }
+            }
+            accumulateWeekTime.add(List.of(tempId, 0));
+        }
+
+        for (List<Integer> idAndTime : accumulateWeekTime) {
+            if (myStreak.getStreakId() == idAndTime.get(0)) {
+                myTime = idAndTime.get(1);
+            } else if (hashSet.contains(idAndTime.get(0))) {
+                treeSet.add(new int[]{idAndTime.get(0), idAndTime.get(1)});
+            }
+        }
+
+        List<RivalListResponse.Rival> selectedRivalList = new ArrayList<>();
+
+        // 나보다 2시간반 이내, 2시간 이내, 1시간반 이내, 1시간 이내, 30분 이내로 앞서는 스트릭을 하나씩 가져와요
+        int[] seconds = {9000, 7200, 5400, 3600, 1800};
+        for (int second : seconds) {
+            int[] findF = treeSet.floor(new int[]{Integer.MAX_VALUE, myTime + second});
+
+            int[] find;
+            // 누적시간이 자신의 누적시간보다 크고 범위보다 작은 값이 있다면 그 값을 써요
+            if (findF != null && findF[1] > myTime) {
+                find = findF;
+            } else {
+                // 위에서 못찾았으면 범위보다 큰 값을 써요
+                int[] findH = treeSet.higher(new int[]{Integer.MAX_VALUE, myTime + second});
+                if (findH != null) {
+                    find = findH;
+                }
+
+                // 위에서 못찾았으면 자신의 누적시간보다 작은 값을 써요
+                else if (findF != null) {
+                    find = findF;
+                }
+
+                // 위에서도 못찾았으면 문제가 있어요 null을 리턴해요
+                else {
+                    return null;
+                }
+            }
+
+            // 찾은 값을 트리셋에서 제거해요
+            treeSet.remove(find);
+
+            // 제거한 값에서의 스트릭 id를 통해 데이터를 저장해요
+            Streak rivalStreak = streakRepository.findById(find[0]).orElse(null);
+            if (rivalStreak == null) {
+                return null;
+            }
+
+            Integer ongoingTime = activityRepository.findOngoingTime(find[0]).orElse(null);
+
+            RivalListResponse.Rival rival = Rival.builder()
+                    .streakId(rivalStreak.getStreakId())
+                    .nickname(rivalStreak.getUserPersonalInfo().getNickname())
+                    .categoryId(rivalStreak.getCategory().getCategoryId())
+                    .categoryMain(rivalStreak.getCategory().getCategoryMain())
+                    .categoryMiddle(rivalStreak.getCategory().getCategoryMiddle())
+                    .accumulateTime(find[1])
+                    .build();
+
+            if (ongoingTime != null) {
+                rival.setActive(true);
+                rival.setOngoingTime(ongoingTime);
+            } else {
+                rival.setActive(false);
+                rival.setOngoingTime(0);
+            }
+
+            selectedRivalList.add(rival);
+        }
+
+        return RivalListResponse.builder()
+                .myAccumulateTime(myTime)
+                .rivalList(selectedRivalList).build();
     }
 }

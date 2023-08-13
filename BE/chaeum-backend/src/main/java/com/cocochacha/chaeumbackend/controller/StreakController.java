@@ -1,5 +1,6 @@
 package com.cocochacha.chaeumbackend.controller;
 
+import com.cocochacha.chaeumbackend.domain.Streak;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.CreateStreakRequest;
 import com.cocochacha.chaeumbackend.dto.DeactivateStreakRequest;
@@ -7,6 +8,8 @@ import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
 import com.cocochacha.chaeumbackend.dto.GetCategoryResponse;
 import com.cocochacha.chaeumbackend.dto.GetStreakResponse;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
+import com.cocochacha.chaeumbackend.dto.RivalListRequest;
+import com.cocochacha.chaeumbackend.dto.RivalListResponse;
 import com.cocochacha.chaeumbackend.service.StreakService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import java.util.ArrayList;
@@ -143,6 +146,34 @@ public class StreakController {
         List<GetCategoryResponse> getStreakResponseList = streakService.getCategory();
 
         return new ResponseEntity<>(getStreakResponseList, HttpStatus.OK);
+    }
+
+    /**
+     * 라이벌 리스트를 선정하여 반환합니다.
+     *
+     * @param rivalListRequest
+     * @return
+     */
+    @GetMapping("/rival-list")
+    public ResponseEntity<?> rivalList(@RequestBody RivalListRequest rivalListRequest) {
+
+        // 요청으로 들어온 스트릭 id가 요청을 보낸 유저의 스트릭인지 확인
+        Streak myStreak = streakService.findById(rivalListRequest.getStreakId());
+
+        // 해당 유저가 아니라면 잘못된 요청
+        if (!myStreak.getUserPersonalInfo().getId().equals(getUserIDFromAuthentication())) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        RivalListResponse rivalListResponse = streakService.getRivalList(myStreak);
+        if (rivalListResponse == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        // 요청으로 들어온 스트릭의 기존 누적 시간을 담아요
+        // 위에서 선정된 5개의 스트릭에 대해서 아래 내용을 담아요
+        // 스트릭 id, 유저의 닉네임, 대분류, 중분류, 분류 id, 누적시간(지난7일), 활동중여부, (활동중이면) 현재진행시간
+        return ResponseEntity.ok(rivalListResponse);
     }
 
     /**
