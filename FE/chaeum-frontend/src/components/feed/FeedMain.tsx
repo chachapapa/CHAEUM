@@ -49,6 +49,7 @@ const FeedMain = () => {
     //     }
     //   });
 
+
     setStoryList([
       {
         activityId: 1,
@@ -81,6 +82,178 @@ const FeedMain = () => {
         time: 10,
       },
     ]);
+
+
+    setArticleList([
+      {
+        id: 1,
+        user: { nickName: 'chacha', profileImage: '../chacha2.png' },
+        date: 'Mar 16, 2020',
+        dateTime: '2020-03-16',
+        activityInfo: {
+          id: 1,
+          streakId: 1,
+          streak: {
+            categoryMain: '공부',
+            categoryMiddle: '수능',
+            streakTag: ['#서울대드가자~', '#10수'],
+            streakName: '니가 그렇게 공부를 잘해?!?',
+          },
+          category: '수능',
+          startTime: '2023-08-10 11:00:00',
+          endTime: '2023-08-11 12:00:00',
+          color: 'red',
+        },
+        likeCount: 5,
+        commentCount: 15,
+        content:
+          '윽엑 더미데이터 한땀한땀 적어 넣기 여간 귀찮은게 아닌걸',
+        imageList: [
+          '../chacha1.jpg',
+          '../chacha2.png',
+          '../chacha2.png',
+          '../chacha1.jpg',
+        ],
+        encourageMessageList: [
+          {
+            activityId: 1,
+            user: { nickName: '차차아버님', profileImage: './chacha2.png' },
+            content: '응 절대 못가~~~',
+          },
+          {
+            activityId: 1,
+            user: { nickName: '지나가는 서울대생', profileImage: './chacha1.jpg' },
+            content: '11수 하면 그만이야~~~',
+          },
+        ],
+        commentList: [
+          {
+            activityId: 1,
+            user: { nickName: '스승님', profileImage: './chacha1.jpg' },
+            content: '헛된 꿈을 꾸었느냐...',
+          },
+          {
+            activityId: 1,
+            user: { nickName: 'Daniel Ceaser', profileImage: './chacha2.png' },
+            content: 'Best Part',
+          },
+        ],
+      },
+
+      {
+        id: 2,
+        user: { nickName: 'chacha', profileImage: '../chacha1.jpg' },
+        date: 'Mar 16, 2020',
+        dateTime: '2020-03-16',
+        activityInfo: {
+          id: 1,
+          streakId: 1,
+          streak: {
+            categoryMain: '운동',
+            categoryMiddle: '클라이밍',
+            streakTag: ['#빨주노초파남보', '#영!차-'],
+            streakName: '산양은 아니고 염소정도',
+          },
+          category: '클라이밍',
+          startTime: '2023-08-10 11:00:00',
+          endTime: '2023-08-11 12:00:00',
+          color: 'teal',
+        },
+        likeCount: 5,
+        commentCount: 15,
+        content:
+          '오늘은 컴포넌트를 만들어볼거에요 꺄륵꺄륵 \n 오늘 하나는 만들어 놔야지. \n 타입스크립트도 조금 적용 제대로 해서..',
+        imageList: [
+          '../chacha1.jpg',
+          '../chacha1.jpg',
+          '../chacha1.jpg',
+          '../chacha1.jpg',
+        ],
+        encourageMessageList: [
+          {
+            activityId: 2,
+            user: { nickName: 'coco', profileImage: '코코' },
+            content: '댓글 1',
+          },
+          {
+            activityId: 2,
+            user: { nickName: 'lulu', profileImage: '룰루' },
+            content: '댓글 2',
+          },
+        ],
+        commentList: [
+          {
+            activityId: 2,
+            user: { nickName: '차차아버님', profileImage: '코코' },
+            content: '댓글 1',
+          },
+          {
+            activityId: 2,
+            user: { nickName: 'lulu', profileImage: '룰루' },
+            content: '댓글 2',
+          },
+        ],
+      },
+      {
+        id: 2,
+        user: { nickName: 'chacha', profileImage: '../chacha1.jpg' },
+        date: 'Mar 16, 2020',
+        dateTime: '2020-03-16',
+        activityInfo: {
+          id: 1,
+          streakId: 1,
+          streak: {
+            categoryMain: '운동',
+            categoryMiddle: '클라이밍',
+            streakTag: ['#빨주노초파남보', '#영!차-'],
+            streakName: '산양은 아니고 염소정도',
+          },
+          category: '클라이밍',
+          startTime: '2023-08-10 11:00:00',
+          endTime: '2023-08-11 12:00:00',
+          color: 'blue',
+        },
+        likeCount: 5,
+        commentCount: 15,
+        content:
+          '오늘은 컴포넌트를 만들어볼거에요 꺄륵꺄륵 \n 오늘 하나는 만들어 놔야지. \n 타입스크립트도 조금 적용 제대로 해서..',
+        imageList: [
+          '../chacha1.jpg',
+          '../chacha1.jpg',
+          '../chacha1.jpg',
+          '../chacha1.jpg',
+        ],
+        encourageMessageList: [
+          {
+            activityId: 2,
+            user: { nickName: 'coco', profileImage: '코코' },
+            content: '댓글 1',
+          },
+          {
+            activityId: 2,
+            user: { nickName: 'lulu', profileImage: '룰루' },
+            content: '댓글 2',
+          },
+        ],
+        commentList: [
+          {
+            activityId: 2,
+            user: { nickName: '차차아버님', profileImage: '코코' },
+            content: '댓글 1',
+          },
+          {
+            activityId: 2,
+            user: { nickName: 'lulu', profileImage: '룰루' },
+            content: '댓글 2',
+          },
+        ],
+      }
+
+      
+
+    ]);
+
+
   }, []);
 
   const onStoryClicked = (story: Story) => {
@@ -158,11 +331,20 @@ const FeedMain = () => {
       {/* {articleList.map((article,index) => (
         <ArticleCard article={article} key={index}></ArticleCard>
       ))} */}
-      <ArticleCard
-        article={articleList[0]}
-        key={1}
-        setArticleList={setArticleList}
-      ></ArticleCard>
+
+      <div className="bg-gray-100 mt-3">
+        <div className="max-w-7xl">
+          <div className="w-full">
+            {articleList.map(article => (
+              <ArticleCard
+                article={article}
+                key={article.id}
+                setArticleList={setArticleList}
+              ></ArticleCard>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <FeedLoadingWave target={target} />
     </div>

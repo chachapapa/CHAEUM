@@ -56,7 +56,7 @@ const NewStoryCard = ({story, onStoryClicked}: Props) => {
   // Minutes calculation
   const minutes = Math.floor((time % 360000) / 6000);
 
-  // Seconds calculation
+  // Seconds calculat
   const seconds = Math.floor((time % 6000) / 100);
 
   const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes

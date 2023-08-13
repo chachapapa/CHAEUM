@@ -28,6 +28,25 @@ const StoryDetailCard = ({ story, closeStoryDetail }: Props) => {
   const [encourageMessageList, setEncourageMessageList] = useState<Comment[]>(
     []
   );
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+
+
+  useEffect(() => {
+    //각 스토리당 좋아요 여부 가져오기.
+    // axios
+    //   .get(`${LIKE_URL}`, {
+    //     headers: { Authorization: `Bearer ${AccessToken}` },
+    //     params: { activityId: article.activityInfo.id },
+    //   })
+    //   .then(res => {
+    //     console.log(res);
+    //     if (res.data) {
+    //       setsIsLiked(true);
+    //     } else {
+    //       setsIsLiked(false);
+    //     }
+    //   });
+  });
 
   useEffect(() => {
     // axios
@@ -50,34 +69,6 @@ const StoryDetailCard = ({ story, closeStoryDetail }: Props) => {
 
 
 
-  //     setEncourageMessageList([
-  //       {
-  //         activityId: 1,
-  //         replyId: 1,
-  //         user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-  //         content: '댓글 1',
-  //       },
-  //       {
-  //         activityId: 1,
-  //         replyId: 2,
-  //         user: { nickName: 'lulu', profileImage: '../chacha1.jpg' },
-  //         content: '댓글 2',
-  //       },
-  //       {
-  //         activityId: 1,
-  //         replyId: 3,
-  //         user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-  //         content: '댓글 3',
-  //       },
-  //       {
-  //         activityId: 1,
-  //         replyId: 4,
-  //         user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-  //         content: '댓글 4',
-  //       },
-  //     ]),
-  //   []
-  // );
 
   return (
     <Card className="flex pb-3 flex-col items-center justify-between bg-white w-11/12">
@@ -91,6 +82,8 @@ const StoryDetailCard = ({ story, closeStoryDetail }: Props) => {
           activityId={story.activityId}
           inputPlaceholder="응원글 입력..."
           commentOrEncourageMessage="encourageMessage"
+          isLiked = {isLiked}
+          setIsLiked={setIsLiked}
         />
 
         {/* 댓글 목록 */}
