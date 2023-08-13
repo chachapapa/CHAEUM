@@ -168,7 +168,7 @@ export const StreakCard = ({
             icon={faChevronUp}
             className="text-chaeum-gray-600 pt-2 text-xl "
           />
-          <div className={isListOpen ? OPEN_TYPE.open : OPEN_TYPE.close}>
+          {/* <div className={isListOpen ? OPEN_TYPE.open : OPEN_TYPE.close}>
             <div className="transition-height duration-500 delay-200">
               <ActiveInformation />
             </div>
@@ -190,7 +190,7 @@ export const StreakCard = ({
             <div className="transition-height duration-500 delay-200">
               <ActiveInformation />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

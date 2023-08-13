@@ -5,23 +5,25 @@ import {
   CardBody,
   Typography,
 } from '@material-tailwind/react';
-import { WaveColor } from '../theme/WaveColorTheme';
-import { WaveBottomColor } from '../theme/StreakTheme';
-import { Activity, Article } from '../Types';
+import { WaveColor } from '../../theme/WaveColorTheme';
+import { WaveBottomColor } from '../../theme/StreakTheme';
+import { Activity, Article } from '../../Types';
 import { start } from 'repl';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../../hooks/reduxHooks';
+import { setArticleWriteStep } from '../../../features/states/states';
 
 type Props = {
   activity : Activity;
+  setRegistActivity : React.Dispatch<React.SetStateAction<Activity | undefined>>;
 }
 
 
-const ActiveInformation = ({activity} : Props) => {
+const ActivityInformation = ({activity, setRegistActivity} : Props) => {
 
+  const dispatch = useAppDispatch();
   const color = activity.color;
-  const weight2 = 'w2';
   const weight3 = 'w3';
-  const weight4 = 'w4';
-
   const backgroundColor = WaveBottomColor({color,weight3});
 
 
@@ -39,6 +41,10 @@ const ActiveInformation = ({activity} : Props) => {
   const second = (elapsedTime-hour*3600000-minute*60000)/1000;
   const elapsedTimeFormed = hour+'시간 '+minute+'분 '+second+'초';
 
+  const onWriteButtonClicked = () => {
+    setRegistActivity(activity);
+    dispatch(setArticleWriteStep(2));
+  };
   console.log(hour +' '+minute+' '+second);
   // const activeExample = {
   //   streakColor : 'bg-chaeum-blue-400',
@@ -49,7 +55,7 @@ const ActiveInformation = ({activity} : Props) => {
   // };
 
   return (
-    <Card color="transparent" shadow={false} className="w-full max-w-[26rem]">
+    <Card color="transparent"  className="w-full p-2">
       <div className="flex">
         <div className={`h-auto w-[6px] ${backgroundColor} rounded-full mr-2`}></div>
         <div className="flex flex-col grow">
@@ -61,15 +67,17 @@ const ActiveInformation = ({activity} : Props) => {
           >
             <div className="flex w-full flex-col gap-0.5">
               <div className="flex items-center justify-between">
-                <div className="flex flex-col items-start">
+                <div>
+                  <Typography variant='h6'>{activity.streak.streakName}</Typography>
+                </div>
+                <div className="flex flex-col items-end">
                   <Typography variant="small" color="text-chaeum-gray-900">
                     {date}
                   </Typography>
                   <Typography variant="small" color="text-chaeum-gray-900">
-                    {startTimeFormed +'~'+endTimeFormed}
+                    {startTimeFormed +' ~ '+endTimeFormed}
                   </Typography>
                 </div>
-                <Typography>{activity.id}번째 채움</Typography>
               </div>
             </div>
           </CardHeader>
@@ -84,7 +92,7 @@ const ActiveInformation = ({activity} : Props) => {
                 <button className="outline outline-1 w-20 h-6 text-sm items-center rounded-md text-chaeum-gray-900 outline-chaeum-gray-300 hover:bg-chaeum-gray-300 mr-2 transition-all">
                   응원글 보기
                 </button>
-                <button className={`w-20 h-6 text-sm items-center rounded-md text-white ${backgroundColor}`}>
+                <button className={`w-20 h-6 text-sm items-center rounded-md text-white ${backgroundColor}`} onClick={onWriteButtonClicked}>
                   공유하기
                 </button>
               </div>
@@ -96,4 +104,4 @@ const ActiveInformation = ({activity} : Props) => {
   );
 };
 
-export default ActiveInformation;
+export default ActivityInformation;

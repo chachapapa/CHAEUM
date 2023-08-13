@@ -1,17 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ColorVariation } from '../Types';
+import { ColorVariation, ImageFile } from '../Types';
 import axios from 'axios';
+import { useAppDispatch } from '../../hooks/reduxHooks';
+import { setImageList } from '../../features/states/states';
 
-type ImageFile = {
-  id: string;
-  file: File;
-  url: string;
-};
+type Props ={
+  imageList : ImageFile[];
+}
 
-const ImageUpload = () => {
+
+
+const ImageUpload = ({imageList}:Props) => {
   // 업로드할 파일들을 담을 State!
-  const [imageList, setImageList] = useState<ImageFile[]>([]);
 
+  const dispatch = useAppDispatch();
   const imageInput = useRef<HTMLInputElement>(null);
 
   const onUploadButtonClicked = () => {
@@ -33,7 +35,7 @@ const ImageUpload = () => {
 
         temp.push(tmpImageFile);
       }
-      setImageList(temp.concat(imageList));
+      dispatch(setImageList(temp.concat(imageList)));
     }
   };
 
