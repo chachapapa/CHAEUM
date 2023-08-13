@@ -9,6 +9,7 @@ import com.cocochacha.chaeumbackend.dto.GetCategoryResponse;
 import com.cocochacha.chaeumbackend.dto.GetStreakResponse;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import com.cocochacha.chaeumbackend.dto.RivalListResponse;
+import com.cocochacha.chaeumbackend.dto.RivalUpdateResponse;
 import java.util.List;
 
 public interface StreakService {
@@ -72,7 +73,7 @@ public interface StreakService {
      * 스트릭 id로 스트릭을 찾아서 반환하는 함수
      *
      * @param id
-     * @return
+     * @return id에 해당하는 스트릭
      */
     Streak findById(int id);
 
@@ -80,7 +81,15 @@ public interface StreakService {
      * 카테고리로 라이벌 스트릭을 찾아서 반환하는 함수
      *
      * @param myStreak
-     * @return
+     * @return 라이벌
      */
     RivalListResponse getRivalList(Streak myStreak);
+
+    /**
+     * 라이벌들의 아이디로 라이벌 시간 정보를 찾아서 반환하는 함수
+     *
+     * @param rivalStreakIds
+     * @return
+     */
+    RivalUpdateResponse getRivalList(List<Integer> rivalStreakIds);
 }

@@ -10,6 +10,8 @@ import com.cocochacha.chaeumbackend.dto.GetStreakResponse;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import com.cocochacha.chaeumbackend.dto.RivalListRequest;
 import com.cocochacha.chaeumbackend.dto.RivalListResponse;
+import com.cocochacha.chaeumbackend.dto.RivalUpdateRequest;
+import com.cocochacha.chaeumbackend.dto.RivalUpdateResponse;
 import com.cocochacha.chaeumbackend.service.StreakService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import java.util.ArrayList;
@@ -174,6 +176,27 @@ public class StreakController {
         // 위에서 선정된 5개의 스트릭에 대해서 아래 내용을 담아요
         // 스트릭 id, 유저의 닉네임, 대분류, 중분류, 분류 id, 누적시간(지난7일), 활동중여부, (활동중이면) 현재진행시간
         return ResponseEntity.ok(rivalListResponse);
+    }
+
+    /**
+     * 라이벌 활동 정보 갱신을 위해 활동 시간을 반환합니다.
+     *
+     * @param rivalUpdateRequest
+     * @return
+     */
+    @GetMapping("/rival-update")
+    public ResponseEntity<?> rivalUpdate(@RequestBody RivalUpdateRequest rivalUpdateRequest) {
+
+        // 요청으로 들어온 스트릭들의 기존 누적 시간을 담아요
+        // 위에서 선정된 5개의 스트릭에 대해서 아래 내용을 담아요
+        // 스트릭 id, 누적시간(지난7일), 활동중여부, (활동중이면) 현재진행시간
+        RivalUpdateResponse rivalUpdateResponse = streakService.getRivalList(
+                rivalUpdateRequest.getRivalStreakIds());
+        if (rivalUpdateResponse == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return ResponseEntity.ok(rivalUpdateResponse);
     }
 
     /**

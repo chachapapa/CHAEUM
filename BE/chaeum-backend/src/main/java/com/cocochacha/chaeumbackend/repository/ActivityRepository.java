@@ -59,6 +59,13 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
             AND activity_end_time IS NULL;
             """;
 
+    String accmulateWeekTimeByIdQuery = """
+            select sum(activity_time) as `accumulate_time`
+            from activity
+            where DATE_SUB(curdate(), INTERVAL 7 Day) <= Date(activity_start_time)
+            AND streak_id = :streak_id
+            """;
+
     Optional<Activity> findById(int id);
 
     /**
@@ -114,6 +121,15 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
      */
     @Query(value = findOngoingTimeQuery, nativeQuery = true)
     Optional<Integer> findOngoingTime(@Param("streak_id") int streakId);
+
+    /**
+     * streak id에 대해 한 주간의 누적 시간을 구하는 메소드
+     *
+     * @param streakId
+     * @return
+     */
+    @Query(value = accmulateWeekTimeByIdQuery, nativeQuery = true)
+    Optional<Integer> accmulateWeekTime(@Param("streak_id") int streakId);
 }
 
 

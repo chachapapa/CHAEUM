@@ -13,6 +13,7 @@ import com.cocochacha.chaeumbackend.dto.GetStreakResponse;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
 import com.cocochacha.chaeumbackend.dto.RivalListResponse;
 import com.cocochacha.chaeumbackend.dto.RivalListResponse.Rival;
+import com.cocochacha.chaeumbackend.dto.RivalUpdateResponse;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 import com.cocochacha.chaeumbackend.repository.CategoryRepository;
 import com.cocochacha.chaeumbackend.repository.StreakInfoRepository;
@@ -455,5 +456,35 @@ public class StreakServiceImpl implements StreakService {
         return RivalListResponse.builder()
                 .myAccumulateTime(myTime)
                 .rivalList(selectedRivalList).build();
+    }
+
+    @Override
+    public RivalUpdateResponse getRivalList(List<Integer> rivalStreakIds) {
+
+        List<RivalUpdateResponse.Rival> selectedRivalList = new ArrayList<>();
+
+        for (int streakId : rivalStreakIds) {
+            Integer accumlatieWeekTime = activityRepository.accmulateWeekTime(streakId).orElse(0);
+
+            Integer ongoingTime = activityRepository.findOngoingTime(streakId)
+                    .orElse(null);
+
+            RivalUpdateResponse.Rival rival = RivalUpdateResponse.Rival.builder()
+                    .streakId(streakId)
+                    .accumulateTime(accumlatieWeekTime)
+                    .build();
+
+            if (ongoingTime != null) {
+                rival.setActive(true);
+                rival.setOngoingTime(ongoingTime);
+            } else {
+                rival.setActive(false);
+                rival.setOngoingTime(0);
+            }
+
+            selectedRivalList.add(rival);
+        }
+
+        return RivalUpdateResponse.builder().rivalList(selectedRivalList).build();
     }
 }
