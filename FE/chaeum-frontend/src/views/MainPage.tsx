@@ -63,6 +63,7 @@ const MainPage = () => {
       title: '1일 1솔',
       tags: ['공부', '코딩', '알고리즘', '백준', '하기시룸'],
       color: 'chaeumblue',
+      isDeactive: true,
       info: [],
     },
     {
@@ -303,11 +304,10 @@ const MainPage = () => {
 
   // 스트릭 생성하기
   const [isLoadingOver, setIsLoadingOver] = useState(false);
-  const [isOpened, setIsOpened] = useState(false);
   const [goCreate, setGoCreate] = useState(false);
   const [goModify, setGoModify] = useState(false);
   const [categoryName, setCategoryName] = useState<string>('');
-  const [categoryList, setCategoryList] = useState<MiddleCategory>([]);
+  const [categoryList, setCategoryList] = useState<mainCategory>([]);
   const [modalTypeKor, setModalTypeKor] = useState<string>('');
 
   const categoryExercise = [
@@ -326,31 +326,30 @@ const MainPage = () => {
     { id: 4, main: '공부', name: '고시' },
   ];
 
-  const streakPlus = (category: 'exercise' | 'study' | 'others' | '') => {
+  const streakPlus = (category: '운동' | '공부' | '기타' | '') => {
     //스트릭 추가 페이지
     if (modalState.isModalOpen) dispatch(closeModal());
     else
       dispatch(
         openModal({
           isModalOpen: true,
-          modalType: 'modify',
-          middleCategory: category,
+          modalType: 'create',
+          mainCategory: category,
         })
       );
   };
 
   useEffect(() => {
-    if (modalState.middleCategory === 'others') setCategoryList([]);
-    else if (modalState.middleCategory === 'study')
-      setCategoryList(categoryStudy);
+    if (modalState.mainCategory === '기타') setCategoryList([]);
+    else if (modalState.mainCategory === '공부') setCategoryList(categoryStudy);
     else setCategoryList(categoryExercise);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modalState.middleCategory]);
+  }, [modalState.mainCategory]);
 
   useEffect(() => {
     if (drawerType === 'remove') setModalTypeKor('삭제');
-    else if (drawerType === 'modify') setModalTypeKor('수정');
     else if (drawerType === 'lock') setModalTypeKor('비활성화');
+    else if (drawerType === 'unlock') setModalTypeKor('활성화');
   }, [drawerType]);
 
   const createStreak = () => {
@@ -435,7 +434,7 @@ const MainPage = () => {
     },
   ];
 
-  type MiddleCategory = {
+  type mainCategory = {
     id: number;
     main: string;
     name: string;
@@ -465,7 +464,7 @@ const MainPage = () => {
                   colorInput="gray"
                   varient="text"
                   textsize="xl"
-                  callback={() => streakPlus('study')}
+                  callback={() => streakPlus('공부')}
                 />
               </div>
               <StreakCardCarousel activeList={studyActive} />
@@ -481,7 +480,7 @@ const MainPage = () => {
                   colorInput="gray"
                   varient="text"
                   textsize="xl"
-                  callback={() => streakPlus('exercise')}
+                  callback={() => streakPlus('운동')}
                 />
               </div>
               <StreakCardCarousel activeList={exerciseActive} />
@@ -497,7 +496,7 @@ const MainPage = () => {
                   colorInput="gray"
                   varient="text"
                   textsize="xl"
-                  callback={() => streakPlus('others')}
+                  callback={() => streakPlus('기타')}
                 />
               </div>
               <StreakCardCarousel activeList={othersActive} />
@@ -569,7 +568,7 @@ const MainPage = () => {
               )}
             </div>
 
-            {categoryName !== '기타' && (
+            {modalState.mainCategory !== '기타' && (
               <div className=" flex flex-col w-full mb-5">
                 <div className="w-full flex flex-col">
                   <span className="text-start m-1 text-sm text-chaeum-gray-700">

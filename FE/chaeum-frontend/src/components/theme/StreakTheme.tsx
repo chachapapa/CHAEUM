@@ -150,6 +150,13 @@ const ColorNameList: ColorNameType = {
 
   // default color
   defaultw3: 'bg-chaeum-gray-300',
+
+  // deactive color
+  deactivew1: 'bg-stone-100',
+  deactivew2: 'bg-stone-200',
+  deactivew3: 'bg-stone-400',
+  deactivew4: 'bg-stone-600',
+  deactivew5: 'bg-stone-800',
 };
 
 const StreakColor = ({ color, weight }: ColorPropsType) => {
@@ -168,6 +175,5 @@ const WaveBottomColor = ({ color, weight0, weight2, weight3, weight4 }: WaveColo
 
   return ColorNameList[newcolor + newweight];
 };
-
 
 export { StreakColor, WaveBottomColor };

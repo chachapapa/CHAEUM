@@ -32,7 +32,7 @@ public class Reply {
     private String content;
 
     @Column(name = "is_cheer")
-    private boolean isCheer;
+    private Boolean isCheer;
 
     @CreationTimestamp
     @Column(name = "reply_time")
@@ -42,6 +42,6 @@ public class Reply {
     private Long rereplyId;
 
     @Column(name = "reply_deleted")
-    private boolean replyDeleted;
+    private Boolean replyDeleted;
 
 }

@@ -35,7 +35,7 @@ const initialState: State = {
   imageList : [],
   isDrawerOpen: false,
   drawerType: '',
-  modalState: { isModalOpen: false, modalType: '', middleCategory: '' },
+  modalState: { isModalOpen: false, modalType: '', mainCategory: '' },
 };
 
 // 2. slice 생성 : createSlice

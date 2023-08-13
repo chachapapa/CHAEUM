@@ -3,15 +3,20 @@ import React, { useState } from 'react';
 import { Tag } from '../common/Tag';
 import { wait } from '@testing-library/user-event/dist/utils';
 import InputTag from '../common/InputTag';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 type ListStateType = {
   taglist: string[] | [];
 };
 
 export const TagInput = () => {
+  const main = useAppSelector(
+    state => state.stateSetter.modalState.mainCategory
+  );
+
   // 1. 해시태그에 활용할 상태
   const [hashtag, setHashtag] = useState<string>(''); // 단일 해시태그 입력받기
-  const [tagArr, setTagArr] = useState<string[] | []>([]); // 전체 해시태그를 저장할 배열
+  const [tagArr, setTagArr] = useState<string[] | []>([main]); // 전체 해시태그를 저장할 배열
 
   const onChangeTag = (e: React.ChangeEvent<HTMLInputElement>) => {
     let { value } = e.target as HTMLInputElement;
@@ -39,7 +44,6 @@ export const TagInput = () => {
 
   return (
     <div className="flex flex-col flex-wrap justify-left items-start w-full">
-      {/* <div className="bg-white w-full bg-opacity-50 border-[1px] rounded-md border-chaeum-gray-500/80  text-blue-gray-400 flex flex-col flex-wrap justify-left items-start"> */}
       {tagArr.length === 0 ? null : (
         <div className="pb-2">
           <div className="HashWrapOuter flex flex-row flex-wrap">

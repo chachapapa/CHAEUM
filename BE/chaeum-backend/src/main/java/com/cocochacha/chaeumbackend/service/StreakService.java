@@ -57,7 +57,7 @@ public interface StreakService {
      * @return List<GetStreakResponse ( 스트릭_id, 스트릭_이름, 스트릭_컬러, 스트릭_active, 스트릭_deleted, 카테고리, list
             * < list < String>>) >
      */
-    List<GetStreakResponse> getStreak(UserPersonalInfo userPersonalInfo);
+    List<List<GetStreakResponse>> getStreak(UserPersonalInfo userPersonalInfo);
 
     /**
      * 카테고리 중분류를 모두 모두 반환 해주는 함수

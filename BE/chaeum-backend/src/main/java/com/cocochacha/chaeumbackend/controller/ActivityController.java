@@ -5,6 +5,8 @@ import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.service.ActivityService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,13 +65,16 @@ public class ActivityController {
     /**
      * 활동 시작시 멘트를 받기 위한 요청에 대한 응답을 주는 메소드
      *
-     * @param startMessageRequest userId, categoryId
+     * @param categoryId categoryId
      * @return 시작시 사용자가 보게될 멘트 목록
      */
     @GetMapping("/message/starting")
-    public ResponseEntity<?> startMent(@RequestBody StartMessageRequest startMessageRequest) {
+    public ResponseEntity<?> startMent(@RequestParam int categoryId) {
         // 시작시 받는 멘트
         // 유저의 정보를 기반으로 메세지를 보내줄 것
+        StartMessageRequest startMessageRequest = new StartMessageRequest();
+        startMessageRequest.setCategoryId(categoryId);
+
         UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
         StartMessageResponse startMessageResponse = activityService.startMessage(startMessageRequest, userPersonalInfo);
         return new ResponseEntity<>(startMessageResponse, HttpStatus.OK);
@@ -78,11 +83,15 @@ public class ActivityController {
     /**
      * 활동 중 멘트를 받기 위한 요청에 대한 응답을 주는 메소드
      *
-     * @param doingMessageRequest categoryId, activityId
+     * @param  activityId 활동 아이디, categoryId 카테고리 아이디
      * @return 활동 중 받는 멘트의 리스트
      */
     @GetMapping("/message/doing")
-    public ResponseEntity<?> doMent(@RequestBody DoingMessageRequest doingMessageRequest) {
+    public ResponseEntity<?> doMent(@RequestParam int activityId, @RequestParam int categoryId) {
+        DoingMessageRequest doingMessageRequest = new DoingMessageRequest();
+        doingMessageRequest.setActivityId(activityId);
+        doingMessageRequest.setCategoryId(categoryId);
+
         UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
         DoingMessageResponse doingMessageResponse = activityService.doMessage(doingMessageRequest, userPersonalInfo);
         return new ResponseEntity<>(doingMessageResponse, HttpStatus.OK);
@@ -91,13 +100,16 @@ public class ActivityController {
     /**
      * 활동 중 응원글 목록
      *
-     * @param cheeringCommentRequest activityId
+     * @param activityId activityId
      * @return 응원글의 목록
      */
     @GetMapping("/message/cheering")
-    public ResponseEntity<?> cheeringComment(@RequestBody CheeringCommentRequest cheeringCommentRequest) {
+    public ResponseEntity<?> cheeringComment(@RequestParam int activityId) {
+        CheeringCommentRequest cheeringCommentRequest = new CheeringCommentRequest();
+        cheeringCommentRequest.setActivityId(activityId);
+
         try {
-            CheeringCommentResponse cheeringCommentResponse = activityService.cheeringComment(cheeringCommentRequest);
+            List<CheeringCommentResponse> cheeringCommentResponse = activityService.cheeringComment(cheeringCommentRequest);
             return new ResponseEntity<>(cheeringCommentResponse, HttpStatus.OK);
         } catch (NullPointerException NPE) {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);

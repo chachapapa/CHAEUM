@@ -11,6 +11,7 @@ interface ProfileCardPropsType {
   mbti?: string;
   longest?: number;
   profile?: string;
+  onClick: () => void;
 }
 
 export const MyProfileCard = ({
@@ -19,9 +20,13 @@ export const MyProfileCard = ({
   mbti,
   longest,
   profile,
+  onClick,
 }: ProfileCardPropsType) => {
   return (
-    <div className="bg-white z-50 grid grid-cols-[1fr_3fr_1fr] grid-rows-2 p-2 w-11/12 justify-self-center self-center rounded-3xl shadow-[0_0_5px_5px_rgba(208,211,222,0.5)] shadow-chauem-gray-500/50 ">
+    <div
+      onClick={onClick}
+      className="bg-white z-50 grid grid-cols-[1fr_3fr_1fr] grid-rows-2 p-2 w-11/12 justify-self-center self-center rounded-3xl shadow-[0_0_5px_5px_rgba(208,211,222,0.5)] shadow-chauem-gray-500/50 "
+    >
       <div className="profilearea row-span-2 justify-self-center self-center w-3 ">
         {typeof profile === 'undefined' ? (
           <FontAwesomeIcon
