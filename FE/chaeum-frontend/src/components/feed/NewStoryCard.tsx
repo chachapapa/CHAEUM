@@ -30,15 +30,13 @@ type Props = {
 };
 
 const NewStoryCard = ({story, onStoryClicked}: Props) => {
-  const weight2 = 'w2';
+  const weight0 = 'w0';
   const weight3 = 'w3';
   const weight4 = 'w4';
   const waveFirst = WaveColor({ color: story.color, weight4 });
   const waveSecond = WaveColor({ color: story.color, weight3 });
-  const waveThird = WaveColor({ color: story.color, weight2 });
-  const BottomFirst = WaveBottomColor({ color: story.color, weight4 });
-  const BottomSecond = WaveBottomColor({ color: story.color, weight3 });
-  const BottomThird = WaveBottomColor({ color: story.color, weight2 });
+  const titleBoxColor = WaveBottomColor({ color: story.color, weight3 });
+  const backgroundColor = WaveBottomColor({ color: story.color, weight0 });
 
   const [time, setTime] = useState(story.time);
 
@@ -66,18 +64,18 @@ const NewStoryCard = ({story, onStoryClicked}: Props) => {
     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
   return (
-    <div className="bg-gray-50 relative min-w-[230px] min-h-[150px] flex overflow-auto rounded-lg shadow-lg mr-10" onClick={onStoryClicked}>
+    <div className={`${backgroundColor} relative min-w-[230px] min-h-[150px] flex overflow-auto rounded-lg shadow-lg mr-10`} onClick={onStoryClicked}>
       <div className="flex flex-col justify-around w-full m-2">
         <div className="relative flex items-center gap-x-1">
           <img
-            src={story.img}
+            src={story.profileImg}
             alt=""
-            className="h-16 w-16 rounded-full bg-gray-50"
+            className="h-14 w-14 rounded-full bg-gray-50"
           />
           <div className="text-base leading-6">
             <p className="text-chaeum-gray-900 text-left">{story.nickname}</p>
             <div
-              className={`text-xs ${BottomSecond} rounded-md py-0.5 px-1 w-fit`}
+              className={`text-xs ${titleBoxColor} rounded-md py-0.5 px-1 w-fit`}
               style={{ display: 'flex', flexWrap: 'wrap' }}
             >
               <p className="font-bold text-left text-sm">{story.title}</p>

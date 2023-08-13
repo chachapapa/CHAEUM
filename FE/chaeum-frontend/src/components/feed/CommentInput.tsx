@@ -25,49 +25,49 @@ const CommentInput = ({
 
   const registComment = () => {
     if (commentOrEncourageMessage === 'comment') {
-      axios
-        .post(
-          `${COMMENT_REGIST_URL}`,
-          { activityId: activityId, reply: currentComment },
-          { headers: { Authorization: `Bearer ${AccessToken}` } }
-        )
-        .then(res => {
-          console.log(res);
-          if (res && setCommentList) {
-            setCommentList(prevList => [
-              ...prevList,
-              {
-                user: { nickName: 'chacha', profileImage: './chacha1.jpg' },
-                content: currentComment,
-                activityId: activityId,
-              },
-            ]);
-          } else {
-            console.log('댓글 등록 실패');
-          }
-        });
+      // axios
+      //   .post(
+      //     `${COMMENT_REGIST_URL}`,
+      //     { activityId: activityId, reply: currentComment },
+      //     { headers: { Authorization: `Bearer ${AccessToken}` } }
+      //   )
+      //   .then(res => {
+      //     console.log(res);
+      //     if (res && setCommentList) {
+      //       setCommentList(prevList => [
+      //         ...prevList,
+      //         {
+      //           user: { nickName: 'chacha', profileImage: './chacha1.jpg' },
+      //           content: currentComment,
+      //           activityId: activityId,
+      //         },
+      //       ]);
+      //     } else {
+      //       console.log('댓글 등록 실패');
+      //     }
+      //   });
     }else if(commentOrEncourageMessage === 'encourageMessage'){
-      axios
-        .post(
-          `${ENCOURAGE_MESSAGE_REGIST_URL}`,
-          JSON.stringify({activityId: activityId, comment: currentComment }),
-          { headers: { Authorization: `Bearer ${AccessToken}` } }
-        )
-        .then(res => {
-          console.log(res);
-          if (res && setCommentList) {
-            setCommentList(prevList => [
-              ...prevList,
-              {
-                user: { nickName: 'chacha', profileImage: './chacha1.jpg' },
-                content: currentComment,
-                activityId: activityId,
-              },
-            ]);
-          } else {
-            console.log('응원글 등록 실패');
-          }
-        });
+      // axios
+      //   .post(
+      //     `${ENCOURAGE_MESSAGE_REGIST_URL}`,
+      //     JSON.stringify({activityId: activityId, comment: currentComment }),
+      //     { headers: { Authorization: `Bearer ${AccessToken}` } }
+      //   )
+      //   .then(res => {
+      //     console.log(res);
+      //     if (res && setCommentList) {
+      //       setCommentList(prevList => [
+      //         ...prevList,
+      //         {
+      //           user: { nickName: 'chacha', profileImage: './chacha1.jpg' },
+      //           content: currentComment,
+      //           activityId: activityId,
+      //         },
+      //       ]);
+      //     } else {
+      //       console.log('응원글 등록 실패');
+      //     }
+      //   });
     }
   };
 

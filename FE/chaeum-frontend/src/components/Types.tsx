@@ -4,14 +4,18 @@ type User = {
 };
 
 type Activity = {
+  id : number;
+  streakId : number;
+  streak : Streak;
   category: string;
-  color: string;
-  time: number;
+  color: ColorVariation;
+  startTime: string;
+  endTime : string;
 };
 
 type Comment = {
   user: User;
-  postId : number;
+  activityId : number;
   content: string;
   replyId?: number; 
 };
@@ -28,6 +32,12 @@ type Article = {
   imageList: string[];
   encourageMessageList: Comment[];
   commentList: Comment[];
+};
+
+type ImageFile = {
+  id: string;
+  file: File;
+  url: string;
 };
 
 type ColorForSelection = {
@@ -56,10 +66,11 @@ type ColorVariation =
   | 'chaeum-blue';
 
 type Story = {
+  activityId : number,
   id: number;
   nickname: string;
   title: string;
-  img: string;
+  profileImg: string;
   color: ColorVariation;
   tag: string[];
   time: number;
@@ -86,6 +97,7 @@ export interface ColorPropsType {
 
 export interface WaveColorPropsType {
   color?: string;
+  weight0?: 'w0';
   weight2?: 'w2';
   weight3?: 'w3';
   weight4?: 'w4';
@@ -117,6 +129,7 @@ export type {
   Story,
   Streak,
   Modal,
+  ImageFile,
 };
 
 export interface StreakInfoType {

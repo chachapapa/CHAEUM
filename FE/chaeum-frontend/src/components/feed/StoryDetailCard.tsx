@@ -30,20 +30,25 @@ const StoryDetailCard = ({ story, closeStoryDetail }: Props) => {
   );
 
   useEffect(() => {
-    axios
-      .get(`${ENCOURAGE_MESSAGE_URL}`,{
-        headers: { Authorization: `Bearer ${AccessToken}` },
-        params: { activityId: story.activityId },
-      })
-      .then(res => {
-        console.log(res);
-        if (res) {
-          setEncourageMessageList(prevList => [...prevList, res.data]);
-        } else {
-          console.log('응원글 가져오기 실패');
-        }
-      });
+    // axios
+    //   .get(`${ENCOURAGE_MESSAGE_URL}`,{
+    //     headers: { Authorization: `Bearer ${AccessToken}` },
+    //     params: { activityId: story.activityId },
+    //   })
+    //   .then(res => {
+    //     console.log(res);
+    //     if (res) {
+    //       setEncourageMessageList(prevList => [...prevList, res.data]);
+    //     } else {
+    //       console.log('응원글 가져오기 실패');
+    //     }
+    //   });
   });
+
+
+  
+
+
 
   //     setEncourageMessageList([
   //       {
