@@ -53,8 +53,7 @@ function App() {
         </Route> */}
         <Route path="/feed" element={<FeedPage />}>
           <Route index element={<FeedMain/>}/>
-          <Route path="write" element={<FeedWritePage streakColor='blue'/>}></Route>
-          <Route path=":articleId" element={<FeedDetailPage />}></Route>
+          <Route path="write" element={<FeedWritePage/>}></Route>
         </Route>
         <Route path="/chat" element={<ChatPage />}>
           <Route path="init" element={<ChatInitPage />}></Route>

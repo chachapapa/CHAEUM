@@ -28,30 +28,31 @@ type Props = {
   tag: string[];
   // 렌더링 문제로 string이 아닌 number로 넘겨서 계산해야 합니다.
   startToEndTime: string;
-  time: number;
+  date: string;
   title: string;
 };
 
 const ActivityUploadCard = (props: Props) => {
+  const weight0 = 'w0';
   const weight2 = 'w2';
   const weight3 = 'w3';
   const weight4 = 'w4';
   const waveFirst = WaveColor({ color: props.color, weight4 });
   const waveSecond = WaveColor({ color: props.color, weight3 });
   const waveThird = WaveColor({ color: props.color, weight2 });
+  const backgroundColor = WaveBottomColor({ color: props.color, weight0 });
   const BottomFirst = WaveBottomColor({ color: props.color, weight4 });
   const BottomSecond = WaveBottomColor({ color: props.color, weight3 });
   const BottomThird = WaveBottomColor({ color: props.color, weight2 });
 
-  const [time, setTime] = useState(props.time);
 
   return (
-    <div className="relative w-11/12 h-[120px] flex overflow-auto rounded-lg shadow-xl">
-      <div className="flex flex-col justify-around w-full m-2 z-10">
-        <div className="relative flex items-center gap-x-1">
+    <div className={`relative w-11/12 h-[120px] flex overflow-auto rounded-lg shadow-xl ${backgroundColor}`}>
+      <div className="flex flex-col justify-evenly w-full mx-2 z-10">
+        <div className="relative flex items-center justify-between gap-x-1">
           <div className="text-base leading-6">
             <div
-              className={`text-xs ${BottomFirst} rounded-md py-0.5 px-1 w-fit`}
+              className={`text-xs ${BottomFirst} rounded-md py-0.5 px-1 w-fit mb-1`}
               style={{ display: 'flex', flexWrap: 'wrap' }}
             >
               <p className="font-bold text-left text-sm text-white">{props.title}</p>
@@ -68,9 +69,13 @@ const ActivityUploadCard = (props: Props) => {
               ))}
             </div>
           </div>
+          <div className='self-start text-chaeum-gray-900'>
+            {props.date}
+          </div>
         </div>
+        
         <div className="text-xl text-white">
-          {props.startToEndTime} ({props.time}시간)
+          {props.startToEndTime}
         </div>
       </div>
       <div className="absolute flex flex-col self-end w-full z-0">

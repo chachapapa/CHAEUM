@@ -1,61 +1,46 @@
 import { Avatar, IconButton, Typography } from '@material-tailwind/react';
 import React from 'react';
+import { Comment } from '../Types';
+import axios from 'axios';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
-type User = {
-  nickName: string;
-  profileImage: string;
+type Props = {
+  commentList: Comment[];
+  setCommentList: React.Dispatch<React.SetStateAction<Comment[]>>;
 };
 
-type Comment = {
-  commentId: number;
-  user: User;
-  content: string;
-};
+const COMMENT_DELETE_URL =
+  'http://i9a810.p.ssafy.io:8080/api/sns/comment/delete';
+const AccessToken = localStorage.getItem('access_token');
 
-const CommentList = () => {
-  const commentListExample: Comment[] = [
-    {
-      commentId: 1,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 1',
-    },
-    {
-      commentId: 2,
-      user: { nickName: 'lulu', profileImage: '../chacha1.jpg' },
-      content: '댓글 2',
-    },
-    {
-      commentId: 3,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 3',
-    },
-    {
-      commentId: 4,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 4',
-    },
-    {
-      commentId: 5,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 5',
-    },
-    {
-      commentId: 6,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 6',
-    },
-    {
-      commentId: 7,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 7',
-    },
-  ];
+const CommentList = ({ commentList, setCommentList }: Props) => {
+  const fixedNickname = useAppSelector(state => state.stateSetter.nickname);
+
+  const onCommentDeleteButtonClick = (
+    replyId: number | undefined,
+    index: number
+  ) => {
+    axios
+      .put(
+        `${COMMENT_DELETE_URL}`,
+        { replyId: replyId },
+        { headers: { Authorization: `Bearer ${AccessToken}` } }
+      )
+      .then(res => {
+        console.log(res);
+        if (res) {
+          setCommentList(prevList => prevList.splice(index, 1));
+        } else {
+          console.log('댓글 삭제 실패');
+        }
+      });
+  };
 
   return (
-    <div className=" w-[360px] p-1 pl-2 my-3">
-      {commentListExample.map(comment => (
-        <div className="relative w-full h-10 mb-1" key={comment.commentId}>
-          <div className="absolute h-full w-full grid justify-items-start items-center ">
+    <div className=" w-full p-1 pl-2 my-3">
+      {commentList.map((comment, index) => (
+        <div className="w-full h-10 mb-1" key={index}>
+          <div className="flex h-full justify-between items-center ">
             <div className="flex h-full">
               <Avatar
                 src={comment.user.profileImage}
@@ -70,11 +55,21 @@ const CommentList = () => {
                   color="text-chaeum-gray-900"
                   className="opacity-80 text-sm"
                 >
-                  <span className="font-bold mr-2">{comment.user.nickName}</span>
+                  <span className="font-bold mr-2">
+                    {comment.user.nickName}
+                  </span>
                   <span>{comment.content}</span>
                 </Typography>
               </div>
             </div>
+            {fixedNickname === comment.user.nickName ? (
+              <i
+                className="fa-solid fa-trash"
+                onClick={() =>
+                  onCommentDeleteButtonClick(comment.replyId, index)
+                }
+              ></i>
+            ) : null}
           </div>
         </div>
       ))}

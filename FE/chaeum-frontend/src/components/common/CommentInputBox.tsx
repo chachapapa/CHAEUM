@@ -2,10 +2,17 @@ import React from 'react';
 import { Textarea } from '@material-tailwind/react';
 
 type Props = {
-  inputPlaceholder : string;
-}
+  inputPlaceholder: string;
+  setCurrentComment?: React.Dispatch<React.SetStateAction<string>>;
+};
 
-const CommentInputBox = (props : Props) => {
+const CommentInputBox = (props: Props) => {
+  const onCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (props.setCurrentComment) {
+      props.setCurrentComment(e.target.value);
+    }
+  };
+
   return (
     <div className="flex w-full flex-row items-center gap-2 rounded-lg  bg-gray-100">
       <Textarea
@@ -18,6 +25,7 @@ const CommentInputBox = (props : Props) => {
         labelProps={{
           className: 'before:content-none after:content-none',
         }}
+        onChange={onCommentChange}
       />
     </div>
   );

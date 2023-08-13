@@ -1,20 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextButton from '../common/TextButton';
 
 type Props = {
-  isStarted: boolean;
   onClickNext: () => void;
 };
 
-const TermsOfUse = ({ isStarted, onClickNext }: Props) => {
+const TermsOfUse = ({ onClickNext }: Props) => {
 
   const [isNextClicked, setIsNextClicked]=useState(false);
+  const [isStarted, setIsStarted] = useState<boolean>(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsStarted(true);
+    }, 300);
+  },[isStarted]);
+  
   
   return (
     <div
       className={
         isStarted && !isNextClicked
-          ? 'flex flex-col w-full h-5/6 items-center gap-8 transition-opacity duration-1000'
+          ? 'flex flex-col w-full h-5/6 items-center gap-8 transition-opacity duration-500'
           : 'flex flex-col w-full h-5/6 items-center gap-8 opacity-0'
       }
     >

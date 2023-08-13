@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Streak, Modal } from '../../components/Types';
+import { Streak, Modal, ImageFile } from '../../components/Types';
 
 // 1. initial state type 생성
 export type State = {
@@ -8,6 +8,13 @@ export type State = {
   initialSportsStreak: Streak;
   initialMyStreak: Streak;
   tabNumber: number;
+
+  // 게시글 작성시 헤더 컨트롤 state
+  articleWriteStep : number;
+
+  // 게시글 업로드를 위한 컨텐츠 state
+  articleContent : string;
+  imageList : ImageFile[];
 
   // Drawer Control State
   isDrawerOpen: boolean;
@@ -23,6 +30,9 @@ const initialState: State = {
   initialSportsStreak: { categoryMain: '운동', categoryMiddle: '기타' },
   initialMyStreak: { categoryMain: '기타', categoryMiddle: '기타' },
   tabNumber: 0,
+  articleWriteStep : 0, 
+  articleContent : '',
+  imageList : [],
   isDrawerOpen: false,
   drawerType: '',
   modalState: { isModalOpen: false, modalType: '', mainCategory: '' },
@@ -54,6 +64,18 @@ const Slice = createSlice({
       state.tabNumber = action.payload;
     },
 
+    setArticleWriteStep : (state, action: PayloadAction<number>) => {
+      state.articleWriteStep = action.payload;
+    },
+
+    setArticleContent : (state, action: PayloadAction<string>)=>{
+      state.articleContent = action.payload;
+    },
+
+    setImageList : (state, action: PayloadAction<ImageFile[]>)=>{
+      state.imageList = action.payload;
+    },
+
     openDrawer: (state, action) => {
       state.isDrawerOpen = true;
       state.drawerType = action.payload;
@@ -70,6 +92,8 @@ const Slice = createSlice({
     closeModal: state => {
       state.modalState.isModalOpen = false;
     },
+
+    
   },
 });
 
@@ -82,6 +106,9 @@ export const {
   setInitialStudyStreak,
   setInitialSportsStreak,
   setInitialMyStreak,
+  setArticleWriteStep,
+  setArticleContent,
+  setImageList,
   openDrawer,
   closeDrawer,
   openModal,

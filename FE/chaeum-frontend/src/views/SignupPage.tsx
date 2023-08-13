@@ -18,6 +18,7 @@ const SignupPage = () => {
   const [isStarted, setIsStarted] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [searchParams, setSearchParams] = useSearchParams();
+  const fixedNickname = useAppSelector(state => state.stateSetter.nickname);
 
   const studyStreak = useAppSelector(
     state => state.stateSetter.initialStudyStreak
@@ -38,8 +39,18 @@ const SignupPage = () => {
   const AccessToken = localStorage.getItem('access_token');
 
   const onClickNext = () => {
-    if (currentStep < 3) {
+    if (currentStep < 2) {
       setCurrentStep(currentStep + 1);
+    } else if (currentStep === 2) {
+      //회원 등록 요청
+      // axios.patch(`${SIGNUP_CHECK_URL}`, {
+      //   headers: {
+      //     Authorization: `Bearer ${AccessToken}`,
+      //     'Content-Type': 'application/json',
+      //   },
+      //   params: {nickname : fixedNickname },
+      // });
+      setCurrentStep(currentStep+1);
     } else if (currentStep === 3) {
       {
         streaks.map(streak => {
@@ -48,12 +59,11 @@ const SignupPage = () => {
           //     headers: {
           //       Authorization: `Bearer ${AccessToken}`,
           //       'Content-Type': 'application/json',
-          //     },  
+          //     },
           //     // params: {
           //     //   categoryMain: streak.categoryMain,
-          //     //   categoryMiddle: streak.categoryMiddle,  
+          //     //   categoryMiddle: streak.categoryMiddle,
           //     // },
-
           //   })
           //   .then(res => {
           //     console.log(res);
@@ -65,7 +75,6 @@ const SignupPage = () => {
           //   });
         });
       }
-
       navigate('/main');
     }
   };
@@ -135,7 +144,7 @@ const SignupPage = () => {
       {currentStep === 0 ? (
         <LoadingPage />
       ) : currentStep === 1 ? (
-        <TermsOfUse isStarted={isStarted} onClickNext={onClickNext} />
+        <TermsOfUse onClickNext={onClickNext} />
       ) : currentStep === 2 ? (
         <UserNicknameInput
           currentStep={currentStep}

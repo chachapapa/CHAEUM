@@ -9,6 +9,8 @@
 
 .mySelect ul {
     font-size: 16px;
+    height : 210px !important;
+    overflow : auto;
 }
 
 :focus .mySelect button {
