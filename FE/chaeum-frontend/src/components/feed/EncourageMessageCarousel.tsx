@@ -1,52 +1,12 @@
 import { Carousel, Typography, IconButton } from '@material-tailwind/react';
 import React from 'react';
+import { Comment } from '../Types';
 
 type Props = {
   onPlusButtonClicked : ()=> void;
-  articleId : number;
+  encourageMessageList : Comment[];
 }
 
-type User = {
-  nickName: string;
-  profileImage: string;
-};
-
-type Comment = {
-  user: User;
-  content: string;
-};
-
-const commentList: Comment[] = [
-  {
-    user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-    content: '댓글 1',
-  },
-  {
-    user: { nickName: 'lulu', profileImage: '../chacha1.jpg' },
-    content: '댓글 2',
-  },
-  {
-    user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-    content: '댓글 1',
-  },
-  {
-    user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-    content: '댓글 1',
-  },
-  {
-    user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-    content: '댓글 1',
-  },
-  {
-    user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-    content: '댓글 1',
-  },
-  {
-    user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-    content: '댓글 1',
-  },
-
-];
 
 const EncourageMessageCarousel = (props:Props) => {
   return (
@@ -106,12 +66,12 @@ const EncourageMessageCarousel = (props:Props) => {
         </IconButton>
       )}
     >
-      {commentList.map((comment, key) => (
+      {props.encourageMessageList.map((encourageMessage, key) => (
         <div className="relative w-full h-10" key={key}>
           <div className="absolute h-full w-full grid justify-items-start items-center bg-gray-100 pl-2">
             <div className="flex h-full">
               <img
-                src={comment.user.profileImage}
+                src={encourageMessage.user.profileImage}
                 alt=""
                 className="h-7 w-7 rounded-full bg-gray-50 mr-2 self-center"
               />
@@ -122,7 +82,7 @@ const EncourageMessageCarousel = (props:Props) => {
                   color="text-chaeum-gray-900"
                   className="opacity-80 text-sm"
                 >
-                  {comment.user.nickName} {comment.content}
+                  {encourageMessage.user.nickName} {encourageMessage.content}
                 </Typography>
               </div>
             </div>

@@ -13,7 +13,7 @@ const ScreenTwo = () => {
     user: { nickName: 'chacha', profileImage: '../chacha2.png' },
     date: 'Mar 16, 2020',
     dateTime: '2020-03-16',
-    activityInfo: { category: '클라이밍', time: 3, color: 'bg-yellow-300' },
+    activityInfo: {id: 2, streakId: 2,  streak :{categoryMain : '운동', categoryMiddle: '클라이밍', streakTag: ['#빨주노초파남보', '#영!차-'],  streakName: '산양은 아니고 염소정도'}, category: '클라이밍', startTime: '2023-08-10 11:00:00', endTime : '2023-08-11 12:00:00', color: 'red' },
     likeCount: 5,
     commentCount: 15,
     content: '오늘은 컴포넌트를 만들어볼거에요 꺄륵',
@@ -24,12 +24,12 @@ const ScreenTwo = () => {
       '../chacha1.jpg',
     ],
     encourageMessageList: [
-      { postId : 1, replyId: 1, user: { nickName: 'coco', profileImage: '코코' }, content: '응원글 1' },
-      { postId : 1, replyId: 2, user: { nickName: 'lulu', profileImage: '룰루' }, content: '응원글 2' },
+      { activityId : 1, replyId: 1, user: { nickName: 'coco', profileImage: '코코' }, content: '응원글 1' },
+      { activityId : 1, replyId: 2, user: { nickName: 'lulu', profileImage: '룰루' }, content: '응원글 2' },
     ],
     commentList: [
-      { postId : 1, replyId: 3, user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { postId : 1, replyId: 4, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      { activityId : 1, replyId: 3, user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
+      { activityId : 1, replyId: 4, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
     ],
   };
 
@@ -38,7 +38,7 @@ const ScreenTwo = () => {
     user: { nickName: 'chacha', profileImage: '../chacha1.jpg' },
     date: 'Mar 16, 2020',
     dateTime: '2020-03-16',
-    activityInfo: { category: '클라이밍', time: 3, color: 'bg-blue-300' },
+    activityInfo: { id: 1, streakId: 1, streak : {categoryMain : '운동', categoryMiddle: '클라이밍', streakTag: ['#빨주노초파남보', '#영!차-'],  streakName: '산양은 아니고 염소정도'}, category: '클라이밍', startTime: '2023-08-10 11:00:00', endTime : '2023-08-11 12:00:00', color: 'blue' },
     likeCount: 5,
     commentCount: 15,
     content:
@@ -50,12 +50,12 @@ const ScreenTwo = () => {
       '../chacha1.jpg',
     ],
     encourageMessageList: [
-      { postId : 2, replyId: 3, user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { postId : 2, replyId: 4, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      { activityId : 2, replyId: 3, user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
+      { activityId : 2, replyId: 4, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
     ],
     commentList: [
-      { postId : 2, replyId: 5, user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { postId : 2, replyId: 6, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      { activityId : 2, replyId: 5, user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
+      { activityId : 2, replyId: 6, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
     ],
   };
 
@@ -104,6 +104,9 @@ const ScreenTwo = () => {
     setDetailedArticle(false);
     setFocusedArticle(id);
   };
+
+
+
   return (
     <div className="h-96 overflow-y-auto">
       <div>최신순으로 내가 작성한 게시글을 보여줍니다.</div>
@@ -136,9 +139,9 @@ const ScreenTwo = () => {
                       <p className="text-white text-left">
                         #{post.activityInfo.category}
                       </p>
-                      <p className="text-white text-left">
+                      {/* <p className="text-white text-left">
                         {post.activityInfo.time}시간
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </div>
@@ -193,12 +196,12 @@ const ScreenTwo = () => {
               {isPlusButtonClicked && focusedArticle === post.id ? (
                 <EncourageMessageDetail
                   onPlusButtonClicked={() => onPlusButtonClicked(post.id)}
-                  articleId={post.id}
+                  encourageMessageList={post.encourageMessageList}
                 />
               ) : (
                 <EncourageMessageCarousel
                   onPlusButtonClicked={() => onPlusButtonClicked(post.id)}
-                  articleId={post.id}
+                  encourageMessageList={post.encourageMessageList}
                 />
               )}
               {/* <CommentInput /> */}

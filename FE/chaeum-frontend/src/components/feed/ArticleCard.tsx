@@ -5,14 +5,26 @@ import EncourageMessageDetail from './EncourageMessageDetail';
 import CommentList from './CommentList';
 import { Article, Comment } from '../Types';
 import LoadingPage from '../common/LoadingPage';
+import { IconButton } from '@material-tailwind/react';
+import { useAppSelector } from '../../hooks/reduxHooks';
+import axios from 'axios';
 
-const ArticleCard = () => {
+type Props = {
+  article: Article;
+  key: number;
+  setArticleList: React.Dispatch<React.SetStateAction<Article[]>>;
+};
+
+const ARTICLE_DELETE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/delete';
+const AccessToken = localStorage.getItem('access_token');
+
+const ArticleCard = ({ article, key, setArticleList }: Props) => {
   const example1: Article = {
     id: 1,
-    user: { nickName: 'chacha', profileImage: '../chacha2.png' },
+    user: { nickName: '차차아버님', profileImage: '../chacha2.png' },
     date: 'Mar 16, 2020',
     dateTime: '2020-03-16',
-    activityInfo: { category: '클라이밍', time: 3, color: 'bg-yellow-300' },
+    activityInfo: { id: 2, streakId : 2, streak :{categoryMain : '운동', categoryMiddle: '클라이밍', streakTag: ['#빨주노초파남보', '#영!차-'],  streakName: '산양은 아니고 염소정도'}, category: '클라이밍',  startTime: '2023-08-10 11:00:00', endTime : '2023-08-11 12:00:00', color: 'red' },
     likeCount: 5,
     commentCount: 15,
     content: '오늘은 컴포넌트를 만들어볼거에요 꺄륵',
@@ -23,12 +35,28 @@ const ArticleCard = () => {
       '../chacha1.jpg',
     ],
     encourageMessageList: [
-      { postId : 1, user: { nickName: '차차아버님', profileImage: '코코' }, content: '응원글 1' },
-      { postId : 1, user: { nickName: 'lulu', profileImage: '룰루' }, content: '응원글 2' },
+      {
+        activityId: 1,
+        user: { nickName: '차차아버님', profileImage: '코코' },
+        content: '응원글 1',
+      },
+      {
+        activityId: 1,
+        user: { nickName: 'lulu', profileImage: '룰루' },
+        content: '응원글 2',
+      },
     ],
     commentList: [
-      { postId : 1, user: { nickName: '차차아버님', profileImage: '코코' }, content: '댓글 1' },
-      { postId : 1, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      {
+        activityId: 1,
+        user: { nickName: '차차아버님', profileImage: '코코' },
+        content: '댓글 1',
+      },
+      {
+        activityId: 1,
+        user: { nickName: 'lulu', profileImage: '룰루' },
+        content: '댓글 2',
+      },
     ],
   };
 
@@ -37,7 +65,7 @@ const ArticleCard = () => {
     user: { nickName: 'chacha', profileImage: '../chacha1.jpg' },
     date: 'Mar 16, 2020',
     dateTime: '2020-03-16',
-    activityInfo: { category: '클라이밍', time: 3, color: 'bg-blue-300' },
+    activityInfo: { id: 1, streakId: 1, streak :{categoryMain : '운동', categoryMiddle: '클라이밍', streakTag: ['#빨주노초파남보', '#영!차-'],  streakName: '산양은 아니고 염소정도'}, category: '클라이밍',  startTime: '2023-08-10 11:00:00', endTime : '2023-08-11 12:00:00', color: 'blue' },
     likeCount: 5,
     commentCount: 15,
     content:
@@ -49,12 +77,28 @@ const ArticleCard = () => {
       '../chacha1.jpg',
     ],
     encourageMessageList: [
-      { postId : 2, user: { nickName: 'coco', profileImage: '코코' }, content: '댓글 1' },
-      { postId : 2, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      {
+        activityId: 2,
+        user: { nickName: 'coco', profileImage: '코코' },
+        content: '댓글 1',
+      },
+      {
+        activityId: 2,
+        user: { nickName: 'lulu', profileImage: '룰루' },
+        content: '댓글 2',
+      },
     ],
     commentList: [
-      { postId : 2, user: { nickName: '차차아버님', profileImage: '코코' }, content: '댓글 1' },
-      { postId : 2, user: { nickName: 'lulu', profileImage: '룰루' }, content: '댓글 2' },
+      {
+        activityId: 2,
+        user: { nickName: '차차아버님', profileImage: '코코' },
+        content: '댓글 1',
+      },
+      {
+        activityId: 2,
+        user: { nickName: 'lulu', profileImage: '룰루' },
+        content: '댓글 2',
+      },
     ],
   };
 
@@ -67,6 +111,8 @@ const ArticleCard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFadingOut, setIsFadingOut] = useState<boolean>(false);
   const [commentList, setCommentList] = useState<Comment[]>([]);
+  const fixedNickname = useAppSelector(state => state.stateSetter.nickname);
+
   //로딩스크린 페이드아웃을 만들어보자...
   //페이지 로드가 끝나면
   //isFadingOut true로 바꿔주기
@@ -108,6 +154,23 @@ const ArticleCard = () => {
     setFocusedArticle(id);
   };
 
+  const onArticleDeleteClicked = (id: number, index: number) => {
+    axios
+      .put(
+        `${ARTICLE_DELETE_URL}`,
+        JSON.stringify({ post_id: id }),
+        { headers: { Authorization: `Bearer ${AccessToken}` } }
+      )
+      .then(res => {
+        console.log(res);
+        if (res) {
+          setArticleList(prevList => prevList.splice(index, 1));
+        } else {
+          console.log('댓글 삭제 실패');
+        }
+      });
+  };
+
   return (
     <div className="bg-gray-100 mt-3">
       {!isLoading && !isFadingOut ? (
@@ -135,9 +198,9 @@ const ArticleCard = () => {
                         <p className="text-white text-left">
                           #{post.activityInfo.category}
                         </p>
-                        <p className="text-white text-left">
+                        {/* <p className="text-white text-left">
                           {post.activityInfo.time}시간
-                        </p>
+                        </p> */}
                       </div>
                     </div>
                   </div>
@@ -156,6 +219,24 @@ const ArticleCard = () => {
                       <i className="fa-regular fa-comment ml-2 mr-0.5" />
                       {post.commentCount}
                     </div>
+                    {fixedNickname === post.user.nickName ? (
+                      <div className="flex justify-end">
+                        <IconButton
+                          variant="text"
+                          className="w-8 h-8 rounded-full hover:bg-chaeum-blue-500/10"
+                          onClick={() => onArticleDeleteClicked(post.id, key)}
+                        >
+                          <svg
+                            className="fill-chaeum-gray-900"
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="2em"
+                            viewBox="20 20 576 512"
+                          >
+                            <path d="M290.7 57.4L57.4 290.7c-25 25-25 65.5 0 90.5l80 80c12 12 28.3 18.7 45.3 18.7H288h9.4H512c17.7 0 32-14.3 32-32s-14.3-32-32-32H387.9L518.6 285.3c25-25 25-65.5 0-90.5L381.3 57.4c-25-25-65.5-25-90.5 0zM297.4 416H288l-105.4 0-80-80L227.3 211.3 364.7 348.7 297.4 416z" />
+                          </svg>
+                        </IconButton>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
                 <div className="group relative">
@@ -184,25 +265,36 @@ const ArticleCard = () => {
                 {isPlusButtonClicked && focusedArticle === post.id ? (
                   <EncourageMessageDetail
                     onPlusButtonClicked={() => onPlusButtonClicked(post.id)}
-                    articleId={post.id}
+                    encourageMessageList={post.encourageMessageList}
                   />
                 ) : (
                   <EncourageMessageCarousel
                     onPlusButtonClicked={() => onPlusButtonClicked(post.id)}
-                    articleId={post.id}
+                    encourageMessageList={post.encourageMessageList}
                   />
                 )}
-                <CommentInput postId={post.id} setCommentList={setCommentList}/>
+                <CommentInput
+                  activityId={post.activityInfo.id}
+                  setCommentList={setCommentList}
+                  inputPlaceholder='댓글 입력...'
+                  commentOrEncourageMessage='comment'
+                />
                 {detailedArticle && focusedArticle === post.id ? (
                   <div className="flex flex-col items-start w-full">
-                    <span onClick={() => onCloseButtonClicked(post.id)}>
+                    <span onClick={() => onCloseButtonClicked(post.id)} className="text-sm">
                       닫기
                     </span>
-                    <CommentList commentList={post.commentList} setCommentList={setCommentList}/>
+                    <CommentList
+                      commentList={post.commentList}
+                      setCommentList={setCommentList}
+                    />
                   </div>
                 ) : (
-                  <span onClick={() => onMoreCommentClicked(post.id)} className='text-sm'>
-                    댓글 상세보기
+                  <span
+                    onClick={() => onMoreCommentClicked(post.id)}
+                    className="text-sm"
+                  >
+                    댓글 더보기
                   </span>
                 )}
               </article>
