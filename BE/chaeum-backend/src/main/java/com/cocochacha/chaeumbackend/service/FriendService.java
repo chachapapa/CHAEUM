@@ -1,10 +1,7 @@
 package com.cocochacha.chaeumbackend.service;
 
 import com.cocochacha.chaeumbackend.domain.*;
-import com.cocochacha.chaeumbackend.dto.AcceptFriendRequest;
-import com.cocochacha.chaeumbackend.dto.AddFriendRequest;
-import com.cocochacha.chaeumbackend.dto.CancelAddFriendRequest;
-import com.cocochacha.chaeumbackend.dto.RejectFriendRequest;
+import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -142,6 +139,37 @@ public class FriendService {
     }
 
     /**
+     * 친구를 삭제(끊어주는) 메소드
+     *
+     * @param deleteFriendRequest 끊고 싶은 친구의 닉네임
+     * @param userPersonalInfo 본인 아이디
+     * @return 삭제가 성공하면 true, 실패하면 false
+     */
+    public boolean deleteFriend(DeleteFriendRequest deleteFriendRequest, UserPersonalInfo userPersonalInfo) {
+        /*
+            삭제가 아니라 기존에 친구였던 관계(true)를 바꾸는 것(false)
+            바꿀 때, toId와 fromId둘 다 바꿔야함
+
+         */
+        UserPersonalInfo userPersonalInfoFrom = findUserPersonalInfo(deleteFriendRequest.getNickname());
+
+        long fromId = userPersonalInfoFrom.getId();
+        long toId = userPersonalInfo.getId();
+
+        String toFromId = toId + "." + fromId;
+        String fromToId = fromId + "." + toId;
+
+        update(toFromId, true);
+        update(fromToId, true);
+
+        if (updateFriendRelationship(userPersonalInfo, userPersonalInfoFrom) ||
+                updateFriendRelationship(userPersonalInfoFrom, userPersonalInfo)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 친구 신청 중 DB에 값을 넣어주는 메소드
      * 값이 이미 있다면, 친구 신청 중으로 바꿔주는 메소드
      *
@@ -248,5 +276,47 @@ public class FriendService {
                 .build();
 
         friendRepository.save(friendCheck); // mongoDB의 정보를 수정해줌
+    }
+
+    /**
+     * 현재 여부를 반대로 바꿔주는 메소드
+     *
+     * @param id 만들어진 ID
+     * @param isCheck 현재 여부
+     */
+    public void update(String id, boolean isCheck) {
+        FriendCheck friendCheck = FriendCheck.builder()
+                .check(isCheck ^ true)
+                .friendRelationship(id)
+                .build();
+        friendRepository.save(friendCheck);
+    }
+
+    /**
+     * 친구 관계를 반대로 해주는 메소드
+     * 친구 관계가 true면 false로, false면 true로
+     *
+     * @param userPersonalInfoTo 친구 신청을 한 유저의 정보
+     * @param userPersonalInfoFrom 친구 신청을 받은 유저의 정보
+     * @return 친구 정보가 알맞게 수정이 되면 true, 아니라면 false
+     */
+    public boolean updateFriendRelationship(UserPersonalInfo userPersonalInfoTo, UserPersonalInfo userPersonalInfoFrom) {
+        FriendRelationship friendRelationship = friendRelationshipRepository
+                .findByToIdAndFromId(userPersonalInfoTo, userPersonalInfoFrom)
+                .orElse(null);
+
+        if (friendRelationship == null) {
+            return false;
+        }
+
+        friendRelationship.changeIsFriend(friendRelationship.isFriend() ^ true);
+
+        FriendRelationship saveFriendRelation = friendRelationshipRepository.save(friendRelationship);
+
+        FriendLog friendLog = FriendLog.builder()
+                .friendRelationshipId(saveFriendRelation)
+                .build();
+        friendLogRepository.save(friendLog);
+        return true;
     }
 }

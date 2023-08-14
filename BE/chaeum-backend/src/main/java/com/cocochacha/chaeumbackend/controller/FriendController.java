@@ -1,10 +1,7 @@
 package com.cocochacha.chaeumbackend.controller;
 
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
-import com.cocochacha.chaeumbackend.dto.AcceptFriendRequest;
-import com.cocochacha.chaeumbackend.dto.AddFriendRequest;
-import com.cocochacha.chaeumbackend.dto.CancelAddFriendRequest;
-import com.cocochacha.chaeumbackend.dto.RejectFriendRequest;
+import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.service.FriendService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +57,7 @@ public class FriendController {
     }
 
     /**
-     * 친구 신청 거절에 대한 응답에 요청을 해주는 메소드
+     * 친구 신청 거절에 대한 요청에 응답을 해주는 메소드
      *
      * @param rejectFriendRequest 친구를 신청한 사람의 아이디, 즉, 본인한테 친구 신청을 한 사람의 아이디
      * @return 거절 성공, 실패 여부
@@ -83,7 +80,7 @@ public class FriendController {
     }
 
     /**
-     * 친구 신청 취소에 대한 응답에 요청을 해주는 메소드
+     * 친구 신청 취소에 대한 요청에 응답을 해주는 메소드
      *
      * @param cancelAddFriendRequest 본인이 친구 신청을 보낸 사람의 닉네임
      * @return 친구 신청 취소 성공, 실패 여부
@@ -96,6 +93,22 @@ public class FriendController {
             return new ResponseEntity<>("친구 신청 취소 완료", HttpStatus.OK);
         } catch (NoSuchElementException NSEE) {
             return new ResponseEntity<>("친구 신청 취소 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 친구 삭제 요청에 대한 응답을 주는 메소드
+     *
+     * @param deleteFriendRequest 삭제하고 싶은 친구의 닉네임
+     * @return 삭제 성공, 실패 여부
+     */
+    @PatchMapping("")
+    public ResponseEntity<?> deleteFriend(@RequestBody DeleteFriendRequest deleteFriendRequest) {
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+        if (friendService.deleteFriend(deleteFriendRequest, userPersonalInfo)) {
+            return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("삭제 실패", HttpStatus.BAD_REQUEST);
         }
     }
 
