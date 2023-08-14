@@ -1,12 +1,9 @@
 package com.cocochacha.chaeumbackend.service;
 
-import com.cocochacha.chaeumbackend.domain.FriendAdd;
-import com.cocochacha.chaeumbackend.domain.FriendCheck;
-import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import com.cocochacha.chaeumbackend.domain.*;
+import com.cocochacha.chaeumbackend.dto.AcceptFriendRequest;
 import com.cocochacha.chaeumbackend.dto.AddFriendRequest;
-import com.cocochacha.chaeumbackend.repository.FriendAddRepository;
-import com.cocochacha.chaeumbackend.repository.FriendRepository;
-import com.cocochacha.chaeumbackend.repository.UserPersonalInfoRepository;
+import com.cocochacha.chaeumbackend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +15,8 @@ public class FriendService {
 
     private final FriendRepository friendRepository;
     private final UserPersonalInfoRepository userPersonalInfoRepository;
+    private final FriendRelationshipRepository friendRelationshipRepository;
+    private final FriendLogRepository friendLogRepository;
     private final FriendAddRepository friendAddRepository;
 
     /**
@@ -62,6 +61,33 @@ public class FriendService {
         createdAddDatabase(userPersonalInfoTo, userPersonalInfoFrom);
         save(toFromId);
         save(fromToId);
+        return true;
+    }
+
+    /**
+     * 친구 신청에 대해서 수락을 해주는 메소드
+     *
+     * @param acceptFriendRequest 친구 신청을 한 사람의 닉네임
+     * @param toUser 친구 신청을 받은 아이디
+     * @return 친구 신청 수락 성공 여부
+     */
+    public boolean acceptFriend(AcceptFriendRequest acceptFriendRequest, UserPersonalInfo toUser) {
+        // acceptFriendRequest는 친구 신청을 보낸 사람, toUser는 친구 신청을 받은 사람
+        String nickname = acceptFriendRequest.getNickname();
+        long toId = toUser.getId();
+
+        UserPersonalInfo fromUser = findUserPersonalInfo(nickname);
+        long fromId = fromUser.getId();
+
+        if (fromUser == null) {
+            // 해당 닉네임을 가지고 있는 유저가 없다는 의미
+            return false;
+        }
+
+        // 친구 신청을 받아서 더 이상 친구 신청 중이 아님 => false 로 변경
+        changeAddFriend(fromUser, toUser);
+        saveAtFriendRelationship(toUser, fromUser);
+        saveAtFriendRelationship(fromUser, toUser);
         return true;
     }
 
@@ -120,5 +146,57 @@ public class FriendService {
                 .build();
         FriendCheck a = friendRepository.save(friendCheck);
         return true;
+    }
+
+    /**
+     * 친구 신청 여부의 상태를 fasle로 바꿔주는 메소드
+     *
+     * @param userPersonalInfoFrom 친구 신청을 한 사람
+     * @param userPersonalInfoTo 친구 신청을 받은 사람
+     */
+    public void changeAddFriend(UserPersonalInfo userPersonalInfoFrom, UserPersonalInfo userPersonalInfoTo) {
+        // from이 준 사람, to가 받은 사람
+        FriendAdd friendAdd = friendAddRepository.findByToIdAndFromId(userPersonalInfoTo, userPersonalInfoFrom).orElse(null);
+        friendAdd.changeIsAdd(false);
+        friendAddRepository.save(friendAdd);
+    }
+
+    /**
+     * 친구 관계를 저장해주는 메소드
+     *
+     * @param userPersonalInfoTo 친구 신청을 한 사람의 아이디
+     * @param userPersonalInfoFrom 친구 신청을 받은 사람의 아이디
+     */
+    public void saveAtFriendRelationship(UserPersonalInfo userPersonalInfoTo, UserPersonalInfo userPersonalInfoFrom) {
+        FriendRelationship friendRelationship = friendRelationshipRepository
+                .findByToIdAndFromId(userPersonalInfoTo, userPersonalInfoFrom)
+                .orElse(null);
+        if (friendRelationship != null) {
+            // 기존에 친구 였다가 친구를 끊고 다시 친구를 한 경우
+            friendRelationship.changeIsFriend(true);
+        } else {
+            // 신규 저장
+            friendRelationship = FriendRelationship.builder()
+                    .toId(userPersonalInfoTo)
+                    .fromId(userPersonalInfoFrom)
+                    .isFriend(true)
+                    .build();
+        }
+        FriendRelationship saveFriendRelation = friendRelationshipRepository.save(friendRelationship);
+
+        FriendLog friendLog = FriendLog.builder()
+                .friendRelationshipId(saveFriendRelation)
+                .build();
+
+        friendLogRepository.save(friendLog); // 친구 신청을 수락해서, 해당 정보를 로그에 저장
+
+        String toFromId = userPersonalInfoTo.getId() + "." + userPersonalInfoFrom.getId();
+
+        FriendCheck friendCheck = FriendCheck.builder()
+                .friendRelationship(toFromId)
+                .check(true)
+                .build();
+
+        friendRepository.save(friendCheck); // mongoDB의 정보를 수정해줌
     }
 }

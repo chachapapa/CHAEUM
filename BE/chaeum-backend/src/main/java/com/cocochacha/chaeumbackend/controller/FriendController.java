@@ -1,6 +1,7 @@
 package com.cocochacha.chaeumbackend.controller;
 
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import com.cocochacha.chaeumbackend.dto.AcceptFriendRequest;
 import com.cocochacha.chaeumbackend.dto.AddFriendRequest;
 import com.cocochacha.chaeumbackend.service.FriendService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
@@ -37,6 +38,23 @@ public class FriendController {
             return new ResponseEntity<>("친구 신청 완료", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("친구 신청 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 친구 신청 수락에 대한 응답을 주는 메소드
+     *
+     * @param acceptFriendRequest 친구 신청을 한 사람의 닉네임
+     * @return 성공, 실패 여부
+     */
+    @PostMapping("/accept")
+    public ResponseEntity<?> acceptFriend(@RequestBody AcceptFriendRequest acceptFriendRequest) {
+        // 친구 요청 수락
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+        if (friendService.acceptFriend(acceptFriendRequest, userPersonalInfo)) {
+            return new ResponseEntity<>("친구 신청 수락 완료", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("친구 신청 수락 실패", HttpStatus.BAD_REQUEST);
         }
     }
 
