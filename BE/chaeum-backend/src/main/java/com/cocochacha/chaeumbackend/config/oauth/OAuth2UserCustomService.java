@@ -64,9 +64,9 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
                         .isRegistered(false)
                         .build());
 
-        UserMypageInfo userMypageInfo = userMypageInfoRepository.findById(id)
-                .orElse(UserMypageInfo.builder().userPersonalInfo(userPersonalInfo).build());
-        userMypageInfoRepository.save(userMypageInfo);
+//        UserMypageInfo userMypageInfo = userMypageInfoRepository.findById(id)
+//                .orElse(UserMypageInfo.builder().userPersonalInfo(userPersonalInfo).build());
+//        userMypageInfoRepository.save(userMypageInfo);
 
         return userPersonalInfoRepository.save(userPersonalInfo);
     }
