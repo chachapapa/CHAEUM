@@ -2,14 +2,17 @@ package com.cocochacha.chaeumbackend.controller;
 
 import com.cocochacha.chaeumbackend.dto.MyPersonalInfoRequest;
 import com.cocochacha.chaeumbackend.dto.MyPersonalInfoResponse;
+import com.cocochacha.chaeumbackend.dto.UpdateMypageInfoRequest;
+import com.cocochacha.chaeumbackend.dto.UpdateMypageInfoResponse;
+import com.cocochacha.chaeumbackend.service.UserMypageInfoService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,9 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user")
-public class UserPersonalInfoApiController {
+public class UserInfoApiController {
 
     private final UserPersonalInfoService userPersonalInfoService;
+    private final UserMypageInfoService userMypageInfoService;
 
     /**
      * 현재 인증된 사용자의 정보를 가져와서 MyInfoResponse 객체로 응답합니다.
@@ -71,6 +75,26 @@ public class UserPersonalInfoApiController {
 
         userPersonalInfoService.updateUserPersonalInfo(userId, newNickname);
         return ResponseEntity.ok(true);
+    }
+
+    /**
+     * 마이페이지 회원정보를 수정하는 API 엔드포인트입니다.
+     *
+     * @param updateMypageInfoRequest
+     * @return
+     */
+    @PatchMapping("/mypage-info")
+    public ResponseEntity<?> updateMypageInfo(
+            @RequestBody UpdateMypageInfoRequest updateMypageInfoRequest) {
+        Long userId = getUserIDFromAuthentication();
+        UpdateMypageInfoResponse updateMypageInfoResponse = userMypageInfoService.updateMypageInfoResponse(
+                userId, updateMypageInfoRequest);
+
+        if (updateMypageInfoResponse == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return ResponseEntity.ok(updateMypageInfoResponse);
     }
 
     private Long getUserIDFromAuthentication() {
