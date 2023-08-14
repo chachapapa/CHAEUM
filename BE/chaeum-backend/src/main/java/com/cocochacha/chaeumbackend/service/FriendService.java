@@ -163,8 +163,8 @@ public class FriendService {
         update(toFromId, true);
         update(fromToId, true);
 
-        if (updateFriendRelationship(userPersonalInfo, userPersonalInfoFrom) ||
-                updateFriendRelationship(userPersonalInfoFrom, userPersonalInfo)) {
+        if (!updateFriendRelationship(userPersonalInfo, userPersonalInfoFrom) &&
+                !updateFriendRelationship(userPersonalInfoFrom, userPersonalInfo)) {
             return false;
         }
         return true;
