@@ -3,11 +3,14 @@ package com.cocochacha.chaeumbackend.service;
 import com.cocochacha.chaeumbackend.domain.*;
 import com.cocochacha.chaeumbackend.dto.AcceptFriendRequest;
 import com.cocochacha.chaeumbackend.dto.AddFriendRequest;
+import com.cocochacha.chaeumbackend.dto.CancelAddFriendRequest;
+import com.cocochacha.chaeumbackend.dto.RejectFriendRequest;
 import com.cocochacha.chaeumbackend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -89,6 +92,53 @@ public class FriendService {
         saveAtFriendRelationship(toUser, fromUser);
         saveAtFriendRelationship(fromUser, toUser);
         return true;
+    }
+
+    /**
+     * 친구 신청을 거절을 해주는 메소드
+     *
+     * @param rejectFriendRequest 본인한테 친구 신청을 넣은 사람의 닉네임
+     * @param userPersonalInfoFrom 본인 아이디
+     */
+    public void rejectFriend(RejectFriendRequest rejectFriendRequest, UserPersonalInfo userPersonalInfoFrom) {
+        // rejectFriendRequest 이게 거절 할 사람으로 이 사람이 신청을 한거임
+        // userPersonalInfoFrom 본인이고, 거절을 할 사람
+
+        UserPersonalInfo userPersonalInfoTo = findUserPersonalInfo(rejectFriendRequest.getNickname());
+
+        FriendAdd friendAdd = friendAddRepository
+                .findByToIdAndFromId(userPersonalInfoTo, userPersonalInfoFrom)
+                .orElse(null);
+
+        if (friendAdd == null) {
+            throw new NoSuchElementException("null 값!");
+        }
+
+        // 친구 신청을 하는 중이 아니므로 false로 해야함
+        friendAdd.changeIsAdd(false);
+        friendAddRepository.save(friendAdd);
+    }
+
+    /**
+     * 친구 신청 취소를 해주는 메소드
+     *
+     * @param cancelAddFriendRequest 본인한테 친구 신청을 받은 사람의 닉네임
+     * @param userPersonalInfoTo 본인 아이디
+     */
+    public void cancelAddFriend(CancelAddFriendRequest cancelAddFriendRequest, UserPersonalInfo userPersonalInfoTo) {
+        // 본인이 취소를 구른 사람
+        // 입력으로 들어오는 값이 친구 신청을 받은 사람
+        // 즉, 본인이 To, 입력으로 들어오는 값이 from 임
+        UserPersonalInfo userPersonalInfoFrom = findUserPersonalInfo(cancelAddFriendRequest.getNickname());
+        FriendAdd friendAdd = friendAddRepository.findByToIdAndFromId(userPersonalInfoTo, userPersonalInfoFrom).orElse(null);
+
+        if (friendAdd == null) {
+            throw new NoSuchElementException("null 값!");
+        }
+
+        // 친구 신청을 취소했기 때문에 false로 바꿔주면 됨
+        friendAdd.changeIsAdd(false);
+        friendAddRepository.save(friendAdd);
     }
 
     /**
