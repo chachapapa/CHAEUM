@@ -6,6 +6,7 @@ import com.cocochacha.chaeumbackend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -167,6 +168,90 @@ public class FriendService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * A와 B가 친구인지 알려주는 메소드
+     *
+     * @param viewFriendRequest 친구인지 궁금한 사람의 닉네임
+     * @param toId 본인 아이디
+     * @return A와 B의 친구 여부, 친구면 true, 아니면 false
+     */
+    public boolean viewFriend(ViewFriendRequest viewFriendRequest, long toId) {
+        // A와 B가 친구인지 확인 해주는 메소드
+        String nickname = viewFriendRequest.getNickname();
+        long fromId = findUserPersonalInfo(nickname).getId();
+
+        String id = toId + "." + fromId;
+        FriendCheck friendCheck = friendRepository.findByFriendRelationship(id).orElse(null);
+        System.out.println(friendCheck);
+
+        if (friendCheck == null || !friendCheck.isCheck()) {
+            // 둘이 친구 아님
+            return false;
+        }
+        // 둘이 친구임
+        return true;
+    }
+
+    /**
+     * 입력으로 들어오는 사람의 전체 친구 목록
+     *
+     * @param viewAllFriendRequest 해당 사람의 전체 친구 목록
+     * @return 해당 사람의 전체 친구 목록
+     */
+    public List<ViewAllFriendResponse> viewAllFriend(ViewAllFriendRequest viewAllFriendRequest) {
+        // 입력으로 받는 닉네임을 통해서 유저의 아이디를 얻음
+        UserPersonalInfo userId = findUserPersonalInfo(viewAllFriendRequest.getNickname());
+
+        // 해당 유저의 정보를 이용해서 해당 유저와 친구인 유저를 추출함
+        List<FriendRelationship> friendRelationshipList = friendRelationshipRepository.findByToIdAndIsFriendIsTrue(userId)
+                .orElse(null);
+
+        if (friendRelationshipList == null) {
+            throw new NoSuchElementException("null 값!");
+        }
+
+        // 닉네임, 프로필 사진 ??
+        // 더 필요가 없나 => 만약에 더 필요하다고 하면 추가해주기
+        List<ViewAllFriendResponse> responses = new ArrayList<>();
+        for (FriendRelationship friendRelationship : friendRelationshipList) {
+            UserPersonalInfo userPersonalInfo = friendRelationship.getFromId();
+
+            // DTO에 값 넣어주기
+            ViewAllFriendResponse viewAllFriendResponse = ViewAllFriendResponse.builder()
+                    .nickname(userPersonalInfo.getNickname())
+                    .profileUrl(userPersonalInfo.getProfileImageUrl())
+                    .build();
+
+            responses.add(viewAllFriendResponse);
+        }
+        return responses;
+    }
+
+    /**
+     * 본인한테 친구 신청을 넣은 사람의 목록을 보여주는 메소드
+     *
+     * @param userPersonalInfo 본인 아이디
+     * @return 본인한테 친구 신청을 넣은 사람의 목록
+     */
+    public List<UserPersonalInfo> addListFriend(UserPersonalInfo userPersonalInfo) {
+        // 나한테 친구 신청을 넣은 사람의 목록
+        // 친구가 된 사람이 아니라 현재 친구 신청을 넣은 사람의 목록을 보여주면 됨
+        // 파라미터는 본인임
+        List<FriendAdd> friendAddList = friendAddRepository.findAllByFromId(userPersonalInfo).orElse(null);
+
+        if (friendAddList == null) {
+            throw new NoSuchElementException("null 값!");
+        }
+
+        List<UserPersonalInfo> userPersonalInfoList = new ArrayList<>();
+
+        for (FriendAdd friendAdd : friendAddList) {
+            userPersonalInfoList.add(friendAdd.getToId());
+        }
+
+        return userPersonalInfoList;
     }
 
     /**

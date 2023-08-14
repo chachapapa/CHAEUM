@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -109,6 +110,65 @@ public class FriendController {
             return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("삭제 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 본인과 다른 사람이 친구인지 확인하는 요청에 대한 응답을 주는 메소드
+     *
+     * @param nickname 본인과 친구인지 궁금한 사람의 닉네임
+     * @return 친구 여부
+     */
+    @GetMapping("")
+    public ResponseEntity<?> viewFriend(@RequestParam String nickname) {
+        // 본인과 입력으로 들어오는 사람이 친구인지 여부 확인
+        ViewFriendRequest viewFriendRequest = new ViewFriendRequest();
+        viewFriendRequest.setNickname(nickname);
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+
+        if (friendService.viewFriend(viewFriendRequest, userPersonalInfo.getId())) {
+            return new ResponseEntity<>("둘이 친구 입니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("둘이 친구가 아닙니다.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 특정 사람의 전체 친구 목록을 보기위한 요청에 대한 응답을 해주는 메소드
+     *
+     * @param nickname 친구 목록이 궁금한 사람의 닉네임
+     * @return 해당 사람의 친구 리스트
+     */
+    @GetMapping("/list")
+    public ResponseEntity<?> viewAllFriend(@RequestParam String nickname) {
+        // 본인의 전체 친구 목록이 궁금하면, 본인의 닉네임을 입력으로 받으면 됨
+        ViewAllFriendRequest viewAllFriendRequest = new ViewAllFriendRequest();
+        viewAllFriendRequest.setNickname(nickname);
+
+        try {
+            List<ViewAllFriendResponse> viewAllFriendResponseList = friendService.viewAllFriend(viewAllFriendRequest);
+            return new ResponseEntity<>(viewAllFriendResponseList, HttpStatus.OK);
+        } catch (NoSuchElementException NSEE) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 본인한테 친구 요청을 넣은 사람을 보기 위한 요청에 대한 응답을 주는 메소드
+     *
+     * @return 본인한테 친구 신청을 넣은 사람의 목록
+     */
+    @GetMapping("/add/list")
+    public ResponseEntity<?> addListFriend() {
+        // 나한테 친구 신청을 넣은 사람의 목록
+        // 즉 내가 지금 무시를 하고 있는 사람의 목록
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+        try {
+            List<UserPersonalInfo> userPersonalInfoList = friendService.addListFriend(userPersonalInfo);
+            return new ResponseEntity<>(userPersonalInfoList, HttpStatus.OK);
+        } catch (NoSuchElementException NCEE) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
