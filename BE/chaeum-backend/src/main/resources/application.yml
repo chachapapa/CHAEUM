@@ -1,4 +1,9 @@
 spring:
+  data:
+    mongodb:
+      host: i9a810.p.ssafy.io
+      port: 27017
+      database: euinyun
   jpa:
     hibernate:
       ddl-auto: update
