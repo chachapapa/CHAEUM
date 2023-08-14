@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @Entity
 public class UserPersonalInfo implements UserDetails {
 
@@ -42,7 +44,8 @@ public class UserPersonalInfo implements UserDetails {
     private Boolean isRegistered;
 
     @Builder
-    public UserPersonalInfo(Long id, String email, String password, String nickname, String profileImageUrl,
+    public UserPersonalInfo(Long id, String email, String password, String nickname,
+            String profileImageUrl,
             Boolean isRegistered) {
         this.id = id;
         this.email = email;
