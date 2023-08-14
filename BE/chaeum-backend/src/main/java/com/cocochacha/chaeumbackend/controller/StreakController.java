@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -157,7 +158,7 @@ public class StreakController {
      * @return
      */
     @GetMapping("/rival-list")
-    public ResponseEntity<?> rivalList(@RequestBody RivalListRequest rivalListRequest) {
+    public ResponseEntity<?> rivalList(@ModelAttribute RivalListRequest rivalListRequest) {
 
         // 요청으로 들어온 스트릭 id가 요청을 보낸 유저의 스트릭인지 확인
         Streak myStreak = streakService.findById(rivalListRequest.getStreakId());
@@ -185,7 +186,7 @@ public class StreakController {
      * @return
      */
     @GetMapping("/rival-update")
-    public ResponseEntity<?> rivalUpdate(@RequestBody RivalUpdateRequest rivalUpdateRequest) {
+    public ResponseEntity<?> rivalUpdate(@ModelAttribute RivalUpdateRequest rivalUpdateRequest) {
 
         // 요청으로 들어온 스트릭들의 기존 누적 시간을 담아요
         // 위에서 선정된 5개의 스트릭에 대해서 아래 내용을 담아요
