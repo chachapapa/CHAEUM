@@ -130,6 +130,35 @@ public class ActivityLikeService {
     }
 
     /**
+     * 좋아요를 취소해주는 메소드
+     *
+     * @param disLikeActivityRequest activityId
+     * @param userPersonalInfo userInfo
+     * @return 좋아요 취소가 성공하면 true, 실패하면 false
+     */
+    public boolean disLikeByActivity(DisLikeActivityRequest disLikeActivityRequest, UserPersonalInfo userPersonalInfo) {
+        // activityId에 해당하는 활동내역에 본인이 좋아요를 누른 것을 취소한 것
+        Activity activity = activityRepository.findById(disLikeActivityRequest.getActivityId()).orElse(null);
+        return disLike(activity, userPersonalInfo);
+    }
+
+    /**
+     * 좋아요를 취소해주는 멧드
+     *
+     * @param disLikePostRequest postId
+     * @param userPersonalInfo userInfo
+     * @return 좋아요 취소가 성공하면 true, 실패하면 false
+     */
+    public boolean disLikeByPost(DisLikePostRequest disLikePostRequest, UserPersonalInfo userPersonalInfo) {
+        // postID에 해당하는 post에 본인이 누른 좋아요를 취소함
+        Post post = postRepository.findById(disLikePostRequest.getPostId()).orElse(null);
+        if (post == null) {
+            return false;
+        }
+        return disLike(post.getActivity(), userPersonalInfo);
+    }
+
+    /**
      * 만약에 좋아요 여부 테이블에 해당 값이 없다면 추가해주는 메소드
      *
      * @param activity activityId
@@ -166,5 +195,40 @@ public class ActivityLikeService {
      */
     public int viewLike(Activity activity) {
         return activity.getLikeCnt();
+    }
+
+    /**
+     * activityId와 userInfo를 가지고 좋아요를 취소해주는 메소드
+     *
+     * @param activity activityId
+     * @param userPersonalInfo userInfo
+     * @return 좋아요 취소가 성공하면 true, 실패하면 false
+     */
+    public boolean disLike(Activity activity, UserPersonalInfo userPersonalInfo) {
+        // 내가 해당 활동 내역에 좋아요를 누른 적이 있는지 확인하기
+        ActivityLike activityLike = activityLikeRepository
+                .findByActivityIdAndUserId(activity, userPersonalInfo).orElse(null);
+
+        if (activityLike == null) {
+            // 좋아요를 취소하려면 누를 것이 있어야함!
+            return false;
+        }
+
+        // 현재 좋아요 상태인지 확인 하기
+        if (!activityLike.isLike()) {
+            // isLike가 false라는 것은 해당 활동 내역은 좋아요를 안누를 것으로 취소할 수 없음
+            return false;
+        }
+
+        // 취소 누르기
+        activityLike.changeIsLike();
+        // 좋아요 수 줄이기
+        activity.subLikeCnt();
+        // 로그 남기기
+        createActivityLikeLog(activityLike);
+
+        activityRepository.save(activity);
+        activityLikeRepository.save(activityLike);
+        return true;
     }
 }
