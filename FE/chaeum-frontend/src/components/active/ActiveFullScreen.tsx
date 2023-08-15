@@ -10,46 +10,79 @@ import ActiveInfoCard from './ActiveInfoCard';
 import PhraseCard from './PhraseCard';
 import { useNavigate } from 'react-router';
 import { Tag } from '../common/Tag';
-
-/*
-  사용 예시
-
-  <Timer></Timer>
-*/
-type User = {
-  nickName: string;
-  profileImage: string;
+import axios from 'axios';
+import {
+  setMyActivityInfo,
+  setRivalInfoList,
+  setMyAccumalteTime,
+} from '../../features/states/states';
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../hooks/reduxHooks';
+type Cheering = {
+  nickname: string;
+  comments: string;
+  profileUrl: string;
 };
 
-type Comment = {
-  commentId: number;
-  user: User;
-  content: string;
+type Props = {
+  cheeringMent: Cheering[];
+  startMent: string[];
 };
-const ActiveFullScreen = () => {
+
+const ActiveFullScreen = (props: Props) => {
+  const dispatch = useDispatch();
+  const myActivityInfo = useAppSelector(
+    state => state.stateSetter.myActivityInfo
+  );
+  const rivalInfoList = useAppSelector(
+    state => state.stateSetter.rivalInfoList
+  );
+  const myAccumulateTime = useAppSelector(
+    state => state.stateSetter.myAccumulateTime
+  );
+
   // state to store time
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(
+    myAccumulateTime + calculateTimeDifference(myActivityInfo.date)
+  );
 
   // state to check stopwatch running or not
   const [isRunning, setIsRunning] = useState(true);
+
+  function calculateTimeDifference(targetTime: string): number {
+    /*
+      현재 시간 - 활동 시작시간 을 빼면
+      라이벌이 활동중일때 accumulateTime + 해당 시간 차 만큼
+      활동시간을 갱신할 수 있습니다.
+    */
+
+    const currentTime = new Date();
+    const targetDate = new Date(targetTime);
+
+    const timeDifferenceInSeconds = Math.floor(
+      (currentTime.getTime() - targetDate.getTime()) / 1000
+    );
+
+    return timeDifferenceInSeconds;
+  }
 
   useEffect(() => {
     let intervalId: string | number | NodeJS.Timeout | undefined;
     if (isRunning) {
       // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
-      intervalId = setInterval(() => setTime(time + 1), 10);
+      intervalId = setInterval(() => setTime(time + 1), 1000);
     }
     return () => clearInterval(intervalId);
   }, [isRunning, time]);
 
   // Hours calculation
-  const hours = Math.floor(time / 360000);
+  const hours = Math.floor(time / 3600);
 
   // Minutes calculation
-  const minutes = Math.floor((time % 360000) / 6000);
+  const minutes = Math.floor((time % 3600) / 60);
 
   // Seconds calculation
-  const seconds = Math.floor((time % 6000) / 100);
+  const seconds = Math.floor((time % 60) / 1);
 
   // Method to start and stop timer
   const startAndStop = () => {
@@ -59,25 +92,62 @@ const ActiveFullScreen = () => {
     console.log('현재 시간 타입입니다 : ' + typeof currentTimer());
   };
 
+  const UPDATE_ACTIVITY_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
+  const access_token = localStorage.getItem('access_token');
   const navigate = useNavigate();
-  const goResult = () => {
-    navigate('/active/result');
-  };
 
-  const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
-    .toString()
-    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
+  // 서버에 시간을 넘기기 위한 함수
   const currentTimer = () => {
     const now = new Date();
     const year = String(now.getFullYear());
-    const months = String(now.getMonth()).padStart(2, '0');
+    const months = String(now.getMonth() + 1).padStart(2, '0');
     const days = String(now.getDate()).padStart(2, '0');
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
     return `${year}-${months}-${days} ${hours}:${minutes}:${seconds}`;
   };
+
+  const goResult = () => {
+    // 활동 종료
+    const updateActivity = async () => {
+      try {
+        const response = await axios.patch(
+          UPDATE_ACTIVITY_URL,
+          {
+            activityId: myActivityInfo.activityId,
+            streakId: myActivityInfo.streakId,
+            endTime: currentTimer(),
+          },
+          {
+            headers: {
+              Authorization: 'Bearer ' + access_token,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        // Dispatch action to store the sentences in Redux
+        // dispatch(setActiveMentList(response.data.sentences));
+        // console.log(startMentList);
+
+        // myAccumulateTime = response.data.myAccumulateTime;
+        // console.log(myAccumulateTime);
+        console.log('활동을 끝내고 서버로 업데이트합니다.');
+        console.log(response.data);
+      } catch (error) {
+        // console.error('Error fetching sentences:', error);
+        console.log('Error fetching sentences:', error);
+      }
+    };
+
+    updateActivity();
+    navigate('/active/result');
+  };
+
+  const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
   const tags = [
     {
@@ -94,28 +164,6 @@ const ActiveFullScreen = () => {
     },
   ];
 
-  const commentListExample: Comment[] = [
-    {
-      commentId: 1,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 1',
-    },
-    {
-      commentId: 2,
-      user: { nickName: 'lulu', profileImage: '../chacha1.jpg' },
-      content: '댓글 2',
-    },
-    {
-      commentId: 3,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 3',
-    },
-    {
-      commentId: 4,
-      user: { nickName: 'coco', profileImage: '../chacha1.jpg' },
-      content: '댓글 4',
-    },
-  ];
   return (
     <div className="z-10 stopwatch-container bg-chaeum-blue-300 w-[307.16px] h-full">
       <div className="max-w-[307.16px] mx-auto overflow-hidden">
@@ -129,43 +177,64 @@ const ActiveFullScreen = () => {
         <div className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center">
           <Card className="w-full h-[200px] border-x-4">
             <div className=" w-[360px] p-1 pl-2 my-3">
-              {commentListExample.map(comment => (
-                <div
-                  className="relative w-full h-10 mb-1"
-                  key={comment.commentId}
-                >
-                  <div className="absolute h-full w-full grid justify-items-start items-center ">
-                    <div className="flex h-full">
-                      <Avatar
-                        src={comment.user.profileImage}
-                        alt="avatar"
-                        size="sm"
-                        className="mr-2"
-                      />
+              {/* {commentListExample.map(comment => ( */}
 
-                      <div className="text-center self-center">
-                        <Typography
-                          variant="lead"
-                          color="text-chaeum-gray-900"
-                          className="opacity-80 text-sm"
-                        >
-                          <span className="font-bold mr-2">
-                            {comment.user.nickName}
-                          </span>
-                          <span>{comment.content}</span>
-                        </Typography>
+              {/* 응원글이 없을경우 처리 */}
+              {props.cheeringMent.length === 0 ? (
+                <div className="text-center w-full pr-24">
+                  작성된 응원글이 없습니다.
+                </div>
+              ) : (
+                <>
+                  {/* 응원글이 있을경우 최대 4개까지 보여주게끔 처리 */}
+                  {props.cheeringMent.slice(0, 4).map(comment => (
+                    <div
+                      className="relative w-full h-10 mb-1"
+                      key={comment.nickname}
+                    >
+                      <div className="absolute h-full w-full grid justify-items-start items-center ">
+                        <div className="flex h-full">
+                          <Avatar
+                            src={comment.profileUrl}
+                            alt="avatar"
+                            size="sm"
+                            className="mr-2"
+                          />
+
+                          <div className="text-center self-center">
+                            <Typography
+                              variant="lead"
+                              color="text-chaeum-gray-900"
+                              className="opacity-80 text-sm"
+                            >
+                              <span className="font-bold mr-2">
+                                {comment.nickname}
+                              </span>
+                              <span>{comment.comments}</span>
+                            </Typography>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  ))}
+                </>
+              )}
             </div>
           </Card>
         </div>
         <div className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center">
-          <Card>
-            <PhraseCard title="동기부여멘트" ment={'동기부여멘트'}></PhraseCard>
-          </Card>
+          <Carousel>
+            {props.startMent.map((ment, index) => (
+              <div
+                key={index}
+                className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center"
+              >
+                <Card>
+                  <PhraseCard title="동기부여 멘트" ment={ment}></PhraseCard>
+                </Card>
+              </div>
+            ))}
+          </Carousel>
         </div>
         <div className="mx-auto flex justify-center place-items-center ">
           <Button
