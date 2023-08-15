@@ -51,8 +51,8 @@ public class Activity {
         this.activityEndTime = activityEndTime;
     }
 
-    public void changeActivityIsPost(boolean activityIsPost) {
-        this.activityIsPost = activityIsPost;
+    public void changeActivityIsPost() {
+        this.activityIsPost = !this.activityIsPost;
     }
 }
 

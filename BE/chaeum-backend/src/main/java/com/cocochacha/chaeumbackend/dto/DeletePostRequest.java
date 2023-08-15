@@ -6,17 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetActiveResponse {
+public class DeletePostRequest {
 
-    private String friendName;
-    private String activeStartTime;
-    private String streakName;
-    private int streakId;
-    private int activityId;
-    private String profileUrl;
+    private int postId;
 }
