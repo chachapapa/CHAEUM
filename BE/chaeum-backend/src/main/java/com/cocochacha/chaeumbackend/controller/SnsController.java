@@ -1,9 +1,10 @@
 package com.cocochacha.chaeumbackend.controller;
 
-import com.cocochacha.chaeumbackend.domain.Activity;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import com.cocochacha.chaeumbackend.dto.CreateReplyRequest;
 import com.cocochacha.chaeumbackend.dto.CreatePostRequest;
 import com.cocochacha.chaeumbackend.dto.DeletePostRequest;
+import com.cocochacha.chaeumbackend.dto.DeleteReplyRequest;
 import com.cocochacha.chaeumbackend.dto.GetActiveResponse;
 import com.cocochacha.chaeumbackend.service.SnsService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
@@ -49,6 +50,26 @@ public class SnsController {
         return new ResponseEntity<>(getActiveResponseList, HttpStatus.OK);
     }
 
+    /**
+     * 액티브에서 응원글을 등록하는 함수
+     *
+     * @param createReplyRequest ( 활동내역_id, 댓글 내용 )
+     * @return
+     */
+    @PostMapping("/cheering")
+    public ResponseEntity<?> createCheering(
+            @RequestBody CreateReplyRequest createReplyRequest) {
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
+
+        if (snsService.createReply(createReplyRequest, userPersonalInfo, true)) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
     @PostMapping("/create")
     public ResponseEntity<?> createPost(@RequestPart CreatePostRequest createPostRequest,
                                         @RequestPart List<MultipartFile> fileList) {
@@ -74,6 +95,31 @@ public class SnsController {
                 getUserIDFromAuthentication());
 
         if (snsService.deletePost(deletePostRequest, userPersonalInfo)) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<?> createReply(@RequestBody CreateReplyRequest createReplyRequest) {
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
+
+        if (snsService.createReply(createReplyRequest, userPersonalInfo, false)) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/comment")
+    public ResponseEntity<?> deleteReply(@RequestBody DeleteReplyRequest deleteReplyRequest) {
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
+
+        if (snsService.deleteReply(deleteReplyRequest, userPersonalInfo)) {
             return new ResponseEntity<>(true, HttpStatus.OK);
         }
         return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);

@@ -7,15 +7,19 @@ import com.cocochacha.chaeumbackend.domain.Category;
 import com.cocochacha.chaeumbackend.domain.File;
 import com.cocochacha.chaeumbackend.domain.FriendRelationship;
 import com.cocochacha.chaeumbackend.domain.Post;
+import com.cocochacha.chaeumbackend.domain.Reply;
 import com.cocochacha.chaeumbackend.domain.Streak;
 import com.cocochacha.chaeumbackend.domain.StreakInfo;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import com.cocochacha.chaeumbackend.dto.CreateReplyRequest;
 import com.cocochacha.chaeumbackend.dto.CreatePostRequest;
 import com.cocochacha.chaeumbackend.dto.DeletePostRequest;
+import com.cocochacha.chaeumbackend.dto.DeleteReplyRequest;
 import com.cocochacha.chaeumbackend.dto.GetActiveResponse;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 import com.cocochacha.chaeumbackend.repository.FriendRelationshipRepository;
 import com.cocochacha.chaeumbackend.repository.PostRepository;
+import com.cocochacha.chaeumbackend.repository.ReplyRepository;
 import com.cocochacha.chaeumbackend.repository.StreakInfoRepository;
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
 import java.io.IOException;
@@ -44,6 +48,9 @@ public class SnsServiceImpl implements SnsService {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    ReplyRepository replyRepository;
 
     @Autowired
     StreakInfoRepository streakInfoRepository;
@@ -206,6 +213,49 @@ public class SnsServiceImpl implements SnsService {
         post.changePostEnable();
 
         activity.changeActivityIsPost();
+
+        return true;
+    }
+
+    /**
+     * 댓글 작성하는 함수
+     *
+     * @param createReplyRequest ( 활동내역_Id, 댓글_내용, 댓글_작성_시간 )
+     * @param userPersonalInfo   User 정보
+     * @param isCheer            응원글이라면 True
+     * @return 생성이 잘 되었느지
+     */
+
+    @Override
+    @Transactional
+    public boolean createReply(CreateReplyRequest createReplyRequest,
+                               UserPersonalInfo userPersonalInfo, boolean isCheer) {
+
+        Reply reply = Reply.builder()
+                .isCheer(isCheer)
+                .content(createReplyRequest.getComment())
+                .replyDeleted(false)
+                .activityId(activityRepository.findById(createReplyRequest.getActivityId())
+                        .orElse(null))
+                .userId(userPersonalInfo)
+                .build();
+
+        return reply.equals(replyRepository.save(reply));
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteReply(DeleteReplyRequest deleteReplyRequest,
+                               UserPersonalInfo userPersonalInfo) {
+
+        // 댓글을 댓글 번호로 찾아서 삭제 한다.
+        Reply reply = replyRepository.findById(deleteReplyRequest.getReplyId()).orElse(null);
+
+        if (!reply.getUserId().equals(userPersonalInfo)) {
+            return false;
+        }
+
+        reply.changeDeleted();
 
         return true;
     }

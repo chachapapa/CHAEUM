@@ -2,6 +2,7 @@ package com.cocochacha.chaeumbackend.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Entity
 @Table(name = "reply")
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Reply {
@@ -44,4 +46,8 @@ public class Reply {
     @Column(name = "reply_deleted")
     private Boolean replyDeleted;
 
+
+    public void changeDeleted(){
+        this.replyDeleted = true;
+    }
 }
