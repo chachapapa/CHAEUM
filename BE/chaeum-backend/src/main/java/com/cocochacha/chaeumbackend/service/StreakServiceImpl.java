@@ -379,7 +379,7 @@ public class StreakServiceImpl implements StreakService {
         if (accumulateWeekTime == null) {
             return null;
         }
-        fill: while (accumulateWeekTime.size() < 5) {
+        fill: while (accumulateWeekTime.size() < 6) {
             int tempId = streakIds.get(new Random().nextInt(streakIds.size()));
             for (List<Integer> idAndTime : accumulateWeekTime) {
                 if (idAndTime.get(0).equals(tempId)) {
@@ -422,6 +422,7 @@ public class StreakServiceImpl implements StreakService {
 
                 // 위에서도 못찾았으면 문제가 있어요 null을 리턴해요
                 else {
+                    System.out.println("!");
                     return null;
                 }
             }
@@ -444,6 +445,7 @@ public class StreakServiceImpl implements StreakService {
                     .categoryMain(rivalStreak.getCategory().getCategoryMain())
                     .categoryMiddle(rivalStreak.getCategory().getCategoryMiddle())
                     .accumulateTime(find[1])
+                    .profileImageUrl(rivalStreak.getUserPersonalInfo().getProfileImageUrl())
                     .build();
 
             if (ongoingTime != null) {
