@@ -26,5 +26,6 @@ public class RivalListResponse {
         int accumulateTime;
         boolean isActive;
         int ongoingTime;
+        String profileImageUrl;
     }
 }
