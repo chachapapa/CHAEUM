@@ -1,5 +1,5 @@
+import React from 'react';
 import { useDispatch } from 'react-redux';
-import React, { ComponentProps } from 'react';
 import { closeDrawer } from '../../features/states/states';
 import { Drawer, IconButton, Typography } from '@material-tailwind/react';
 import { useAppSelector } from '../../hooks/reduxHooks';
@@ -11,20 +11,41 @@ type Props = {
   button1: string; // 첫번째 버튼
   button2: string; // 두번째 버튼
   openChk: boolean;
+  streakId?: number;
+  callback1?(): void;
+  callback2?(): void;
 };
 
 export const BottomDrawer = (props: Props) => {
   const dispatch = useDispatch();
+  const { drawerState } = useAppSelector(state => state.stateSetter);
 
   const overlayProps = {
     className: 'w-full h-full fixed',
   };
+
+  const onFirstButtonClick = () => {
+    if (props.callback1 !== undefined) {
+      props.callback1(); // 상위 컴포넌트의 onChange 콜백 호출
+    }
+    dispatch(closeDrawer());
+  };
+
+  const onSecondButtonClick = () => {
+    if (props.callback2 !== undefined) {
+      props.callback2(); // 상위 컴포넌트의 onChange 콜백 호출
+    }
+    dispatch(closeDrawer());
+  };
+
   return (
     <>
       <Drawer
         overlayProps={overlayProps}
         placement="bottom"
-        open={useAppSelector(state => state.stateSetter.isDrawerOpen)}
+        open={useAppSelector(
+          state => state.stateSetter.drawerState.isDrawerOpen
+        )}
         onClose={() => dispatch(closeDrawer())}
         className={
           props.openChk
@@ -62,17 +83,17 @@ export const BottomDrawer = (props: Props) => {
         </Typography>
         <div>
           <TextButton
-            type="warning"
+            type={drawerState.drawerType === 'unlock' ? 'primary' : 'warning'}
             size="medium"
             label={props.button1}
-            callback={() => dispatch(closeDrawer())}
+            callback={onFirstButtonClick}
             className="my-1"
           ></TextButton>
           <TextButton
             type="gray"
             size="medium"
             label={props.button2}
-            callback={() => dispatch(closeDrawer())}
+            callback={onSecondButtonClick}
             className="my-1"
           ></TextButton>
         </div>

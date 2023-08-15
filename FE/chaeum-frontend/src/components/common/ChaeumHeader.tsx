@@ -13,7 +13,7 @@ interface HeaderPropsType {
 const ARTICLE_WRITE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/create';
 const AccessToken = localStorage.getItem('access_token');
 
-export const ChaeumHeader = ({ title, isLogo}: HeaderPropsType) => {
+export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
@@ -80,15 +80,21 @@ export const ChaeumHeader = ({ title, isLogo}: HeaderPropsType) => {
           <Link to={'/main'}>
             <LogoText height="auto" width="10rem" className="px-2" />
           </Link>
-        ) : isElement(title) ? (
-          <span className="px-4 text-3xl font-environmentR font-semibold text-chaeum-gray-900" onClick={onGobackButtonClicked}>
+        ) : isElement(title) || typeof title === 'string' ? (
+          <span
+            className="px-4 text-3xl font-environmentR font-semibold text-chaeum-gray-900"
+            onClick={onGobackButtonClicked}
+          >
             {title}
           </span>
         ) : null}
       </div>
       <div className="px-2">
         {location.pathname === '/feed/write' && articleWriteStep === 2 ? (
-          <div className="w-[80px] flex flex-row-reverse justify-between text-lg text-chaeum-blue-500" onClick={onRegistButtonClicked}>
+          <div
+            className="w-[80px] flex flex-row-reverse justify-between text-lg text-chaeum-blue-500"
+            onClick={onRegistButtonClicked}
+          >
             공유하기
           </div>
         ) : location.pathname === '/feed/write' && articleWriteStep === 1 ? (

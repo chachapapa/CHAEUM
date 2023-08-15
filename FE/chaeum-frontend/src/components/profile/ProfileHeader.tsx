@@ -15,7 +15,7 @@ const ProfileHeader = () => {
   const logOutButtonClick = () => {
     // 로그아웃 or 회원탈퇴 기능
     console.log('logout button clicked!!');
-    dispatch(openDrawer('logout'));
+    dispatch(openDrawer({ drawerType: 'logout', isDrawerOpen: true }));
     console.log('logout state updated!!');
   };
 

@@ -57,9 +57,9 @@ const EnterancePage = () => {
 
   const genderList: string[] = ['남자', '여자'];
 
-  const drawerType = useAppSelector(state => state.stateSetter.drawerType);
-  const isDrawerOpen = useAppSelector(state => state.stateSetter.isDrawerOpen);
-  const { modalState } = useAppSelector(state => state.stateSetter);
+  const { modalState, drawerState } = useAppSelector(
+    state => state.stateSetter
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -95,7 +95,7 @@ const EnterancePage = () => {
   const logOutButtonClick = () => {
     // 로그아웃 or 회원탈퇴 기능
     console.log('logout button clicked!!');
-    dispatch(openDrawer('logout'));
+    dispatch(openDrawer({ drawerType: 'logout', isDrawerOpen: true }));
     console.log('logout state updated!!');
   };
 
@@ -122,9 +122,10 @@ const EnterancePage = () => {
   };
 
   useEffect(() => {
-    if (drawerType === 'logout') setModalTypeKor('로그아웃');
-    else if (drawerType === 'withdrawal') setModalTypeKor('회원탈퇴');
-  }, [drawerType]);
+    if (drawerState.drawerType === 'logout') setModalTypeKor('로그아웃');
+    else if (drawerState.drawerType === 'withdrawal')
+      setModalTypeKor('회원탈퇴');
+  }, [drawerState.drawerType]);
 
   return (
     <div className="w-full flex flex-col items-center outline">
@@ -194,9 +195,9 @@ const EnterancePage = () => {
       </div>
       <ChaeumNav />
       {/* 로그아웃 */}
-      {isDrawerOpen ? (
+      {drawerState.isDrawerOpen ? (
         <div className="visible z-[9999] bg-white">
-          {isDrawerOpen ? (
+          {drawerState.isDrawerOpen ? (
             <BottomDrawer
               title="로그아웃"
               content="로그아웃 하시겠습니까?"
@@ -285,7 +286,7 @@ const EnterancePage = () => {
         </div>
       ) : (
         <div className="invisible transition-all delay-500 z-[9999] bg-white">
-          {isDrawerOpen ? (
+          {drawerState.isDrawerOpen ? (
             <BottomDrawer
               title="로그아웃"
               content="로그아웃 하시겠습니까?"
