@@ -13,6 +13,25 @@ type Activity = {
   endTime: string;
 };
 
+type MyActivity = {
+  activityId: number;
+  streakId: number;
+  categoryId: number;
+  date: string;
+};
+
+type RivalActivity = {
+  accumulateTime: number;
+  active: boolean;
+  categoryId: number;
+  categoryMain: string;
+  categoryMiddle: string;
+  nickname: string;
+  ongoingTime: number;
+  profileImageUrl: string;
+  streakId: number;
+};
+
 type Comment = {
   user: User;
   activityId: number;
@@ -133,6 +152,8 @@ export type {
   Modal,
   ImageFile,
   Drawer,
+  RivalActivity,
+  MyActivity,
 };
 
 export interface StreakInfoType {
