@@ -497,7 +497,7 @@ export const OverlayModal = ({ ...props }: ModalType) => {
             ) : (
               <TextButton
                 label="수정하기"
-                type="warning"
+                type="primary"
                 className="h-12 w-full"
                 callback={modifyStreak}
               />
@@ -528,11 +528,11 @@ export const OverlayModal = ({ ...props }: ModalType) => {
             <div className="text-center my-4 p-2 rounded-lg transition-all duration-500 w-full">
               {goModify ? (
                 <span className="bg-chaeum-blue-700 bg-opacity-70 p-2 text-xs text-white rounded-lg transition-all duration-500  w-full">
-                  '스트릭 이름'을 수정했어요!
+                  '{patchParams.streakName}' 스트릭을 수정했어요!
                 </span>
               ) : (
                 <span className="transition-all duration-500 bg-white bg-opacity-0 text-opacity-0 text-white invisible">
-                  '스트릭 이름'을 수정했어요!
+                  '{patchParams.streakName}' 스트릭을 수정했어요!
                 </span>
               )}
             </div>

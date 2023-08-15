@@ -106,6 +106,13 @@ const TextColorList: ColorNameType = {
   fuchsiaw4: 'active:text-fuchsia-600',
   fuchsiaw5: 'active:text-fuchsia-800',
 
+  // purple
+  purplew1: 'active:text-purple-200',
+  purplew2: 'active:text-purple-300',
+  purplew3: 'active:text-purple-400',
+  purplew4: 'active:text-purple-600',
+  purplew5: 'active:text-purple-700',
+
   // pink
   pinkw1: 'active:text-pink-50',
   pinkw2: 'active:text-pink-200',

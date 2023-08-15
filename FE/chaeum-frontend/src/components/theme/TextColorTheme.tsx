@@ -99,6 +99,13 @@ const TextColorList: ColorNameType = {
   violetw4: 'text-violet-600',
   violetw5: 'text-violet-800',
 
+  // purple
+  purplew1: 'text-purple-200',
+  purplew2: 'text-purple-300',
+  purplew3: 'text-purple-400',
+  purplew4: 'text-purple-600',
+  purplew5: 'text-purple-700',
+
   // fuchsia
   fuchsiaw1: 'text-fuchsia-50',
   fuchsiaw2: 'text-fuchsia-200',

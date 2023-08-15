@@ -234,10 +234,6 @@ const MainPage = () => {
       });
   };
 
-  type mainCategory = {
-    categoryMiddleList: string[];
-  }[];
-
   return (
     <div className="w-full h-full">
       {isInfo !== null ? (
