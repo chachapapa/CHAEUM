@@ -422,7 +422,6 @@ public class StreakServiceImpl implements StreakService {
 
                 // 위에서도 못찾았으면 문제가 있어요 null을 리턴해요
                 else {
-                    System.out.println("!");
                     return null;
                 }
             }
