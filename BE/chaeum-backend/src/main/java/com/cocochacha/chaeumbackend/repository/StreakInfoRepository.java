@@ -13,4 +13,6 @@ public interface StreakInfoRepository extends JpaRepository<StreakInfo, Integer>
     Optional<StreakInfo> findByStreak(Streak streak);
 
     Optional<List<StreakInfo>> findAllByStreak(Streak streak);
+
+    void deleteAllByStreak(Streak streak);
 }

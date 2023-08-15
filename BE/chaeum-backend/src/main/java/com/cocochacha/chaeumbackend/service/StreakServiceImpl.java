@@ -60,7 +60,7 @@ public class StreakServiceImpl implements StreakService {
     @Override
     @Transactional
     public boolean createStreak(CreateStreakRequest createStreakRequest,
-            UserPersonalInfo userPersonalInfo) {
+                                UserPersonalInfo userPersonalInfo) {
 
         //들어온 createStreakRequest 를 사용해서
         //새로운 Streak 객체를 만들어준다.
@@ -108,7 +108,7 @@ public class StreakServiceImpl implements StreakService {
     @Override
     @Transactional
     public boolean modifyStreak(ModifyStreakRequest modifyStreakRequest,
-            UserPersonalInfo userPersonalInfo) {
+                                UserPersonalInfo userPersonalInfo) {
         Optional<Streak> optionalStreak = streakRepository.findById(
                 modifyStreakRequest.getStreakId());
 
@@ -122,6 +122,10 @@ public class StreakServiceImpl implements StreakService {
 
             streak.changeStreakName(modifyStreakRequest.getStreakName());
             streak.changeStreakColor(modifyStreakRequest.getStreakColor());
+
+            // 기존 스트릭 정보 리스트를 모두 제거
+            streakInfoRepository.deleteAllByStreak(streak);
+
 
             // 스트릭 정보 리스트를 선언한다.
             List<StreakInfo> streakInfos = new ArrayList<>();
@@ -160,7 +164,7 @@ public class StreakServiceImpl implements StreakService {
     @Override
     @Transactional
     public boolean deleteStreak(DeleteStreakRequest deleteStreakRequest,
-            UserPersonalInfo userPersonalInfo) {
+                                UserPersonalInfo userPersonalInfo) {
         // deleteStreakRequest의 StreakId를 이용해서 streak을 뽑아낸다.
         Optional<Streak> optionalStreak = streakRepository.findById(
                 deleteStreakRequest.getStreakId());
@@ -192,7 +196,7 @@ public class StreakServiceImpl implements StreakService {
     @Override
     @Transactional
     public boolean deactivateStreak(DeactivateStreakRequest deactivateStreakRequest,
-            UserPersonalInfo userPersonalInfo) {
+                                    UserPersonalInfo userPersonalInfo) {
         Optional<Streak> optionalStreak = streakRepository.findById(
                 deactivateStreakRequest.getStreakId());
 
@@ -205,7 +209,7 @@ public class StreakServiceImpl implements StreakService {
                 return false;
             }
 
-            streak.changeStreakActive(false);
+            streak.changeStreakActive();
 
             if (streak.isStreakActive()) {
                 return false;
