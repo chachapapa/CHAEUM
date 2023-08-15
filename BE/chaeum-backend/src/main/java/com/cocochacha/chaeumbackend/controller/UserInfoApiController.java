@@ -1,9 +1,12 @@
 package com.cocochacha.chaeumbackend.controller;
 
+import com.cocochacha.chaeumbackend.domain.UserMypageInfo;
+import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.MyPersonalInfoRequest;
 import com.cocochacha.chaeumbackend.dto.MyPersonalInfoResponse;
 import com.cocochacha.chaeumbackend.dto.UpdateMypageInfoRequest;
 import com.cocochacha.chaeumbackend.dto.UpdateMypageInfoResponse;
+import com.cocochacha.chaeumbackend.dto.UserMypageInfoResponse;
 import com.cocochacha.chaeumbackend.service.UserMypageInfoService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import lombok.RequiredArgsConstructor;
@@ -95,6 +98,32 @@ public class UserInfoApiController {
         }
 
         return ResponseEntity.ok(updateMypageInfoResponse);
+    }
+
+    @GetMapping("/mypage-info")
+    public ResponseEntity<?> userMypageInfo(@RequestParam String nickname) {
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findRegisteredUsersByNickname(nickname);
+        if (userPersonalInfo == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        UserMypageInfo userMypageInfo = userMypageInfoService.findMypageInfo(userPersonalInfo);
+        if (userMypageInfo == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        UserMypageInfoResponse userMypageInfoResponse = UserMypageInfoResponse.builder()
+                .nickname(nickname)
+                .mbti(userMypageInfo.getMbti())
+                .introduce(userMypageInfo.getIntroduce())
+                .backgroundUrl(userMypageInfo.getBackgroundUrl())
+                .profileImageUrl(userPersonalInfo.getProfileImageUrl())
+                .build();
+
+        if (userMypageInfo.getId().equals(getUserIDFromAuthentication())) {
+            userMypageInfoResponse.setGender(userMypageInfo.getGender());
+            userMypageInfoResponse.setHeight(userMypageInfo.getHeight());
+            userMypageInfoResponse.setWeight(userMypageInfo.getWeight());
+        }
+
+        return new ResponseEntity<>(userMypageInfoResponse, HttpStatus.OK);
     }
 
     private Long getUserIDFromAuthentication() {

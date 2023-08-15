@@ -3,6 +3,7 @@ package com.cocochacha.chaeumbackend.repository;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import java.util.List;
 import java.util.Optional;
+import javax.swing.text.html.Option;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserPersonalInfoRepository extends JpaRepository<UserPersonalInfo, Long> {
@@ -22,4 +23,6 @@ public interface UserPersonalInfoRepository extends JpaRepository<UserPersonalIn
      * @return 검색된 사용자 객체들의 컬렉션 (List)
      */
     List<UserPersonalInfo> findAllByNickname(String nickname);
+
+    Optional<UserPersonalInfo> findByNicknameAndIsRegistered(String nickname, Boolean isRegistered);
 }

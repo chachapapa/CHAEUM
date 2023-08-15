@@ -101,4 +101,8 @@ public class UserPersonalInfoService {
     public void save(UserPersonalInfo userPersonalInfo) {
         userPersonalInfoRepository.save(userPersonalInfo);
     }
+
+    public UserPersonalInfo findRegisteredUsersByNickname(String nickname) {
+        return userPersonalInfoRepository.findByNicknameAndIsRegistered(nickname, true).orElse(null);
+    }
 }

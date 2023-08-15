@@ -78,4 +78,14 @@ public class UserMypageInfoService {
 
         return updateMypageInfoResponse;
     }
+
+    public UserMypageInfo findMypageInfo(UserPersonalInfo userPersonalInfo) {
+
+        UserMypageInfo userMypageInfo = userMypageInfoRepository.findById(userPersonalInfo.getId()).orElse(null);
+        if (userMypageInfo == null) {
+            userMypageInfo = userMypageInfoRepository.save(UserMypageInfo.builder().userPersonalInfo(userPersonalInfo).build());
+        }
+
+        return userMypageInfo;
+    }
 }
