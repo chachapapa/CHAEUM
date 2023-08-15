@@ -62,12 +62,21 @@ public class StreakServiceImpl implements StreakService {
     public boolean createStreak(CreateStreakRequest createStreakRequest,
                                 UserPersonalInfo userPersonalInfo) {
 
+        String color = createStreakRequest.getStreakColor();
+        String name = createStreakRequest.getStreakName();
+
+        if(createStreakRequest.getStreakName() == null){
+            name = createStreakRequest.getCategoryMiddle();
+        }
+        if(color == null){
+            color = "chaeumblue";
+        }
+
         //들어온 createStreakRequest 를 사용해서
         //새로운 Streak 객체를 만들어준다.
-
         Streak streak = Streak.builder()
-                .streakName(createStreakRequest.getStreakName())
-                .streakColor(createStreakRequest.getStreakColor())
+                .streakName(name)
+                .streakColor(color)
                 .category(categoryRepository.findByCategoryMainAndCategoryMiddle(
                         createStreakRequest.getCategoryMain(),
                         createStreakRequest.getCategoryMiddle()).get())
@@ -78,29 +87,29 @@ public class StreakServiceImpl implements StreakService {
         // 스트릭 정보 리스트를 선언한다.
         List<StreakInfo> streakInfos = new ArrayList<>();
 
-        // 들어온 태그 리스트들을 사용한다.
-        // 만약 태그가 저장되어있지 않다면 태그를 새로 저장한다
-        for (String tagName : createStreakRequest.getTagList()) {
-            Optional<Tag> optionalTag = tagRepository.findByTagName(tagName);
-            Tag tag;
-            if (optionalTag.isEmpty()) {
-                tag = Tag.builder()
-                        .tagName(tagName)
+        if(createStreakRequest.getTagList() != null) {
+            // 들어온 태그 리스트들을 사용한다.
+            // 만약 태그가 저장되어있지 않다면 태그를 새로 저장한다
+            for (String tagName : createStreakRequest.getTagList()) {
+                Optional<Tag> optionalTag = tagRepository.findByTagName(tagName);
+                Tag tag;
+                if (optionalTag.isEmpty()) {
+                    tag = Tag.builder()
+                            .tagName(tagName)
+                            .build();
+                    tagRepository.save(tag);
+                } else {
+                    tag = optionalTag.get();
+                }
+                StreakInfo streakInfo = StreakInfo.builder()
+                        .streak(streak)
+                        .tag(tag)
                         .build();
-                tagRepository.save(tag);
-            } else {
-                tag = optionalTag.get();
+                streakInfos.add(streakInfo);
             }
-            StreakInfo streakInfo = StreakInfo.builder()
-                    .streak(streak)
-                    .tag(tag)
-                    .build();
-            streakInfos.add(streakInfo);
+            // 스트릭에 스트릭 정보를 넣어준다.
+            streak.changeStreakInfoList(streakInfos);
         }
-
-        // 스트릭에 스트릭 정보를 넣어준다.
-        streak.changeStreakInfoList(streakInfos);
-
         // 잘 저장이 되었다면 true 아니라면 false
         return streak.equals(streakRepository.save(streak));
     }
