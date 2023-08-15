@@ -42,7 +42,8 @@ public class UserPersonalInfoService {
      */
     public UserPersonalInfo findById(Long userId) {
         return userPersonalInfoRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with ID " + userId + " not found."));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "User with ID " + userId + " not found."));
     }
 
     /**
@@ -66,7 +67,8 @@ public class UserPersonalInfoService {
      */
     public boolean isNicknameAvailable(Long userId, String nickname) {
         List<UserPersonalInfo> usersWithNickname = findAllByNickname(nickname);
-        return usersWithNickname.isEmpty() || (usersWithNickname.size() == 1 && usersWithNickname.get(0).getId().equals(userId));
+        return usersWithNickname.isEmpty() || (usersWithNickname.size() == 1
+                && usersWithNickname.get(0).getId().equals(userId));
     }
 
     /**
@@ -103,6 +105,17 @@ public class UserPersonalInfoService {
     }
 
     public UserPersonalInfo findRegisteredUsersByNickname(String nickname) {
-        return userPersonalInfoRepository.findByNicknameAndIsRegistered(nickname, true).orElse(null);
+        return userPersonalInfoRepository.findByNicknameAndIsRegistered(nickname, true)
+                .orElse(null);
+    }
+
+    /**
+     * 특정 키워드를 기반으로 유저를 검색하고 유사도 순으로 정렬합니다.
+     *
+     * @param keyword
+     * @return
+     */
+    public List<UserPersonalInfo> findAllByNicknameOrderBySimilarity(String keyword) {
+        return userPersonalInfoRepository.searchByNicknameOrderBySimilarity(keyword).orElse(null);
     }
 }
