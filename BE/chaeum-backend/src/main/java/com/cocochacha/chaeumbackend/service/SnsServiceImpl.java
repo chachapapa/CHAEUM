@@ -297,7 +297,12 @@ public class SnsServiceImpl implements SnsService {
         }
 
         // 모든 포스트를 확인해서 친구의 것인지 아닌지 확인
-        for (Post post : postRepository.findAllByPostEnableIsTrue()) {
+        for (Post post : postRepository.findAllByPostEnableIsTrueOrderByPostIdDesc()) {
+            // 내 포스트라면 넘어간다.
+            if(userPersonalInfo.equals(post.getUserPersonalInfo()))
+                continue;
+
+            // 친구 포스트라면 친구포스트 리스트에 넣어준다
             if (friends.contains(post.getUserPersonalInfo())) {
                 friendPostList.add(post);
             } else {

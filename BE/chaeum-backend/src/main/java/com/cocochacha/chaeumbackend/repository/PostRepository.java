@@ -20,5 +20,5 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query("SELECT p FROM Post p Where p.userPersonalInfo NOT IN :friends")
     List<Post> findStrangersPosts(@Param("friends") List<UserPersonalInfo> friends);
 
-    List<Post> findAllByPostEnableIsTrue();
+    List<Post> findAllByPostEnableIsTrueOrderByPostIdDesc();
 }
