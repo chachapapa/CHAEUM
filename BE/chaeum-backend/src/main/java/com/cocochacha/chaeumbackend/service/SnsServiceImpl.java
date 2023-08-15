@@ -25,6 +25,7 @@ import com.cocochacha.chaeumbackend.repository.PostRepository;
 import com.cocochacha.chaeumbackend.repository.ReplyRepository;
 import com.cocochacha.chaeumbackend.repository.StreakInfoRepository;
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
+import com.cocochacha.chaeumbackend.repository.UserPersonalInfoRepository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,6 +61,9 @@ public class SnsServiceImpl implements SnsService {
 
     @Autowired
     FriendRelationshipRepository friendRelationshipRepository;
+
+    @Autowired
+    UserPersonalInfoRepository userPersonalInfoRepository;
 
     @Autowired
     AmazonS3 amazonS3;
@@ -299,8 +303,8 @@ public class SnsServiceImpl implements SnsService {
         // 모든 포스트를 확인해서 친구의 것인지 아닌지 확인
         for (Post post : postRepository.findAllByPostEnableIsTrueOrderByPostIdDesc()) {
             // 내 포스트라면 넘어간다.
-            if(userPersonalInfo.equals(post.getUserPersonalInfo()))
-                continue;
+//            if(userPersonalInfo.equals(post.getUserPersonalInfo()))
+//                continue;
 
             // 친구 포스트라면 친구포스트 리스트에 넣어준다
             if (friends.contains(post.getUserPersonalInfo())) {
@@ -398,6 +402,92 @@ public class SnsServiceImpl implements SnsService {
         // 이거 매번 완탐으로 하는데 괜찮은건가....
         return postResponseList.stream().skip(getPostRequest.getIdx())
                 .limit(10).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GetPostResponse> getPostByNickname(String nickName, UserPersonalInfo userPersonalInfo){
+
+        List<GetPostResponse> postResponseList = new ArrayList<>();
+        List<Post> postList = new ArrayList<>();
+
+        if(nickName.equals(userPersonalInfo.getNickname())){
+            postList = postRepository.findAllByUserPersonalInfoAndPostEnableIsTrueOrderByPostIdDesc(userPersonalInfo);
+        }
+        else{
+            UserPersonalInfo user = userPersonalInfoRepository.findByNicknameAndIsRegistered(nickName, true).orElse(null);
+            postList = postRepository.findAllByUserPersonalInfoAndPostEnableIsTrueOrderByPostIdDesc(user);
+        }
+
+        // 모든 포스트들에 대한 댓글 등등 넣어준다.
+        for (Post post : postList) {
+
+            // 포스트에 해당하는 댓글들 가져오기
+            List<Reply> replyList = replyRepository
+                    .findAllByActivityIdAndReplyDeletedIsFalse(post.getActivity());
+
+            List<String> tagList = new ArrayList<>();
+
+            // tag 정보를 가져오기 위한 streakInfo 리스트
+            List<StreakInfo> streakInfos = streakInfoRepository
+                    .findAllByStreak(post.getActivity().getStreakId())
+                    .orElse(null);
+
+            for (StreakInfo streakInfo : streakInfos) {
+                tagList.add(streakInfo.getTag().getTagName());
+            }
+
+            // 댓글들을 가져와서 대댓글과 댓글로 정렬하기
+            List<GetReplyResponse> replySortList = new ArrayList<>();
+            Map<Long, List<GetReplyResponse>> replyMap = new HashMap<>();
+
+            // 댓글들을 가져와서 대댓글, 댓글로 분류하기
+            for (Reply reply : replyList) {
+
+                GetReplyResponse replyResponse = GetReplyResponse.builder()
+                        .replyId(reply.getReplyId())
+                        .content(reply.getContent())
+                        .isCheer(reply.getIsCheer())
+                        .rereplyId(reply.getRereplyId())
+                        .build();
+
+                if (reply.getRereplyId() == null) {
+                    replySortList.add(replyResponse);
+                } else {
+                    // 대댓글을 댓글의 해쉬맵 안에 넣어서 관리한다.
+                    replyMap.computeIfAbsent(reply.getRereplyId(), k -> new ArrayList<>())
+                            .add(replyResponse);
+                }
+            }
+
+            for (GetReplyResponse replyResponse : replySortList) {
+                List<GetReplyResponse> replies = replyMap.getOrDefault(replyResponse.getReplyId(),
+                        Collections.emptyList());
+                replyResponse.setReplies(replies);
+            }
+
+            List<String> fileList = new ArrayList<>();
+            for (File file : post.getFileList()) {
+                fileList.add(file.getFileUrl());
+            }
+
+            // 댓글, 파일리스트, 포스트 관련 내용들을 모두 한 dto에 담는다.
+            GetPostResponse getPostResponse = GetPostResponse.builder()
+                    .postId(post.getPostId())
+                    .activityId(post.getActivity().getId())
+                    .postContent(post.getPostContent())
+                    .postTime(post.getPostTime())
+                    .replyList(replySortList)
+                    .tagList(tagList)
+                    .profileUrl(post.getUserPersonalInfo().getProfileImageUrl())
+                    .imageList(fileList)
+                    .isFriend(true)
+                    .build();
+
+            // dto 리스트에 저장
+            postResponseList.add(getPostResponse);
+        }
+
+        return postResponseList;
     }
 
     /**
