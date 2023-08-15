@@ -10,6 +10,7 @@ import com.cocochacha.chaeumbackend.dto.UpdateMypageInfoResponse;
 import com.cocochacha.chaeumbackend.dto.UserMypageInfoResponse;
 import com.cocochacha.chaeumbackend.service.UserMypageInfoService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -93,8 +94,14 @@ public class UserInfoApiController {
     public ResponseEntity<?> updateMypageInfo(
             @RequestBody UpdateMypageInfoRequest updateMypageInfoRequest) {
         Long userId = getUserIDFromAuthentication();
-        UpdateMypageInfoResponse updateMypageInfoResponse = userMypageInfoService.updateMypageInfoResponse(
-                userId, updateMypageInfoRequest);
+        UpdateMypageInfoResponse updateMypageInfoResponse = null;
+        try {
+            updateMypageInfoResponse = userMypageInfoService.updateMypageInfoResponse(
+                    userId, updateMypageInfoRequest);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         if (updateMypageInfoResponse == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -103,6 +110,12 @@ public class UserInfoApiController {
         return ResponseEntity.ok(updateMypageInfoResponse);
     }
 
+    /**
+     * 닉네임이 일치하는 등록된 회원의 마이페이지 회원정보를 읽어오는 API 엔드포인트입니다.
+     *
+     * @param nickname
+     * @return
+     */
     @GetMapping("/mypage-info")
     public ResponseEntity<?> userMypageInfo(@RequestParam String nickname) {
 

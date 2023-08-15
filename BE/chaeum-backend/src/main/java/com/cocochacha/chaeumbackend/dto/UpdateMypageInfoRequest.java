@@ -2,6 +2,7 @@ package com.cocochacha.chaeumbackend.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -12,6 +13,6 @@ public class UpdateMypageInfoRequest {
     private String weight;
     private String mbti;
     private String introduce;
-    private String backgroundUrl;
-    private String profileImageUrl;
+    private MultipartFile backgroundImage;
+    private MultipartFile profileImage;
 }
