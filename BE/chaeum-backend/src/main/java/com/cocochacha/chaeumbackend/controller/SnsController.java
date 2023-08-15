@@ -2,9 +2,12 @@ package com.cocochacha.chaeumbackend.controller;
 
 import com.cocochacha.chaeumbackend.domain.Activity;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import com.cocochacha.chaeumbackend.dto.CreatePostRequest;
+import com.cocochacha.chaeumbackend.dto.DeletePostRequest;
 import com.cocochacha.chaeumbackend.dto.GetActiveResponse;
 import com.cocochacha.chaeumbackend.service.SnsService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,9 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/sns")
@@ -42,7 +49,35 @@ public class SnsController {
         return new ResponseEntity<>(getActiveResponseList, HttpStatus.OK);
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<?> createPost(@RequestPart CreatePostRequest createPostRequest,
+                                        @RequestPart List<MultipartFile> fileList) {
 
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
+
+        try {
+            if (snsService.createPost(createPostRequest, userPersonalInfo, fileList)) {
+                return new ResponseEntity<>(true, HttpStatus.OK);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @PatchMapping("/delete")
+    public ResponseEntity<?> deletePost(@RequestBody DeletePostRequest deletePostRequest) {
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
+
+        if (snsService.deletePost(deletePostRequest, userPersonalInfo)) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
+    }
 
     /**
      * 헤더에서 UserId를 추출하는 함수
