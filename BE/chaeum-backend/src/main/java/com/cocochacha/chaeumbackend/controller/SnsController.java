@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -137,6 +138,18 @@ public class SnsController {
         List<GetPostResponse> postResponseList = snsService.getPostResponseList(getPostRequest, userPersonalInfo);
 
         return new ResponseEntity<>(postResponseList, HttpStatus.OK);
+    }
+
+    @GetMapping("/mypage")
+    public ResponseEntity<?> getNicknamePost(@RequestParam String nickName){
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
+
+        List<GetPostResponse> postResponseList = snsService.getPostByNickname(nickName, userPersonalInfo);
+
+        return new ResponseEntity<>(postResponseList, HttpStatus.OK);
+
     }
 
     /**

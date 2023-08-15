@@ -32,4 +32,5 @@ public interface SnsService {
 
     List<GetPostResponse> getPostResponseList(GetPostRequest getPostRequest, UserPersonalInfo userPersonalInfo);
 
+    List<GetPostResponse> getPostByNickname(String nickName, UserPersonalInfo userPersonalInfo);
 }
