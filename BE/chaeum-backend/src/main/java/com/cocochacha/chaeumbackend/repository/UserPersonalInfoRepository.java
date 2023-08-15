@@ -3,8 +3,9 @@ package com.cocochacha.chaeumbackend.repository;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import java.util.List;
 import java.util.Optional;
-import javax.swing.text.html.Option;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface UserPersonalInfoRepository extends JpaRepository<UserPersonalInfo, Long> {
 
@@ -25,4 +26,21 @@ public interface UserPersonalInfoRepository extends JpaRepository<UserPersonalIn
     List<UserPersonalInfo> findAllByNickname(String nickname);
 
     Optional<UserPersonalInfo> findByNicknameAndIsRegistered(String nickname, Boolean isRegistered);
+
+    String searchByNicknameOrderBySimilarityQuery = """
+            SELECT *
+            FROM users
+            WHERE nickname LIKE CONCAT('%', :keyword, '%')
+            AND is_registered = TRUE
+            ORDER BY CASE WHEN nickname = :keyword THEN 0
+            WHEN nickname = CONCAT(:keyword, '%') THEN 1
+            WHEN nickname = CONCAT('%', :keyword, '%') THEN 2
+            WHEN nickname = CONCAT('%', :keyword) THEN 3
+            ELSE 4
+            END
+            """;
+
+    @Query(value = searchByNicknameOrderBySimilarityQuery, nativeQuery = true)
+    Optional<List<UserPersonalInfo>> searchByNicknameOrderBySimilarity(
+            @Param("keyword") String keyword);
 }

@@ -4,11 +4,14 @@ import com.cocochacha.chaeumbackend.domain.UserMypageInfo;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.MyPersonalInfoRequest;
 import com.cocochacha.chaeumbackend.dto.MyPersonalInfoResponse;
+import com.cocochacha.chaeumbackend.dto.SearchMypageInfoResponse;
 import com.cocochacha.chaeumbackend.dto.UpdateMypageInfoRequest;
 import com.cocochacha.chaeumbackend.dto.UpdateMypageInfoResponse;
 import com.cocochacha.chaeumbackend.dto.UserMypageInfoResponse;
 import com.cocochacha.chaeumbackend.service.UserMypageInfoService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,11 +106,16 @@ public class UserInfoApiController {
     @GetMapping("/mypage-info")
     public ResponseEntity<?> userMypageInfo(@RequestParam String nickname) {
 
-        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findRegisteredUsersByNickname(nickname);
-        if (userPersonalInfo == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findRegisteredUsersByNickname(
+                nickname);
+        if (userPersonalInfo == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
 
         UserMypageInfo userMypageInfo = userMypageInfoService.findMypageInfo(userPersonalInfo);
-        if (userMypageInfo == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (userMypageInfo == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
 
         UserMypageInfoResponse userMypageInfoResponse = UserMypageInfoResponse.builder()
                 .nickname(nickname)
@@ -124,6 +132,35 @@ public class UserInfoApiController {
         }
 
         return new ResponseEntity<>(userMypageInfoResponse, HttpStatus.OK);
+    }
+
+    /**
+     * 닉네임에 키워드를 포함하는 유저 리스트를 검색하여 유사도 순으로 보여줍니다
+     *
+     * @param keyword
+     * @return
+     */
+    @GetMapping("/nickname-search")
+    public ResponseEntity<?> userNicknameSearch(@RequestParam String keyword) {
+
+        List<UserPersonalInfo> userPersonalInfoList = userPersonalInfoService.findAllByNicknameOrderBySimilarity(
+                keyword);
+        if (userPersonalInfoList == null || userPersonalInfoList.size() == 0) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        List<SearchMypageInfoResponse> searchMypageInfoResponseList = new ArrayList<>();
+        for (UserPersonalInfo userPersonalInfo : userPersonalInfoList) {
+            UserMypageInfo userMypageInfo = userMypageInfoService.findMypageInfo(userPersonalInfo);
+
+            searchMypageInfoResponseList.add(SearchMypageInfoResponse.builder()
+                    .nickname(userPersonalInfo.getNickname())
+                    .mbti(userMypageInfo.getMbti())
+                    .profileImageUrl(userPersonalInfo.getProfileImageUrl())
+                    .build());
+        }
+
+        return new ResponseEntity<>(searchMypageInfoResponseList, HttpStatus.OK);
     }
 
     private Long getUserIDFromAuthentication() {
