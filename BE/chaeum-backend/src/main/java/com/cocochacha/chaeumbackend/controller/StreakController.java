@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -149,6 +150,21 @@ public class StreakController {
         List<GetCategoryResponse> getStreakResponseList = streakService.getCategory();
 
         return new ResponseEntity<>(getStreakResponseList, HttpStatus.OK);
+    }
+
+    @GetMapping("/mypage")
+    public ResponseEntity<?> getStreakByNickname(@RequestParam String nickName){
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findRegisteredUsersByNickname(nickName);
+
+        // userPersonalInfo에 대한 6주치 활동내역 리스트 가져오기
+        List<List<GetStreakResponse>> streakResponseList = streakService.getStreak(userPersonalInfo);
+
+        if (streakResponseList != null) {
+            return new ResponseEntity<>(streakResponseList, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
+        }
     }
 
     /**
