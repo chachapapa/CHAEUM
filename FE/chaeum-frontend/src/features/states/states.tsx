@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Streak, Modal, ImageFile } from '../../components/Types';
+import {
+  Streak,
+  Modal,
+  ImageFile,
+  StreakInfoType,
+  Drawer,
+} from '../../components/Types';
 
 // 1. initial state type 생성
 export type State = {
@@ -10,18 +16,20 @@ export type State = {
   tabNumber: number;
 
   // 게시글 작성시 헤더 컨트롤 state
-  articleWriteStep : number;
+  articleWriteStep: number;
 
   // 게시글 업로드를 위한 컨텐츠 state
-  articleContent : string;
-  imageList : ImageFile[];
+  articleContent: string;
+  imageList: ImageFile[];
 
   // Drawer Control State
-  isDrawerOpen: boolean;
-  drawerType: string;
+  drawerState: Drawer;
 
   // Modal Control State
   modalState: Modal;
+
+  // Streak Info. state
+  myStreakInfo: StreakInfoType[][] | null;
 };
 // 1-1. initial state 객체 생성
 const initialState: State = {
@@ -30,12 +38,12 @@ const initialState: State = {
   initialSportsStreak: { categoryMain: '운동', categoryMiddle: '기타' },
   initialMyStreak: { categoryMain: '기타', categoryMiddle: '기타' },
   tabNumber: 0,
-  articleWriteStep : 0, 
-  articleContent : '',
-  imageList : [],
-  isDrawerOpen: false,
-  drawerType: '',
+  articleWriteStep: 0,
+  articleContent: '',
+  imageList: [],
+  drawerState: { isDrawerOpen: false, drawerType: '' },
   modalState: { isModalOpen: false, modalType: '', mainCategory: '' },
+  myStreakInfo: null,
 };
 
 // 2. slice 생성 : createSlice
@@ -64,27 +72,25 @@ const Slice = createSlice({
       state.tabNumber = action.payload;
     },
 
-    setArticleWriteStep : (state, action: PayloadAction<number>) => {
+    setArticleWriteStep: (state, action: PayloadAction<number>) => {
       state.articleWriteStep = action.payload;
     },
 
-    setArticleContent : (state, action: PayloadAction<string>)=>{
+    setArticleContent: (state, action: PayloadAction<string>) => {
       state.articleContent = action.payload;
     },
 
-    setImageList : (state, action: PayloadAction<ImageFile[]>)=>{
+    setImageList: (state, action: PayloadAction<ImageFile[]>) => {
       state.imageList = action.payload;
     },
 
-    openDrawer: (state, action) => {
-      state.isDrawerOpen = true;
-      state.drawerType = action.payload;
+    openDrawer: (state, action: PayloadAction<Drawer>) => {
+      state.drawerState = action.payload;
     },
 
     closeDrawer: state => {
-      state.isDrawerOpen = false;
+      state.drawerState.isDrawerOpen = false;
     },
-
     openModal: (state, action: PayloadAction<Modal>) => {
       state.modalState = action.payload;
     },
@@ -93,7 +99,9 @@ const Slice = createSlice({
       state.modalState.isModalOpen = false;
     },
 
-    
+    setMyStreakInfo: (state, action: PayloadAction<StreakInfoType[][]>) => {
+      state.myStreakInfo = action.payload;
+    },
   },
 });
 
@@ -113,6 +121,7 @@ export const {
   closeDrawer,
   openModal,
   closeModal,
+  setMyStreakInfo,
 } = Slice.actions;
 // 3-2. export default slice.reducer
 export default Slice.reducer;
