@@ -1,10 +1,12 @@
 package com.cocochacha.chaeumbackend.service;
 
 import com.cocochacha.chaeumbackend.domain.Activity;
+import com.cocochacha.chaeumbackend.domain.FriendRelationship;
 import com.cocochacha.chaeumbackend.domain.Streak;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
 import com.cocochacha.chaeumbackend.dto.GetActiveResponse;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
+import com.cocochacha.chaeumbackend.repository.FriendRelationshipRepository;
 import com.cocochacha.chaeumbackend.repository.StreakRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,9 @@ public class SnsServiceImpl implements SnsService {
     @Autowired
     ActivityRepository activityRepository;
 
+    @Autowired
+    FriendRelationshipRepository friendRelationshipRepository;
+
     /**
      * User의 친구를 확인하고 액티브 중인 친구들 리스트를 반환한다.
      *
@@ -30,16 +35,17 @@ public class SnsServiceImpl implements SnsService {
     public List<GetActiveResponse> getActiveResponseList(UserPersonalInfo userPersonalInfo) {
 
         // 친구 리스트를 얻어내기
-        // 수정해야해
-        List<UserPersonalInfo> friendInfoList = null;
+        List<FriendRelationship> friendInfoList = friendRelationshipRepository.findByToIdAndIsFriendIsTrue(
+                userPersonalInfo).orElse(null);
 
         // 반환할 리스트 선언
         List<GetActiveResponse> activeResponseList = new ArrayList<>();
 
-        for (UserPersonalInfo friend : friendInfoList) {
+        for (FriendRelationship friendShip : friendInfoList) {
+
             // 친구의 스트릭 목록을 가져오기
             List<Streak> streakList = streakRepository.findStreaksByUserPersonalInfoAndStreakDeletedIsFalse(
-                    friend).orElse(null);
+                    friendShip.getFromId()).orElse(null);
 
             // 친구의 스트릭이 없다면 다른 친구 확인하기
             if (streakList == null) {
@@ -63,10 +69,11 @@ public class SnsServiceImpl implements SnsService {
                     GetActiveResponse activeResponse = GetActiveResponse.builder()
                             .activityId(activity.getId())
                             .activeStartTime(activity.getActivityStartTime())
-                            .friendName(friend.getNickname())
+                            .friendName(friendShip.getFromId().getNickname())
                             .streakName(streak.getStreakName())
                             .streakId(streak.getStreakId())
                             .activityId(activity.getId())
+                            .profileUrl(friendShip.getFromId().getProfileImageUrl())
                             .build();
                     activeResponseList.add(activeResponse);
                     break;

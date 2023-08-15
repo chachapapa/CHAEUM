@@ -18,4 +18,5 @@ public class GetActiveResponse {
     private String streakName;
     private int streakId;
     private int activityId;
+    private String profileUrl;
 }
