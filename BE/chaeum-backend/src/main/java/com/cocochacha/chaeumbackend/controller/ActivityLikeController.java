@@ -1,8 +1,7 @@
 package com.cocochacha.chaeumbackend.controller;
 
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
-import com.cocochacha.chaeumbackend.dto.LikeActivityRequest;
-import com.cocochacha.chaeumbackend.dto.LikePostRequest;
+import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.service.ActivityLikeService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/sns")
@@ -55,6 +53,44 @@ public class ActivityLikeController {
         if (activityLikeService.addLikeByPost(likePostRequest, userPersonalInfo)) {
             return new ResponseEntity<>(true, HttpStatus.OK);
         } else {
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 좋아요 수를 보기 위한 요청에 대한 응답
+     *
+     * @param activityId activityId
+     * @return activityId, 좋아요 수
+     */
+    @GetMapping("/like-activity")
+    public ResponseEntity<?> viewLikeByActivity(@RequestParam int activityId) {
+        ViewLikeActivityRequest viewLikeActivityRequest = new ViewLikeActivityRequest();
+        viewLikeActivityRequest.setActivityId(activityId);
+
+        try {
+            ViewLikeActivityResponse viewLikeActivityResponse = activityLikeService.viewLikeActivity(viewLikeActivityRequest);
+            return new ResponseEntity<>(viewLikeActivityResponse, HttpStatus.OK);
+        } catch (NoSuchElementException NSEE) {
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 좋아요 수를 보기 위한 요청에 대한 응답
+     *
+     * @param postId postId
+     * @return postId, 좋아요 수
+     */
+    @GetMapping("/like-post")
+    public ResponseEntity<?> viewLikeByPost(@RequestParam int postId) {
+        ViewLikePostRequest viewLikePostRequest = new ViewLikePostRequest();
+        viewLikePostRequest.setPostId(postId);
+
+        try {
+            ViewLikePostResponse viewLikePostResponse = activityLikeService.viewLikePost(viewLikePostRequest);
+            return new ResponseEntity<>(viewLikePostResponse, HttpStatus.OK);
+        } catch (NoSuchElementException NSEE) {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }

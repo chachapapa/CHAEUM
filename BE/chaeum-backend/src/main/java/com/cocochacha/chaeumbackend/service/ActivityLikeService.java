@@ -1,14 +1,15 @@
 package com.cocochacha.chaeumbackend.service;
 
 import com.cocochacha.chaeumbackend.domain.*;
-import com.cocochacha.chaeumbackend.dto.LikeActivityRequest;
-import com.cocochacha.chaeumbackend.dto.LikePostRequest;
+import com.cocochacha.chaeumbackend.dto.*;
 import com.cocochacha.chaeumbackend.repository.ActivityLikeLogRepository;
 import com.cocochacha.chaeumbackend.repository.ActivityLikeRepository;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 import com.cocochacha.chaeumbackend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -87,6 +88,48 @@ public class ActivityLikeService {
     }
 
     /**
+     * 좋아요 수와 activityId를 합쳐서 반환해주는 메소드
+     *
+     * @param viewLikeActivityRequest activityId
+     * @return activityId, 좋아요 수
+     */
+    public ViewLikeActivityResponse viewLikeActivity(ViewLikeActivityRequest viewLikeActivityRequest) {
+        Activity activity = activityRepository.findById(viewLikeActivityRequest.getActivityId()).orElse(null);
+        if (activity == null) {
+            throw new NoSuchElementException("null 값!");
+        }
+        int cnt = viewLike(activity);
+
+        ViewLikeActivityResponse viewLikeActivityResponse = ViewLikeActivityResponse.builder()
+                .activityId(viewLikeActivityRequest.getActivityId())
+                .cnt(cnt)
+                .build();
+
+        return  viewLikeActivityResponse;
+    }
+
+    /**
+     * 좋아요 수와 postId를 합쳐서 반환해주는 메소드
+     *
+     * @param viewLikePostRequest postId
+     * @return postId, 좋아요 수
+     */
+    public ViewLikePostResponse viewLikePost(ViewLikePostRequest viewLikePostRequest) {
+        Post post = postRepository.findById(viewLikePostRequest.getPostId()).orElse(null);
+        if (post == null) {
+            throw new NoSuchElementException("null 값!");
+        }
+        int cnt = viewLike(post.getActivity());
+
+        ViewLikePostResponse viewLikePostResponse = ViewLikePostResponse.builder()
+                .postId(viewLikePostRequest.getPostId())
+                .cnt(cnt)
+                .build();
+
+        return viewLikePostResponse;
+    }
+
+    /**
      * 만약에 좋아요 여부 테이블에 해당 값이 없다면 추가해주는 메소드
      *
      * @param activity activityId
@@ -113,5 +156,15 @@ public class ActivityLikeService {
                 .build();
 
         activityLikeLogRepository.save(activityLikeLog);
+    }
+
+    /**
+     * 좋아요 수를 반환해주는 메소드
+     *
+     * @param activity activity
+     * @return 좋아요 수
+     */
+    public int viewLike(Activity activity) {
+        return activity.getLikeCnt();
     }
 }
