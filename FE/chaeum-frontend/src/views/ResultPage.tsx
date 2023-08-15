@@ -10,6 +10,7 @@ import { Tag } from '../components/common/Tag';
 import CommentList from '../components/feed/CommentList';
 import { RivalCard } from '../components/active/result/RivalCard';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 /*
   Props
@@ -37,6 +38,9 @@ type Comment = {
   user: User;
   content: string;
 };
+
+const access_token = localStorage.getItem('access_token');
+const COMPLETE_ACT_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
 
 const ResultPage = () => {
   // 임시 작성 =====================
@@ -89,13 +93,40 @@ const ResultPage = () => {
   // Routes
   const navigate = useNavigate();
   const goToShare = () => {
+    // patchActivity();
     console.log('go to feed write page');
     navigate('/feed/write');
   };
 
   const goToMain = () => {
+    // patchActivity();
     console.log('go to main write page');
     navigate('/main');
+  };
+
+  // 활동 완료
+  const patchActivity = async () => {
+    console.log(access_token);
+    try {
+      const response = await axios.patch(
+        COMPLETE_ACT_URL,
+        { activityId: 21, streakId: 2, endTime: '2023-08-15 00:00:03' },
+        {
+          headers: {
+            Authorization: 'Bearer ' + access_token,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      // Dispatch action to store the sentences in Redux
+      // dispatch(setStartMentList(response.data.sentences));
+      // console.log(startMentList);
+      console.log(response.data.sentences);
+    } catch (error) {
+      // console.error('Error fetching sentences:', error);
+      console.log('Error fetching sentences:', error);
+    }
   };
 
   return (
