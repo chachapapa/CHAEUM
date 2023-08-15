@@ -34,6 +34,9 @@ public class Activity {
     @Column(name = "activity_is_post")
     private boolean activityIsPost;
 
+    @Column(name = "like_cnt")
+    private int likeCnt;
+
     @Builder
     public Activity(Streak streakId) {
         this.streakId = streakId;
@@ -53,6 +56,14 @@ public class Activity {
 
     public void changeActivityIsPost() {
         this.activityIsPost = !this.activityIsPost;
+    }
+
+    public void addLikeCnt() {
+        this.likeCnt++;
+    }
+
+    public void subLikeCnt() {
+        this.likeCnt--;
     }
 }
 
