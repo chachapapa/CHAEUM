@@ -6,6 +6,8 @@ import com.cocochacha.chaeumbackend.dto.CreatePostRequest;
 import com.cocochacha.chaeumbackend.dto.DeletePostRequest;
 import com.cocochacha.chaeumbackend.dto.DeleteReplyRequest;
 import com.cocochacha.chaeumbackend.dto.GetActiveResponse;
+import com.cocochacha.chaeumbackend.dto.GetPostRequest;
+import com.cocochacha.chaeumbackend.dto.GetPostResponse;
 import com.cocochacha.chaeumbackend.service.SnsService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import java.io.IOException;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -123,6 +126,17 @@ public class SnsController {
             return new ResponseEntity<>(true, HttpStatus.OK);
         }
         return new ResponseEntity<>(false, HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> getPost(@ModelAttribute GetPostRequest getPostRequest) {
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
+                getUserIDFromAuthentication());
+
+        List<GetPostResponse> postResponseList = snsService.getPostResponseList(getPostRequest, userPersonalInfo);
+
+        return new ResponseEntity<>(postResponseList, HttpStatus.OK);
     }
 
     /**

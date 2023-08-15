@@ -6,6 +6,8 @@ import com.cocochacha.chaeumbackend.dto.CreatePostRequest;
 import com.cocochacha.chaeumbackend.dto.DeletePostRequest;
 import com.cocochacha.chaeumbackend.dto.DeleteReplyRequest;
 import com.cocochacha.chaeumbackend.dto.GetActiveResponse;
+import com.cocochacha.chaeumbackend.dto.GetPostRequest;
+import com.cocochacha.chaeumbackend.dto.GetPostResponse;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,5 +29,7 @@ public interface SnsService {
     boolean deletePost(DeletePostRequest deletePostRequest, UserPersonalInfo userPersonalInfo);
 
     boolean deleteReply(DeleteReplyRequest deleteReplyRequest, UserPersonalInfo userPersonalInfo);
+
+    List<GetPostResponse> getPostResponseList(GetPostRequest getPostRequest, UserPersonalInfo userPersonalInfo);
 
 }
