@@ -50,7 +50,7 @@ const ActiveTotalBubble = (props: Props) => {
   const nameList = rivalInfoList.map(rival => rival.nickname);
   const tagList = rivalInfoList.map(rival => rival.categoryMiddle);
   const times = rivalInfoList.map(rival => rival.accumulateTime);
-  const isActive = rivalInfoList.map(rival => rival.active);
+  const isActive = rivalInfoList.map(rival => !rival.active);
 
   // let nameList: string[] = ['라이벌', '라이벌', '라이벌', '라이벌', '라이벌'];
   // let tagList: string[] = ['로딩중', '로딩중', '로딩중', '로딩중', '로딩중'];
@@ -83,7 +83,7 @@ const ActiveTotalBubble = (props: Props) => {
   const navigate = useNavigate();
 
   const stopTime = () => {
-    alert('stop!');
+    alert('추후 업데이트 예정입니다 :(');
   };
 
   const UPDATE_ACTIVITY_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
@@ -126,8 +126,8 @@ const ActiveTotalBubble = (props: Props) => {
 
         // myAccumulateTime = response.data.myAccumulateTime;
         // console.log(myAccumulateTime);
-        console.log('활동을 끝내고 서버로 업데이트합니다.');
-        console.log(response.data);
+        // console.log('활동을 끝내고 서버로 업데이트합니다.');
+        // console.log(response.data);
       } catch (error) {
         // console.error('Error fetching sentences:', error);
         console.log('Error fetching sentences:', error);
@@ -215,7 +215,6 @@ const ActiveTotalBubble = (props: Props) => {
               </div>
               <Carousel
                 autoplay
-                autoplayDelay-500
                 loop
                 navigation={({ setActiveIndex, activeIndex, length }) => (
                   <div className="absolute bottom-1 left-2/4 z-50 flex -translate-x-2/4 gap-2">
@@ -242,35 +241,7 @@ const ActiveTotalBubble = (props: Props) => {
                   </div>
                 ))}
               </Carousel>
-              <Carousel
-                autoplay
-                autoplayDelay-500
-                loop
-                navigation={({ setActiveIndex, activeIndex, length }) => (
-                  <div className="absolute bottom-1 left-2/4 z-50 flex -translate-x-2/4 gap-2">
-                    {new Array(length).fill('').map((_, i) => (
-                      <span
-                        key={i}
-                        className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
-                          activeIndex === i ? 'w-0 bg-white' : 'w-0 bg-white/50'
-                        }`}
-                        onClick={() => setActiveIndex(i)}
-                      />
-                    ))}
-                  </div>
-                )}
-                prevArrow={({ handlePrev }) => null}
-                nextArrow={({ handleNext }) => null}
-              >
-                {props.startMent.map((ment, index) => (
-                  <div
-                    key={index}
-                    className="bg-[#aae8ed] p-4 w-300 h-200 items-center"
-                  >
-                    <div>{ment}</div>
-                  </div>
-                ))}
-              </Carousel>
+
               <div className="mx-auto flex justify-center place-items-center pt-3">
                 <Button
                   className=" m-4 float-left; w-40"

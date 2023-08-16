@@ -144,12 +144,12 @@ const ResultPage = () => {
   // Routes
   const navigate = useNavigate();
   const goToShare = () => {
-    console.log('go to feed write page');
+    // console.log('go to feed write page');
     navigate('/feed/write');
   };
 
   const goToMain = () => {
-    console.log('go to main write page');
+    // console.log('go to main write page');
     navigate('/main');
   };
 

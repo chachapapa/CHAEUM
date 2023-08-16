@@ -90,10 +90,11 @@ const ActiveFullScreen = (props: Props) => {
 
   // Method to start and stop timer
   const startAndStop = () => {
-    setIsRunning(!isRunning);
-    console.log(Math.floor(time / 100));
-    console.log('현재 시간 입니다 : ' + currentTimer());
-    console.log('현재 시간 타입입니다 : ' + typeof currentTimer());
+    // setIsRunning(!isRunning);
+    // console.log(Math.floor(time / 100));
+    // console.log('현재 시간 입니다 : ' + currentTimer());
+    // console.log('현재 시간 타입입니다 : ' + typeof currentTimer());
+    alert('추후 업데이트 예정입니다 :(');
   };
 
   const UPDATE_ACTIVITY_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
@@ -137,8 +138,8 @@ const ActiveFullScreen = (props: Props) => {
 
         // myAccumulateTime = response.data.myAccumulateTime;
         // console.log(myAccumulateTime);
-        console.log('활동을 끝내고 서버로 업데이트합니다.');
-        console.log(response.data);
+        // console.log('활동을 끝내고 서버로 업데이트합니다.');
+        // console.log(response.data);
       } catch (error) {
         // console.error('Error fetching sentences:', error);
         console.log('Error fetching sentences:', error);
@@ -170,7 +171,7 @@ const ActiveFullScreen = (props: Props) => {
 
   const tags = myActivityTagList;
   return (
-    <div className="z-10 stopwatch-container bg-chaeum-blue-300 w-full h-full">
+    <div className="z-10 stopwatch-container bg-[#aae8ed] w-full h-full">
       <div className="max-w-[307.16px] mx-auto overflow-hidden">
         <div className="text-5xl mt-5"> 채움 중 ...</div>
         <div className="mt-5">
@@ -179,7 +180,7 @@ const ActiveFullScreen = (props: Props) => {
           ))}
         </div>
         <div className="text-5xl mt-10">{formattedTime}</div>
-        <div className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center">
+        <div className="bg-[#aae8ed] p-4 w-300 h-200 items-center">
           <Card className="w-full h-[200px] border-x-4">
             <div className=" w-[360px] p-1 pl-2 my-3">
               {/* {commentListExample.map(comment => ( */}
@@ -227,16 +228,32 @@ const ActiveFullScreen = (props: Props) => {
             </div>
           </Card>
         </div>
-        <div className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center">
-          <Carousel>
+        <div className="bg-[#aae8ed] p-4 w-300 h-200 items-center">
+          <Carousel
+            autoplay
+            loop
+            navigation={({ setActiveIndex, activeIndex, length }) => (
+              <div className="absolute bottom-1 left-2/4 z-50 flex -translate-x-2/4 gap-2">
+                {new Array(length).fill('').map((_, i) => (
+                  <span
+                    key={i}
+                    className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
+                      activeIndex === i ? 'w-0 bg-white' : 'w-0 bg-white/50'
+                    }`}
+                    onClick={() => setActiveIndex(i)}
+                  />
+                ))}
+              </div>
+            )}
+            prevArrow={({ handlePrev }) => null}
+            nextArrow={({ handleNext }) => null}
+          >
             {props.startMent.map((ment, index) => (
               <div
                 key={index}
-                className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center"
+                className="bg-[#aae8ed] p-4 w-300 h-200 items-center"
               >
-                <Card>
-                  <PhraseCard title="동기부여 멘트" ment={ment}></PhraseCard>
-                </Card>
+                <div>{ment}</div>
               </div>
             ))}
           </Carousel>
