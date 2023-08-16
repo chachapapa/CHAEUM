@@ -4,6 +4,9 @@ spring:
       host: i9a810.p.ssafy.io
       port: 27017
       database: euinyun
+      username: root
+      password: tpsrhkrladmlsusrhkzhzhdhkckck
+      authentication-database: admin
   jpa:
     hibernate:
       ddl-auto: update

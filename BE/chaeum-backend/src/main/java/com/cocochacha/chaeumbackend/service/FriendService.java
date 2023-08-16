@@ -322,7 +322,7 @@ public class FriendService {
      */
     public void changeAddFriend(UserPersonalInfo userPersonalInfoFrom, UserPersonalInfo userPersonalInfoTo) {
         // from이 준 사람, to가 받은 사람
-        FriendAdd friendAdd = friendAddRepository.findByToIdAndFromId(userPersonalInfoTo, userPersonalInfoFrom).orElse(null);
+        FriendAdd friendAdd = friendAddRepository.findByToIdAndFromId(userPersonalInfoFrom, userPersonalInfoTo).orElse(null);
         friendAdd.changeIsAdd(false);
         friendAddRepository.save(friendAdd);
     }
