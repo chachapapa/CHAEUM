@@ -31,7 +31,6 @@ function App() {
     }
   },[myNickname]);
 
-
   return (
     <div className="App">
       <Routes>

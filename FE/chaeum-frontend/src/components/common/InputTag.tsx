@@ -33,7 +33,7 @@ const InputTag = ({ width = 'w-full', ...props }: Props) => {
           ...prev,
           weight: e.target.value,
         }));
-      } else {
+      } else if(props.onChange){
         props.onChange(e.target.value);
       }
     }

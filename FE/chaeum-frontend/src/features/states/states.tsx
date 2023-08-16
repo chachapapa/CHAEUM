@@ -5,6 +5,7 @@ import {
   Modal,
   ImageFile,
   StreakInfoType,
+  Drawer,
   User
 } from '../../components/Types';
 
