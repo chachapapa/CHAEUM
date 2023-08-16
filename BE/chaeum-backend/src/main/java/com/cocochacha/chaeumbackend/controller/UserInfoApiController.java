@@ -10,6 +10,7 @@ import com.cocochacha.chaeumbackend.dto.UpdateMypageInfoResponse;
 import com.cocochacha.chaeumbackend.dto.UserMypageInfoResponse;
 import com.cocochacha.chaeumbackend.service.UserMypageInfoService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 사용자 개인 정보를 다루는 API 컨트롤러입니다.
@@ -91,10 +94,19 @@ public class UserInfoApiController {
      */
     @PatchMapping("/mypage-info")
     public ResponseEntity<?> updateMypageInfo(
-            @RequestBody UpdateMypageInfoRequest updateMypageInfoRequest) {
+            @RequestPart UpdateMypageInfoRequest updateMypageInfoRequest,
+            @RequestPart MultipartFile updateMypageProfileImage,
+            @RequestPart MultipartFile updateMypageBackgroundImage) {
         Long userId = getUserIDFromAuthentication();
-        UpdateMypageInfoResponse updateMypageInfoResponse = userMypageInfoService.updateMypageInfoResponse(
-                userId, updateMypageInfoRequest);
+        UpdateMypageInfoResponse updateMypageInfoResponse = null;
+        try {
+            updateMypageInfoResponse = userMypageInfoService.updateMypageInfoResponse(
+                    userId, updateMypageInfoRequest, updateMypageProfileImage,
+                    updateMypageBackgroundImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         if (updateMypageInfoResponse == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -103,6 +115,12 @@ public class UserInfoApiController {
         return ResponseEntity.ok(updateMypageInfoResponse);
     }
 
+    /**
+     * 닉네임이 일치하는 등록된 회원의 마이페이지 회원정보를 읽어오는 API 엔드포인트입니다.
+     *
+     * @param nickname
+     * @return
+     */
     @GetMapping("/mypage-info")
     public ResponseEntity<?> userMypageInfo(@RequestParam String nickname) {
 
@@ -123,6 +141,7 @@ public class UserInfoApiController {
                 .introduce(userMypageInfo.getIntroduce())
                 .backgroundUrl(userMypageInfo.getBackgroundUrl())
                 .profileImageUrl(userPersonalInfo.getProfileImageUrl())
+                .mainColor(userMypageInfo.getMainColor())
                 .build();
 
         if (userMypageInfo.getId().equals(getUserIDFromAuthentication())) {
@@ -157,6 +176,7 @@ public class UserInfoApiController {
                     .nickname(userPersonalInfo.getNickname())
                     .mbti(userMypageInfo.getMbti())
                     .profileImageUrl(userPersonalInfo.getProfileImageUrl())
+                    .mainColor(userMypageInfo.getMainColor())
                     .build());
         }
 

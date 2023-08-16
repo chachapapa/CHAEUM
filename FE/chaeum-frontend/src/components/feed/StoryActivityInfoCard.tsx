@@ -6,7 +6,7 @@ import { ColorVariation, Story } from '../Types';
 type Props = {
   color: ColorVariation;
   story: Story;
-  closeStoryDetail: () => void;
+  closeStoryDetail: (e : React.MouseEvent) => void;
 };
 
 const StoryActivityInfoCard = ({ color, story, closeStoryDetail }: Props) => {

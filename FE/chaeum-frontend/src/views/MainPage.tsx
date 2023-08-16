@@ -22,9 +22,15 @@ import { OverlayModal } from '../components/common/OverlayModal';
   feature/#256
   EntrancePage.tsx 에서 파일명만 바꿨습니다.
 */
+
+type Props = {
+  isProfilePage : boolean;
+}
+
 const ACCESS_TOKEN_URL = 'http://i9a810.p.ssafy.io:8080/api/token';
 
-const MainPage = () => {
+
+const MainPage = ({isProfilePage}:Props) => {
   // 모든 스트릭 정보 저정
   const [searchParams, setSearchParams] = useSearchParams();
   const token = searchParams.get('token');
@@ -80,7 +86,6 @@ const MainPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   //이후 쿠키 가져올 때 사용할 코드
   // const getCookie= (key:string) => {
   //   let result = null;
@@ -239,7 +244,7 @@ const MainPage = () => {
       {isInfo !== null ? (
         <>
           <div className="loaded w-full h-full flex flex-col items-center outline  transition-all duration-300">
-            <ChaeumHeader isLogo={false} title="Streak" />
+            {isProfilePage? null: <ChaeumHeader isLogo={false} title="Streak" />}
             <div className="w-full flex-grow overflow-auto  flex justify-center items-end flex-col min-h-vh transition-all z-0">
               <div className="list flex flex-col items-center wrap-scroll w-full h-full mx-auto transition-all ease-out duration-300">
                 <div className="category w-full mb-4 transition duration-300 ease-in-out">
@@ -291,7 +296,7 @@ const MainPage = () => {
                 </div>
               </div>
             </div>
-            <ChaeumNav />
+            {isProfilePage? null : <ChaeumNav />}
             {drawerState.isDrawerOpen ? (
               <div className="visible z-[9999] bg-white">
                 {drawerState.isDrawerOpen ? (

@@ -4,19 +4,24 @@ import { closeDrawer } from '../../features/states/states';
 import { Drawer, IconButton, Typography } from '@material-tailwind/react';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import TextButton from './TextButton';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 type Props = {
   title: string; // 상단 제목
-  content: string; // 내용
+  content?: string; // 내용
   button1: string; // 첫번째 버튼
   button2: string; // 두번째 버튼
   openChk: boolean;
+  type?: string; //설정 버튼 클릭시 구분
+  logOutButtonClick?: () => void;
+  modifyButtonClick?: () => void;
   streakId?: number;
   callback1?(): void;
   callback2?(): void;
 };
 
 export const BottomDrawer = (props: Props) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { drawerState } = useAppSelector(state => state.stateSetter);
 
@@ -50,7 +55,7 @@ export const BottomDrawer = (props: Props) => {
         className={
           props.openChk
             ? 'm-center z-[9997] p-4 rounded-t-lg fixed flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 '
-            : 'm-center z-[9997] p-4 rounded-t-lg fixed flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 translate-x-0 translate-y-[300px] translate-z-0 '
+            : 'm-center z-[9997] p-4 rounded-t-lg fixed flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 translate-x-0 translate-y-[300px] translate-z-0'
         }
       >
         <div className="mb-6 grid grid-cols-3 items-center justify-between grid-rows-1">
@@ -78,25 +83,80 @@ export const BottomDrawer = (props: Props) => {
             </svg>
           </IconButton>
         </div>
-        <Typography variant="h6" color="blue-gray">
-          {props.content}
-        </Typography>
-        <div>
-          <TextButton
-            type={drawerState.drawerType === 'unlock' ? 'primary' : 'warning'}
-            size="medium"
-            label={props.button1}
-            callback={onFirstButtonClick}
-            className="my-1"
-          ></TextButton>
-          <TextButton
-            type="gray"
-            size="medium"
-            label={props.button2}
-            callback={onSecondButtonClick}
-            className="my-1"
-          ></TextButton>
-        </div>
+        {props.content ? (
+          <Typography variant="h6" color="blue-gray">
+            {props.content}
+          </Typography>
+        ) : null}
+
+        {props.type === 'setting' ? (
+          <div>
+            <TextButton
+              type="primary"
+              size="medium"
+              label={props.button1}
+              callback={() => {
+                dispatch(closeDrawer());
+                if (props.modifyButtonClick !== undefined) {
+                  props.modifyButtonClick();
+                }
+              }}
+              className="my-1"
+            ></TextButton>
+            <TextButton
+              type="warning"
+              size="medium"
+              label={props.button2}
+              callback={() => {
+                dispatch(closeDrawer());
+                if (props.logOutButtonClick !== undefined) {
+                  props.logOutButtonClick();
+                }
+              }}
+              className="my-1"
+            ></TextButton>
+          </div>
+        ) : props.type === 'logout' ? (
+          <div>
+            <TextButton
+              type="warning"
+              size="medium"
+              label={props.button1}
+              callback={() => {
+                dispatch(closeDrawer());
+                navigate('/');
+              }}
+              className="my-1"
+            ></TextButton>
+            <TextButton
+              type="gray"
+              size="medium"
+              label={props.button2}
+              callback={() => {
+                dispatch(closeDrawer());
+                navigate('/');
+              }}
+              className="my-1"
+            ></TextButton>
+          </div>
+        ) : (
+          <div>
+            <TextButton
+              type={drawerState.drawerType === 'unlock' ? 'primary' : 'warning'}
+              size="medium"
+              label={props.button1}
+              callback={onFirstButtonClick}
+              className="my-1"
+            ></TextButton>
+            <TextButton
+              type="gray"
+              size="medium"
+              label={props.button2}
+              callback={onSecondButtonClick}
+              className="my-1"
+            ></TextButton>
+          </div>
+        )}
       </Drawer>
     </>
   );

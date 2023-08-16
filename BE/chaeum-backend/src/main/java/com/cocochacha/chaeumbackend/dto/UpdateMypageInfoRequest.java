@@ -12,6 +12,5 @@ public class UpdateMypageInfoRequest {
     private String weight;
     private String mbti;
     private String introduce;
-    private String backgroundUrl;
-    private String profileImageUrl;
+    private String mainColor;
 }

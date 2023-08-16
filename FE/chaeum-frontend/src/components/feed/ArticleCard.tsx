@@ -12,7 +12,7 @@ import { WaveBottomColor } from '../theme/StreakTheme';
 
 type Props = {
   article: Article;
-  key: number;
+  index : number
   setArticleList: React.Dispatch<React.SetStateAction<Article[]>>;
 };
 
@@ -20,7 +20,7 @@ const ARTICLE_DELETE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/delete';
 const LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/heart';
 const AccessToken = localStorage.getItem('access_token');
 
-const ArticleCard = ({ article, key, setArticleList }: Props) => {
+const ArticleCard = ({ article, setArticleList, index }: Props) => {
   const [isPlusButtonClicked, setIsPlusButtonClicked] =
     useState<boolean>(false);
   const [detailedArticle, setDetailedArticle] = useState<boolean>(false);
@@ -158,7 +158,7 @@ const ArticleCard = ({ article, key, setArticleList }: Props) => {
               <IconButton
                 variant="text"
                 className="w-8 h-8 rounded-full hover:bg-chaeum-blue-500/10"
-                onClick={() => onArticleDeleteClicked(article.id, key)}
+                onClick={() => onArticleDeleteClicked(article.id, index)}
               >
                 <svg
                   className="fill-chaeum-gray-900"

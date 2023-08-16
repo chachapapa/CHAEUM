@@ -8,6 +8,7 @@ export const ChaeumNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentTab = useAppSelector(state => state.stateSetter.tabNumber);
+  const myNickName = useAppSelector(state => state.stateSetter.nickname);
   const dispatch = useAppDispatch();
 
   // console.log('렌더링시 state 내 탭번호' + currentTab);
@@ -23,7 +24,7 @@ export const ChaeumNav = () => {
       navigate('/main');
     } else {
       // 유저 닉네임 넣어야함. (redux 통해서 내 닉네임)
-      navigate('/profile/myNickName');
+      navigate(`/profile/${myNickName}`);
     }
   };
 

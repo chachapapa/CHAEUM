@@ -17,4 +17,5 @@ public class UserMypageInfoResponse {
     private String introduce;
     private String backgroundUrl;
     private String profileImageUrl;
+    private String mainColor;
 }
