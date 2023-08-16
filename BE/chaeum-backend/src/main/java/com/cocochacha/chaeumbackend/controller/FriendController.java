@@ -165,8 +165,8 @@ public class FriendController {
         // 즉 내가 지금 무시를 하고 있는 사람의 목록
         UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
         try {
-            List<UserPersonalInfo> userPersonalInfoList = friendService.addListFriend(userPersonalInfo);
-            return new ResponseEntity<>(userPersonalInfoList, HttpStatus.OK);
+            AddListFriendResponse addListFriendResponses = friendService.addListFriend(userPersonalInfo);
+            return new ResponseEntity<>(addListFriendResponses, HttpStatus.OK);
         } catch (NoSuchElementException NCEE) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
