@@ -273,6 +273,7 @@ const DraggableScreen = () => {
       clearInterval(interval); // 컴포넌트가 언마운트될 때 interval 클리어
       clearTimeout(timer);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myActivityInfo]);
 
   return (
