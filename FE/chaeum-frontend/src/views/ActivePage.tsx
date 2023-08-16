@@ -210,6 +210,7 @@ const ActivePage = () => {
     createActivity();
     fetchStartSentences();
     fetchActiveSentences();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
