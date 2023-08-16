@@ -50,7 +50,7 @@ const ActiveTotalBubble = (props: Props) => {
   const nameList = rivalInfoList.map(rival => rival.nickname);
   const tagList = rivalInfoList.map(rival => rival.categoryMiddle);
   const times = rivalInfoList.map(rival => rival.accumulateTime);
-  const isActive = rivalInfoList.map(rival => !rival.active);
+  const isActive = rivalInfoList.map(rival => rival.active);
 
   // let nameList: string[] = ['라이벌', '라이벌', '라이벌', '라이벌', '라이벌'];
   // let tagList: string[] = ['로딩중', '로딩중', '로딩중', '로딩중', '로딩중'];
@@ -199,12 +199,12 @@ const ActiveTotalBubble = (props: Props) => {
         ></ActiveBubble>
       </div>
       {props.size === 'small' ? (
-        <div className="z-0 absolute bottom-0 w-[307.16px] custom-scale-100 right-0">
+        <div className="z-0 absolute bottom-0 w-full custom-scale-100 right-0">
           {/* <NewWave color="chaeumblue"></NewWave> */}
           <NewActiveInfoCard time={times[4]}></NewActiveInfoCard>
         </div>
       ) : (
-        <div className="z-0 absolute bottom-0 w-[307.16px] h-[450px] custom-scale-100 right-0">
+        <div className="z-0 absolute bottom-0 w-full h-[450px] custom-scale-100 right-0">
           {/* <NewWave color="chaeumblue"></NewWave> */}
           <NewActiveInfoCard time={times[4]}></NewActiveInfoCard>
 
