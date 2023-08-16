@@ -1,5 +1,6 @@
 package com.cocochacha.chaeumbackend.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,4 +20,6 @@ public class GetActiveResponse {
     private int streakId;
     private int activityId;
     private String profileUrl;
+    private String streakColor;
+    private List<String> tagList;
 }

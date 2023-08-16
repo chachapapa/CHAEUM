@@ -110,6 +110,17 @@ public class SnsServiceImpl implements SnsService {
                     continue;
                 }
 
+                List<String> tagList = new ArrayList<>();
+
+                // tag 정보를 가져오기 위한 streakInfo 리스트
+                List<StreakInfo> streakInfos = streakInfoRepository
+                        .findAllByStreak(streak)
+                        .orElse(null);
+
+                for (StreakInfo streakInfo : streakInfos) {
+                    tagList.add(streakInfo.getTag().getTagName());
+                }
+
                 // 활동 내역이 있고 아직 endTime이 설정되지 않았다면
                 // 활동 중이므로 list에 추가한다.
                 if (activity.getActivityEndTime() == null) {
@@ -119,8 +130,10 @@ public class SnsServiceImpl implements SnsService {
                             .friendName(friendShip.getFromId().getNickname())
                             .streakName(streak.getStreakName())
                             .streakId(streak.getStreakId())
+                            .streakColor(streak.getStreakColor())
                             .activityId(activity.getId())
                             .profileUrl(friendShip.getFromId().getProfileImageUrl())
+                            .tagList(tagList)
                             .build();
                     activeResponseList.add(activeResponse);
                     break;
@@ -386,8 +399,10 @@ public class SnsServiceImpl implements SnsService {
                     .replyList(replySortList)
                     .tagList(tagList)
                     .profileUrl(post.getUserPersonalInfo().getProfileImageUrl())
+                    .nickname(post.getUserPersonalInfo().getNickname())
                     .imageList(fileList)
                     .isFriend(true)
+                    .streakColor(post.getActivity().getStreakId().getStreakColor())
                     .build();
 
             if (cnt++ <= friendCnt) {
@@ -479,8 +494,10 @@ public class SnsServiceImpl implements SnsService {
                     .replyList(replySortList)
                     .tagList(tagList)
                     .profileUrl(post.getUserPersonalInfo().getProfileImageUrl())
+                    .nickname(post.getUserPersonalInfo().getNickname())
                     .imageList(fileList)
                     .isFriend(true)
+                    .streakColor(post.getActivity().getStreakId().getStreakColor())
                     .build();
 
             // dto 리스트에 저장
