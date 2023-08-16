@@ -114,7 +114,7 @@ const StoryCard = (props: Props) => {
           width="60"
           height="60"
           preserveAspectRatio="xMidYMid slice"
-        />
+        />  
         <use xlinkHref="#circle" fill="none" stroke="#0F1C3F" opacity="0.25" />
       </g>
 

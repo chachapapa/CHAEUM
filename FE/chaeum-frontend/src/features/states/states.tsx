@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import {
   Streak,
   Modal,
   ImageFile,
   StreakInfoType,
   Drawer,
+  User
 } from '../../components/Types';
 
 // 1. initial state type 생성
@@ -14,6 +16,7 @@ export type State = {
   initialSportsStreak: Streak;
   initialMyStreak: Streak;
   tabNumber: number;
+
 
   // 게시글 작성시 헤더 컨트롤 state
   articleWriteStep: number;
@@ -28,12 +31,21 @@ export type State = {
   // Modal Control State
   modalState: Modal;
 
+  //친구 닉네임 목록 관리
+  friendNicknameList : string[];
+
+  //검색창 관리
+  isSearchBarOpened : boolean;
+
+  //유저 검색 결과
+  searchUserList : User[];
+
   // Streak Info. state
   myStreakInfo: StreakInfoType[][] | null;
 };
 // 1-1. initial state 객체 생성
 const initialState: State = {
-  nickname: '',
+  nickname: '차차아버님',
   initialStudyStreak: { categoryMain: '공부', categoryMiddle: '기타' },
   initialSportsStreak: { categoryMain: '운동', categoryMiddle: '기타' },
   initialMyStreak: { categoryMain: '기타', categoryMiddle: '기타' },
@@ -43,7 +55,11 @@ const initialState: State = {
   imageList: [],
   drawerState: { isDrawerOpen: false, drawerType: '' },
   modalState: { isModalOpen: false, modalType: '', mainCategory: '' },
+  friendNicknameList : [],
+  isSearchBarOpened : false,
+  searchUserList : [],
   myStreakInfo: null,
+
 };
 
 // 2. slice 생성 : createSlice
@@ -52,7 +68,7 @@ const Slice = createSlice({
   initialState,
   reducers: {
     // reducer의 각각은 action의 역할을 함. state의 변화를 구현. immer.js를 내장하고 있어 return이 필요없다.
-    setFixedNickname: (state, action: PayloadAction<string>) => {
+    setMyNickname: (state, action: PayloadAction<string>) => {
       state.nickname = action.payload;
     },
 
@@ -84,6 +100,7 @@ const Slice = createSlice({
       state.imageList = action.payload;
     },
 
+
     openDrawer: (state, action: PayloadAction<Drawer>) => {
       state.drawerState = action.payload;
     },
@@ -99,9 +116,23 @@ const Slice = createSlice({
       state.modalState.isModalOpen = false;
     },
 
+
+    setFriendNicknameList : (state, action: PayloadAction<string[]>)=>{
+      state.friendNicknameList = action.payload;
+    },
+
+    setIsSearchBarOpened : (state) => {
+      state.isSearchBarOpened = !state.isSearchBarOpened;
+    },
+
+    setSearchUserList : (state, action : PayloadAction<User[]>)=>{
+      state.searchUserList = action.payload;
+    },
+
     setMyStreakInfo: (state, action: PayloadAction<StreakInfoType[][]>) => {
       state.myStreakInfo = action.payload;
     },
+
   },
 });
 
@@ -110,7 +141,7 @@ const Slice = createSlice({
 // 3-1. export actions
 export const {
   setCurrentTab,
-  setFixedNickname,
+  setMyNickname,
   setInitialStudyStreak,
   setInitialSportsStreak,
   setInitialMyStreak,
@@ -121,6 +152,9 @@ export const {
   closeDrawer,
   openModal,
   closeModal,
+  setFriendNicknameList,
+  setIsSearchBarOpened,
+  setSearchUserList,
   setMyStreakInfo,
 } = Slice.actions;
 // 3-2. export default slice.reducer

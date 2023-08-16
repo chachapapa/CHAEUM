@@ -10,7 +10,7 @@ interface ProfileCardPropsType {
   age?: number;
   mbti?: string;
   longest?: number;
-  profile?: string;
+  profileImage?: string;
   onClick: () => void;
 }
 
@@ -19,44 +19,31 @@ export const MyProfileCard = ({
   age,
   mbti,
   longest,
-  profile,
+  profileImage,
   onClick,
 }: ProfileCardPropsType) => {
   return (
     <div
       onClick={onClick}
-      className="bg-white z-50 grid grid-cols-[1fr_3fr_1fr] grid-rows-2 p-2 w-11/12 justify-self-center self-center rounded-3xl shadow-[0_0_5px_5px_rgba(208,211,222,0.5)] shadow-chauem-gray-500/50 "
+      className="absolute flex bg-white z-50 p-2 w-11/12 h-20  left-[50%] top-[160px] -translate-x-[50%] justify-between rounded-3xl shadow-[0_0_10px_10px_rgba(208,211,222,0.2)] shadow-chauem-gray-500/50 "
     >
-      <div className="profilearea row-span-2 justify-self-center self-center w-3 ">
-        {typeof profile === 'undefined' ? (
+      <div className="flex justify-self-center items-center">
+        {typeof profileImage === 'undefined' ? (
           <FontAwesomeIcon
             icon={faCircleUser}
             className="text-chaeum-gray-900 text-3xl"
           />
         ) : (
-          <Avatar src={profile} alt="profile"></Avatar>
+          <Avatar src={profileImage} alt="profileImage" size="md" />
         )}
-      </div>
-      <div className="justify-self-start self-center text-xl font-extrabold  text-chaeum-gray-900">
-        <span>{name}</span>
-      </div>
 
-      <div className=" justify-self-center self-center ">
-        {longest ? (
-          <span className="font-bold  text-chaeum-gray-900">현재 </span>
-        ) : null}
-      </div>
-      <div className="justify-self-start self-center">
-        {typeof mbti === 'undefined' ? null : <Tag tag={mbti} />}
-        {typeof age === 'undefined' ? null : <Tag tag={age.toString()} />}
-      </div>
-      <div className=" justify-self-center self-center ">
-        <span className="text-chaeum-blue-500 text-bold text-lg">
-          {longest}{' '}
-        </span>
-        {longest ? (
-          <span className="text-lg text-bold text-chaeum-gray-900">일</span>
-        ) : null}
+        <div className="justify-self-start text-start text-md font-bold  text-chaeum-gray-900 ml-2">
+          <span className='ml-2'>{name}</span>
+          <div className="justify-self-start self-center font-light">
+            {typeof mbti === 'undefined' ? null : <Tag tag={mbti} />}
+            {typeof age === 'undefined' ? null : <Tag tag={age.toString()} />}
+          </div>
+        </div>
       </div>
     </div>
   );

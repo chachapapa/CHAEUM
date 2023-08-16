@@ -55,7 +55,7 @@ const CommentList = ({ commentList, setCommentList }: Props) => {
                   color="text-chaeum-gray-900"
                   className="opacity-80 text-sm"
                 >
-                  <span className="font-bold mr-2">
+                  <span className="font-semibold mr-2">
                     {comment.user.nickName}
                   </span>
                   <span>{comment.content}</span>

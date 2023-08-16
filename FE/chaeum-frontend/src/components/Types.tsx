@@ -1,6 +1,12 @@
 type User = {
   nickName: string;
   profileImage: string;
+  introduction? : string;
+  gender? : string;
+  mbti? : string;
+  age? : number;
+  weight? : string;
+  height? : string;
 };
 
 type Activity = {

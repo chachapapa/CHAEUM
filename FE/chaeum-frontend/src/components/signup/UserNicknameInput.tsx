@@ -4,12 +4,14 @@ import TextButton from '../common/TextButton';
 import CommentInputBox from '../common/CommentInputBox';
 import axios from 'axios';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import { setFixedNickname } from '../../features/states/states';
+import { setMyNickname } from '../../features/states/states';
 
 type Props = {
   currentStep: number;
   onClickNext: () => void;
   onClickBefore: () => void;
+  isDuplicationTested : number;
+  setIsDuplicationTested : React.Dispatch<React.SetStateAction<number>>;
 };
 
 const DUPLICATION_CHECK_URL =
@@ -23,13 +25,14 @@ const UserNicknameInput = ({
   currentStep,
   onClickNext,
   onClickBefore,
+  isDuplicationTested,
+  setIsDuplicationTested
 }: Props) => {
 
   const [nickname, setNickname] = useState<string>(' ');
-  const [isDuplicationTested, setIsDuplicationTested] = useState<number>(0);
   const [isStarted, setIsStarted] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-
+  const myNickname = useAppSelector(state => state.stateSetter.nickname);
 
   useEffect(() => {
     setTimeout(() => {
@@ -49,7 +52,7 @@ const UserNicknameInput = ({
       .then(res => {
         console.log(res);
         if (res.data === true) {
-          dispatch(setFixedNickname(nickname));
+          dispatch(setMyNickname(nickname));
           setIsDuplicationTested(1);
         } else {
           setIsDuplicationTested(2);
@@ -76,6 +79,7 @@ const UserNicknameInput = ({
           inputPlaceholder="닉네임을 입력해주세요."
           height="h-16"
           isDuplicationTested={isDuplicationTested}
+          setIsDuplicationTested={setIsDuplicationTested}
           setNickname = {setNickname}
         />
       </div>

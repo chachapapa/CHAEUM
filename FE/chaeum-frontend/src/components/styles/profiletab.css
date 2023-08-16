@@ -1,0 +1,17 @@
+nav ul li .absolute {
+ box-shadow: none;
+ border-radius: 4px;
+ /* transform-origin: 100% 100% 0px !important; */
+}
+
+div div nav {
+    background-color: white;
+    opacity: 100%;
+}
+
+div div nav .bg-blue-gray-50 {
+    --tw-bg-opacity: 1;
+    /* background-color: rgb(243, 244, 246); */
+    /* border-color: rgb(243, 244, 246); */
+    padding: 4px;
+}
