@@ -235,7 +235,7 @@ public class FriendService {
      * @param userPersonalInfo 본인 아이디
      * @return 본인한테 친구 신청을 넣은 사람의 목록
      */
-    public List<UserPersonalInfo> addListFriend(UserPersonalInfo userPersonalInfo) {
+    public AddListFriendResponse addListFriend(UserPersonalInfo userPersonalInfo) {
         // 나한테 친구 신청을 넣은 사람의 목록
         // 친구가 된 사람이 아니라 현재 친구 신청을 넣은 사람의 목록을 보여주면 됨
         // 파라미터는 본인임
@@ -245,13 +245,16 @@ public class FriendService {
             throw new NoSuchElementException("null 값!");
         }
 
-        List<UserPersonalInfo> userPersonalInfoList = new ArrayList<>();
+        List<String> nicknameList = new ArrayList<>();
 
         for (FriendAdd friendAdd : friendAddList) {
-            userPersonalInfoList.add(friendAdd.getToId());
+            nicknameList.add(friendAdd.getToId().getNickname());
         }
 
-        return userPersonalInfoList;
+        AddListFriendResponse addListFriendResponses = new AddListFriendResponse();
+        addListFriendResponses.setNickname(nicknameList);
+
+        return addListFriendResponses;
     }
 
     /**
