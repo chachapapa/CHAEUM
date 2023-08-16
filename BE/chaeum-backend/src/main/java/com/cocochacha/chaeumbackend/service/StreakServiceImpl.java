@@ -11,6 +11,9 @@ import com.cocochacha.chaeumbackend.dto.DeleteStreakRequest;
 import com.cocochacha.chaeumbackend.dto.GetCategoryResponse;
 import com.cocochacha.chaeumbackend.dto.GetStreakResponse;
 import com.cocochacha.chaeumbackend.dto.ModifyStreakRequest;
+import com.cocochacha.chaeumbackend.dto.RivalListResponse;
+import com.cocochacha.chaeumbackend.dto.RivalListResponse.Rival;
+import com.cocochacha.chaeumbackend.dto.RivalUpdateResponse;
 import com.cocochacha.chaeumbackend.repository.ActivityRepository;
 import com.cocochacha.chaeumbackend.repository.CategoryRepository;
 import com.cocochacha.chaeumbackend.repository.StreakInfoRepository;
@@ -20,8 +23,12 @@ import jakarta.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,14 +60,23 @@ public class StreakServiceImpl implements StreakService {
     @Override
     @Transactional
     public boolean createStreak(CreateStreakRequest createStreakRequest,
-            UserPersonalInfo userPersonalInfo) {
+                                UserPersonalInfo userPersonalInfo) {
+
+        String color = createStreakRequest.getStreakColor();
+        String name = createStreakRequest.getStreakName();
+
+        if(createStreakRequest.getStreakName() == null){
+            name = createStreakRequest.getCategoryMiddle();
+        }
+        if(color == null){
+            color = "chaeumblue";
+        }
 
         //들어온 createStreakRequest 를 사용해서
         //새로운 Streak 객체를 만들어준다.
-
         Streak streak = Streak.builder()
-                .streakName(createStreakRequest.getStreakName())
-                .streakColor(createStreakRequest.getStreakColor())
+                .streakName(name)
+                .streakColor(color)
                 .category(categoryRepository.findByCategoryMainAndCategoryMiddle(
                         createStreakRequest.getCategoryMain(),
                         createStreakRequest.getCategoryMiddle()).get())
@@ -71,29 +87,29 @@ public class StreakServiceImpl implements StreakService {
         // 스트릭 정보 리스트를 선언한다.
         List<StreakInfo> streakInfos = new ArrayList<>();
 
-        // 들어온 태그 리스트들을 사용한다.
-        // 만약 태그가 저장되어있지 않다면 태그를 새로 저장한다
-        for (String tagName : createStreakRequest.getTagList()) {
-            Optional<Tag> optionalTag = tagRepository.findByTagName(tagName);
-            Tag tag;
-            if (optionalTag.isEmpty()) {
-                tag = Tag.builder()
-                        .tagName(tagName)
+        if(createStreakRequest.getTagList() != null) {
+            // 들어온 태그 리스트들을 사용한다.
+            // 만약 태그가 저장되어있지 않다면 태그를 새로 저장한다
+            for (String tagName : createStreakRequest.getTagList()) {
+                Optional<Tag> optionalTag = tagRepository.findByTagName(tagName);
+                Tag tag;
+                if (optionalTag.isEmpty()) {
+                    tag = Tag.builder()
+                            .tagName(tagName)
+                            .build();
+                    tagRepository.save(tag);
+                } else {
+                    tag = optionalTag.get();
+                }
+                StreakInfo streakInfo = StreakInfo.builder()
+                        .streak(streak)
+                        .tag(tag)
                         .build();
-                tagRepository.save(tag);
-            } else {
-                tag = optionalTag.get();
+                streakInfos.add(streakInfo);
             }
-            StreakInfo streakInfo = StreakInfo.builder()
-                    .streak(streak)
-                    .tag(tag)
-                    .build();
-            streakInfos.add(streakInfo);
+            // 스트릭에 스트릭 정보를 넣어준다.
+            streak.changeStreakInfoList(streakInfos);
         }
-
-        // 스트릭에 스트릭 정보를 넣어준다.
-        streak.changeStreakInfoList(streakInfos);
-
         // 잘 저장이 되었다면 true 아니라면 false
         return streak.equals(streakRepository.save(streak));
     }
@@ -101,7 +117,7 @@ public class StreakServiceImpl implements StreakService {
     @Override
     @Transactional
     public boolean modifyStreak(ModifyStreakRequest modifyStreakRequest,
-            UserPersonalInfo userPersonalInfo) {
+                                UserPersonalInfo userPersonalInfo) {
         Optional<Streak> optionalStreak = streakRepository.findById(
                 modifyStreakRequest.getStreakId());
 
@@ -115,6 +131,10 @@ public class StreakServiceImpl implements StreakService {
 
             streak.changeStreakName(modifyStreakRequest.getStreakName());
             streak.changeStreakColor(modifyStreakRequest.getStreakColor());
+
+            // 기존 스트릭 정보 리스트를 모두 제거
+            streakInfoRepository.deleteAllByStreak(streak);
+
 
             // 스트릭 정보 리스트를 선언한다.
             List<StreakInfo> streakInfos = new ArrayList<>();
@@ -153,7 +173,7 @@ public class StreakServiceImpl implements StreakService {
     @Override
     @Transactional
     public boolean deleteStreak(DeleteStreakRequest deleteStreakRequest,
-            UserPersonalInfo userPersonalInfo) {
+                                UserPersonalInfo userPersonalInfo) {
         // deleteStreakRequest의 StreakId를 이용해서 streak을 뽑아낸다.
         Optional<Streak> optionalStreak = streakRepository.findById(
                 deleteStreakRequest.getStreakId());
@@ -185,7 +205,7 @@ public class StreakServiceImpl implements StreakService {
     @Override
     @Transactional
     public boolean deactivateStreak(DeactivateStreakRequest deactivateStreakRequest,
-            UserPersonalInfo userPersonalInfo) {
+                                    UserPersonalInfo userPersonalInfo) {
         Optional<Streak> optionalStreak = streakRepository.findById(
                 deactivateStreakRequest.getStreakId());
 
@@ -198,7 +218,7 @@ public class StreakServiceImpl implements StreakService {
                 return false;
             }
 
-            streak.changeStreakActive(false);
+            streak.changeStreakActive();
 
             if (streak.isStreakActive()) {
                 return false;
@@ -329,5 +349,156 @@ public class StreakServiceImpl implements StreakService {
             categoryResponseList.add(categoryResponse);
         }
         return categoryResponseList;
+    }
+
+    @Override
+    public Streak findById(int id) {
+        return streakRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public RivalListResponse getRivalList(Streak myStreak) {
+        // 요청으로 들어온 스트릭과 카테고리가 같은 중분류인 스트릭id들을 가져와요
+        // 개수가 5개가 안된다면 그냥 스트릭 id를 다 가져와요
+        List<Streak> streakList = streakRepository.findAllByCategory(myStreak.getCategory())
+                .orElse(null);
+        if (streakList.size() < 6) {
+            streakList = streakRepository.findAll();
+        }
+        List<Integer> streakIds = streakList.stream().map(Streak::getStreakId)
+                .collect(Collectors.toList());
+
+        // 각 스트릭의 7일간 누적 시간 합을 가져와요
+        int myTime = 0;
+        HashSet<Integer> hashSet = new HashSet<>();
+        for (Streak streak : streakList) {
+            hashSet.add(streak.getStreakId());
+        }
+
+        // 시간을 키, 스트릭 id를 밸류로 하여 트리셋에 데이터 저장
+        TreeSet<int[]> treeSet = new TreeSet<>((o1, o2) -> {
+            if (o1[1] != o2[1]) {
+                return o1[1] - o2[1];
+            }
+            return o1[0] - o2[0];
+        });
+
+        List<List<Integer>> accumulateWeekTime = activityRepository.accumulateWeekTime(
+                streakIds).orElse(null);
+        if (accumulateWeekTime == null) {
+            return null;
+        }
+        fill: while (accumulateWeekTime.size() < 6) {
+            int tempId = streakIds.get(new Random().nextInt(streakIds.size()));
+            for (List<Integer> idAndTime : accumulateWeekTime) {
+                if (idAndTime.get(0).equals(tempId)) {
+                    continue fill;
+                }
+            }
+            accumulateWeekTime.add(List.of(tempId, 0));
+        }
+
+        for (List<Integer> idAndTime : accumulateWeekTime) {
+            if (myStreak.getStreakId() == idAndTime.get(0)) {
+                myTime = idAndTime.get(1);
+            } else if (hashSet.contains(idAndTime.get(0))) {
+                treeSet.add(new int[]{idAndTime.get(0), idAndTime.get(1)});
+            }
+        }
+
+        List<RivalListResponse.Rival> selectedRivalList = new ArrayList<>();
+
+        // 나보다 2시간반 이내, 2시간 이내, 1시간반 이내, 1시간 이내, 30분 이내로 앞서는 스트릭을 하나씩 가져와요
+        int[] seconds = {9000, 7200, 5400, 3600, 1800};
+        for (int second : seconds) {
+            int[] findF = treeSet.floor(new int[]{Integer.MAX_VALUE, myTime + second});
+
+            int[] find;
+            // 누적시간이 자신의 누적시간보다 크고 범위보다 작은 값이 있다면 그 값을 써요
+            if (findF != null && findF[1] > myTime) {
+                find = findF;
+            } else {
+                // 위에서 못찾았으면 범위보다 큰 값을 써요
+                int[] findH = treeSet.higher(new int[]{Integer.MAX_VALUE, myTime + second});
+                if (findH != null) {
+                    find = findH;
+                }
+
+                // 위에서 못찾았으면 자신의 누적시간보다 작은 값을 써요
+                else if (findF != null) {
+                    find = findF;
+                }
+
+                // 위에서도 못찾았으면 문제가 있어요 null을 리턴해요
+                else {
+                    return null;
+                }
+            }
+
+            // 찾은 값을 트리셋에서 제거해요
+            treeSet.remove(find);
+
+            // 제거한 값에서의 스트릭 id를 통해 데이터를 저장해요
+            Streak rivalStreak = streakRepository.findById(find[0]).orElse(null);
+            if (rivalStreak == null) {
+                return null;
+            }
+
+            Integer ongoingTime = activityRepository.findOngoingTime(find[0]).orElse(null);
+
+            RivalListResponse.Rival rival = Rival.builder()
+                    .streakId(rivalStreak.getStreakId())
+                    .nickname(rivalStreak.getUserPersonalInfo().getNickname())
+                    .categoryId(rivalStreak.getCategory().getCategoryId())
+                    .categoryMain(rivalStreak.getCategory().getCategoryMain())
+                    .categoryMiddle(rivalStreak.getCategory().getCategoryMiddle())
+                    .accumulateTime(find[1])
+                    .profileImageUrl(rivalStreak.getUserPersonalInfo().getProfileImageUrl())
+                    .build();
+
+            if (ongoingTime != null) {
+                rival.setActive(true);
+                rival.setOngoingTime(ongoingTime);
+            } else {
+                rival.setActive(false);
+                rival.setOngoingTime(0);
+            }
+
+            selectedRivalList.add(rival);
+        }
+
+        return RivalListResponse.builder()
+                .myAccumulateTime(myTime)
+                .rivalList(selectedRivalList).build();
+    }
+
+    @Override
+    public RivalUpdateResponse getRivalList(List<Integer> rivalStreakIds) {
+
+        List<RivalUpdateResponse.Rival> selectedRivalList = new ArrayList<>();
+
+        for (int streakId : rivalStreakIds) {
+            Integer accumlatieWeekTime = activityRepository.accmulateWeekTime(streakId).orElse(0);
+
+            Integer ongoingTime = activityRepository.findOngoingTime(streakId)
+                    .orElse(null);
+
+            RivalUpdateResponse.Rival rival = RivalUpdateResponse.Rival.builder()
+                    .streakId(streakId)
+                    .accumulateTime(accumlatieWeekTime)
+                    .build();
+
+            if (ongoingTime != null) {
+                rival.setActive(true);
+                rival.setOngoingTime(ongoingTime);
+            } else {
+                rival.setActive(false);
+                rival.setOngoingTime(0);
+            }
+
+            selectedRivalList.add(rival);
+        }
+
+        return RivalUpdateResponse.builder().rivalList(selectedRivalList).build();
     }
 }

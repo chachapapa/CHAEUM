@@ -1,6 +1,8 @@
 package com.cocochacha.chaeumbackend.config.oauth;
 
+import com.cocochacha.chaeumbackend.domain.UserMypageInfo;
 import com.cocochacha.chaeumbackend.domain.UserPersonalInfo;
+import com.cocochacha.chaeumbackend.repository.UserMypageInfoRepository;
 import com.cocochacha.chaeumbackend.repository.UserPersonalInfoRepository;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 
     private final UserPersonalInfoRepository userPersonalInfoRepository;
+    private final UserMypageInfoRepository userMypageInfoRepository;
 
     /**
      * OAuth2UserRequest를 기반으로 사용자 정보를 가져옵니다. 가져온 정보를 데이터베이스에 저장 또는 업데이트합니다.
@@ -60,6 +63,10 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
                         .profileImageUrl(profileImageUrl)
                         .isRegistered(false)
                         .build());
+
+//        UserMypageInfo userMypageInfo = userMypageInfoRepository.findById(id)
+//                .orElse(UserMypageInfo.builder().userPersonalInfo(userPersonalInfo).build());
+//        userMypageInfoRepository.save(userMypageInfo);
 
         return userPersonalInfoRepository.save(userPersonalInfo);
     }

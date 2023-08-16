@@ -10,20 +10,20 @@ type User = {
 };
 
 type Activity = {
-  id : number;
-  streakId : number;
-  streak : Streak;
+  id: number;
+  streakId: number;
+  streak: Streak;
   category: string;
   color: ColorVariation;
   startTime: string;
-  endTime : string;
+  endTime: string;
 };
 
 type Comment = {
   user: User;
-  activityId : number;
+  activityId: number;
   content: string;
-  replyId?: number; 
+  replyId?: number;
 };
 
 type Article = {
@@ -72,7 +72,7 @@ type ColorVariation =
   | 'chaeum-blue';
 
 type Story = {
-  activityId : number,
+  activityId: number;
   id: number;
   nickname: string;
   title: string;
@@ -94,6 +94,13 @@ type Modal = {
   isModalOpen: boolean;
   modalType: 'create' | 'modify' | '';
   mainCategory: '운동' | '공부' | '기타' | '';
+  streakInfo?: StreakInfoType;
+};
+
+type Drawer = {
+  isDrawerOpen: boolean;
+  drawerType: string;
+  streakId?: number;
 };
 
 export interface ColorPropsType {
@@ -113,11 +120,6 @@ type ColorNameType = {
   [key in string]: string;
 };
 
-export interface StreakInfoType {
-  info?: { date: string; activetime: number }[];
-  color?: string;
-}
-
 export interface RivalPropsType {
   name: string;
   tag: string;
@@ -136,20 +138,22 @@ export type {
   Streak,
   Modal,
   ImageFile,
+  Drawer,
 };
 
 export interface StreakInfoType {
-  info?: { date: string; activetime: number }[];
-  color?: string;
-  isDeactive?: boolean;
+  streakId: number;
+  streakName: string;
+  streakColor: string;
+  streakActive: boolean;
+  streakDeleted: boolean;
+  categoryId: number;
+  continueDays: number;
+  tagList: string[];
+  activeHistoryList: string[][]; // 2023-08-10 10:00:10
 }
 
-export interface StreakCardProps extends StreakInfoType {
-  title: string;
-  tags: string[];
-  className?: string;
-}
-
-export interface StreakCardInfoType extends StreakCardProps {
-  category: string;
-}
+export type StreakBlankType = {
+  streakColor: string;
+  activeHistoryList: string[][]; // 2023-08-10 10:00:10
+};

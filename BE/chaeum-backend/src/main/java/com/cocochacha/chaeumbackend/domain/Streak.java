@@ -57,8 +57,8 @@ public class Streak {
         this.streakDeleted = b;
     }
 
-    public void changeStreakActive(boolean b) {
-        this.streakActive = b;
+    public void changeStreakActive() {
+        this.streakActive = !this.streakActive;
     }
 
     public void changeStreakColor(String streakColor) {

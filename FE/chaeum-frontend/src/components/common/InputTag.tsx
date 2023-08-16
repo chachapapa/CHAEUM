@@ -3,12 +3,14 @@ import React from 'react';
 import { User } from '../Types';
 
 type Props = {
-  label: string;
+  label?: string;
   width?: string;
   className?: string;
   setSearchKeyword?: React.Dispatch<React.SetStateAction<string>>;
   setUser?: React.Dispatch<React.SetStateAction<User>>;
   for?: string;
+  value?: string; // value 속성 추가
+  onChange?: (value: string) => void; // onChange 콜백 추가
 };
 
 const InputTag = ({ width = 'w-full', ...props }: Props) => {
@@ -31,6 +33,8 @@ const InputTag = ({ width = 'w-full', ...props }: Props) => {
           ...prev,
           weight: e.target.value,
         }));
+      } else {
+        props.onChange(e.target.value);
       }
     }
   };
@@ -50,6 +54,7 @@ const InputTag = ({ width = 'w-full', ...props }: Props) => {
             className: 'min-w-0',
           }}
           onChange={onKeywordChange}
+          defaultValue={props.value}
         />
       </div>
     </div>

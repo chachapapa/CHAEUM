@@ -14,35 +14,30 @@ import {
   faChevronUp,
   faLockOpen,
 } from '@fortawesome/free-solid-svg-icons';
-import { StreakCardProps } from '../Types';
+import { StreakInfoType } from '../Types';
 import { TextColor } from '../theme/TextColorTheme';
 import { ActiveColor } from '../theme/ActiveColorTheme';
 import { StreakRank } from './StreakRank';
 import ActiveInformation from './ActiveInformation';
 import { openDrawer, openModal } from '../../features/states/states';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { getCategory } from './StreakCategoryList';
 
-export const StreakCard = ({
-  title,
-  tags,
-  color,
-  info,
-  isDeactive = false,
-  ...props
-}: StreakCardProps) => {
-  // 비활성화 시 props 정보 바뀍
-  if (isDeactive) {
-    color = 'deactive';
+export const StreakCard = ({ ...props }: StreakInfoType) => {
+  // 비활성화 시 props 정보 바꾸기
+  if (props.streakDeleted) {
+    props.streakColor = 'deactive';
   }
 
   const [isSettingOpen, setIsSettingOpen] = useState(false);
   const [isListOpen, SetIsListOpen] = useState(false);
 
-  const goStreakSetting = () => {
-    alert('go Setting');
-  };
+  const navigate = useNavigate();
 
-  const today: Date = new Date();
+  const goActive = () => {
+    navigate('/active');
+  };
 
   const duration = (): string => {
     let todayDuration = 0;
@@ -50,7 +45,7 @@ export const StreakCard = ({
     const today: Date = new Date();
     let curr: Date = new Date();
 
-    info?.some(element => {
+    props.activeHistoryList?.some(element => {
       const chkDate: Date = new Date(curr.setDate(curr.getDate() - 1));
       const dateForm: string =
         chkDate.getFullYear() +
@@ -59,7 +54,9 @@ export const StreakCard = ({
         '-' +
         chkDate.getDate();
 
-      if (element.date !== dateForm) return true;
+      // console.log(dateForm);
+      if (element[0] !== dateForm) return true;
+
       todayDuration++;
       curr = chkDate;
     });
@@ -71,7 +68,7 @@ export const StreakCard = ({
     };
 
     if (todayDuration >= getStreakCnt()) return '5주 이상';
-
+    // 오늘 포함하기
     return '현재 ' + todayDuration + '일';
   };
 
@@ -95,43 +92,43 @@ export const StreakCard = ({
 
   return (
     <div
-      className={`text-chaeum-gray-900 grid gap-x-1 grid-cols-3 grid-rows-3-auto w-full h-full px-4 pt-4 rounded-lg border-2 m-4 mb-10  ${props.className}`}
+      className={`${
+        props.streakActive ? 'text-black' : 'text-chaeum-gray-500'
+      } grid gap-x-1 grid-cols-3 grid-rows-3-auto w-full px-4 pt-4 rounded-lg border-2 m-4 mb-10 card shrink-0 h-fit`}
     >
       <div className="card-header col-span-3 flex flex-row items-center justify-between">
-        {isDeactive ? (
-          <span className="title text-xl font-bold mb-2 text-chaeum-gray-700">
-            {title}
-          </span>
-        ) : (
-          <span className="title text-xl font-bold mb-2 text-black">
-            {title}
-          </span>
-        )}
+        <span className="title text-xl font-bold mb-2 ">
+          {props.streakName}
+        </span>
 
         {isSettingOpen ? (
           <div className="flex flex-row justify-end items-center p-0.5 mb-2">
-            {isDeactive ? (
-              <FontAwesomeIcon
-                icon={faLockOpen}
-                className="text-chaeum-gray-600 text-2xl pl-1.5"
-                onClick={() => {
-                  dispatch(openDrawer('unlock'));
-                }}
-              />
-            ) : (
+            {props.streakActive ? (
               <>
                 <FontAwesomeIcon
                   icon={faTrashCan}
                   className="text-chaeum-gray-600 text-2xl "
                   onClick={() => {
-                    dispatch(openDrawer('remove'));
+                    dispatch(
+                      openDrawer({
+                        isDrawerOpen: true,
+                        drawerType: 'remove',
+                        streakId: props.streakId,
+                      })
+                    );
                   }}
                 />
                 <FontAwesomeIcon
                   icon={faLock}
                   className="text-chaeum-gray-600 text-2xl pl-1.5"
                   onClick={() => {
-                    dispatch(openDrawer('lock'));
+                    dispatch(
+                      openDrawer({
+                        isDrawerOpen: true,
+                        drawerType: 'lock',
+                        streakId: props.streakId,
+                      })
+                    );
                   }}
                 />
                 <FontAwesomeIcon
@@ -142,12 +139,28 @@ export const StreakCard = ({
                       openModal({
                         isModalOpen: true,
                         modalType: 'modify',
-                        mainCategory: '공부', // 해당 스트릭의 중분류로 수정
+                        mainCategory: getCategory(props.categoryId)
+                          .mainCategory, // 해당 스트릭의 중분류로 수정
+                        streakInfo: props,
                       })
                     );
                   }}
                 />
               </>
+            ) : (
+              <FontAwesomeIcon
+                icon={faLockOpen}
+                className="text-chaeum-gray-600 text-2xl pl-1.5"
+                onClick={() => {
+                  dispatch(
+                    openDrawer({
+                      isDrawerOpen: true,
+                      drawerType: 'unlock',
+                      streakId: props.streakId,
+                    })
+                  );
+                }}
+              />
             )}
             <FontAwesomeIcon
               onClick={settingToggle}
@@ -166,28 +179,41 @@ export const StreakCard = ({
         )}
       </div>
       <div className="flex flex-row justify-start shrink-0 flex-wrap col-span-3 mb-2">
-        {tags.map((tag, key) => {
-          return <Tag key={key} tag={tag} color={color} />;
+        {props.tagList.map((tag, key) => {
+          return (
+            <Tag
+              key={key}
+              tag={tag}
+              color={props.streakActive ? props.streakColor : 'deactive'}
+            />
+          );
         })}
       </div>
       <div className="col-span-2">
-        <StreakFull color={color} info={info} />
+        <StreakFull
+          streakColor={props.streakActive ? props.streakColor : 'deactive'}
+          activeHistoryList={props.activeHistoryList}
+        />
       </div>
-      <div className="flex flex-col justify-between">
-        <div>
+      <div className="flex flex-col justify-around">
+        {/* <div>
           <StreakRank userlist={userlistSample} />
-        </div>
+        </div> */}
         <div className="duration text-xl pb-2">{duration()}</div>
-        <div onClick={goStreakSetting}>
-          {isDeactive ? null : (
+        {props.streakActive ? (
+          <div onClick={goActive}>
             <FontAwesomeIcon
               icon={faCirclePlay}
-              className={`text-5xl ${TextColor({ color })} ${ActiveColor({
-                color,
-              })}`}
+              className={`text-5xl ${TextColor({
+                color: props.streakColor,
+              })} ${ActiveColor({ color: props.streakColor })}`}
             />
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="duration text-xl pb-2">
+            {props.streakActive ? duration() : '비활성화'}
+          </div>
+        )}
       </div>
       <div className="col-span-3 pt-4 ">
         <hr />
@@ -197,29 +223,7 @@ export const StreakCard = ({
             icon={isListOpen ? faChevronUp : faChevronDown}
             className="text-chaeum-gray-600 pt-2 text-xl "
           />
-          {/* <div className={isListOpen ? OPEN_TYPE.open : OPEN_TYPE.close}>
-            <div className="transition-height duration-500 delay-200">
-              <ActiveInformation />
-            </div>
-            <div className="transition-height duration-500 delay-200">
-              <ActiveInformation />
-            </div>
-            <div className="transition-height duration-500 delay-200">
-              <ActiveInformation />
-            </div>
-            <div className="transition-height duration-500 delay-200">
-              <ActiveInformation />
-            </div>
-            <div className="transition-height duration-500 delay-200">
-              <ActiveInformation />
-            </div>
-            <div className="transition-height duration-500 delay-200">
-              <ActiveInformation />
-            </div>
-            <div className="transition-height duration-500 delay-200">
-              <ActiveInformation />
-            </div>
-          </div> */}
+          <div className={isListOpen ? OPEN_TYPE.open : OPEN_TYPE.close}></div>
         </div>
       </div>
     </div>

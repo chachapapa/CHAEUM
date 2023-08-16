@@ -1,5 +1,5 @@
+import React from 'react';
 import { useDispatch } from 'react-redux';
-import React, { ComponentProps } from 'react';
 import { closeDrawer } from '../../features/states/states';
 import { Drawer, IconButton, Typography } from '@material-tailwind/react';
 import { useAppSelector } from '../../hooks/reduxHooks';
@@ -15,21 +15,42 @@ type Props = {
   type?: string; //설정 버튼 클릭시 구분
   logOutButtonClick?: () => void;
   modifyButtonClick?: () => void;
+  streakId?: number;
+  callback1?(): void;
+  callback2?(): void;
 };
 
 export const BottomDrawer = (props: Props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { drawerState } = useAppSelector(state => state.stateSetter);
 
   const overlayProps = {
     className: 'w-full h-full fixed',
   };
+
+  const onFirstButtonClick = () => {
+    if (props.callback1 !== undefined) {
+      props.callback1(); // 상위 컴포넌트의 onChange 콜백 호출
+    }
+    dispatch(closeDrawer());
+  };
+
+  const onSecondButtonClick = () => {
+    if (props.callback2 !== undefined) {
+      props.callback2(); // 상위 컴포넌트의 onChange 콜백 호출
+    }
+    dispatch(closeDrawer());
+  };
+
   return (
     <>
       <Drawer
         overlayProps={overlayProps}
         placement="bottom"
-        open={useAppSelector(state => state.stateSetter.isDrawerOpen)}
+        open={useAppSelector(
+          state => state.stateSetter.drawerState.isDrawerOpen
+        )}
         onClose={() => dispatch(closeDrawer())}
         className={
           props.openChk
@@ -121,23 +142,17 @@ export const BottomDrawer = (props: Props) => {
         ) : (
           <div>
             <TextButton
-              type="warning"
+              type={drawerState.drawerType === 'unlock' ? 'primary' : 'warning'}
               size="medium"
               label={props.button1}
-              callback={() => {
-                dispatch(closeDrawer());
-                navigate('/');
-              }}
+              callback={onFirstButtonClick}
               className="my-1"
             ></TextButton>
             <TextButton
               type="gray"
               size="medium"
               label={props.button2}
-              callback={() => {
-                dispatch(closeDrawer());
-                navigate('/');
-              }}
+              callback={onSecondButtonClick}
               className="my-1"
             ></TextButton>
           </div>

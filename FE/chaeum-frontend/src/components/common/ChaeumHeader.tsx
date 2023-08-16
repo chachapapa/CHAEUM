@@ -120,9 +120,36 @@ export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
     <div className="flex flex-col items-center justify-center sticky top-0 left-0 z-10 w-full min-h-[56px] bg-white">
       <div className="flex flex-row w-full justify-between items-center">
         <div>
-          {isLogo ? (
-            <Link to={'/main'}>
-              <LogoText height="auto" width="10rem" className="px-2" />
+        {isLogo ? (
+          <Link to={'/main'}>
+            <LogoText height="auto" width="10rem" className="px-2" />
+          </Link>
+        ) : isElement(title) || typeof title === 'string' ? (
+          <span
+            className="px-4 text-3xl font-environmentR font-semibold text-chaeum-gray-900"
+            onClick={onGobackButtonClicked}
+          >
+            {title}
+          </span>
+        ) : null}
+      </div>
+      <div className="px-2">
+        {location.pathname === '/feed/write' && articleWriteStep === 2 ? (
+          <div
+            className="w-[80px] flex flex-row-reverse justify-between text-lg text-chaeum-blue-500"
+            onClick={onRegistButtonClicked}
+          >
+            공유하기
+          </div>
+        ) : location.pathname === '/feed/write' && articleWriteStep === 1 ? (
+          <div className="w-[80px] flex flex-row-reverse justify-between text-lg">
+            활동목록
+          </div>
+        ) : location.pathname === '/feed' ? (
+          <div className="w-[70px] flex flex-row-reverse justify-between">
+            <Link to={'write'} onClick={onWriteButtonClicked}>
+              <i className="fa-regular fa-pen-to-square text-2xl text-chaeum-blue-500"></i>
+>>>>>>> FE/chaeum-frontend/src/components/common/ChaeumHeader.tsx
             </Link>
           ) : isElement(title) ? (
             <span

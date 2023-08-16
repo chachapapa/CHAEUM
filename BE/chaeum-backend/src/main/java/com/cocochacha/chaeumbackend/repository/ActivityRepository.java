@@ -44,6 +44,28 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
             order by `start_time` desc;      
             """;
 
+    String accumulateWeekTimeQuery = """
+            select streak_id as `streak_id`, sum(activity_time) as `accumulate_time`
+            from activity
+            where DATE_SUB(curdate(), INTERVAL 7 Day) <= Date(activity_start_time)
+            AND streak_id IN (:streak_ids)
+            group by streak_id;
+            """;
+
+    String findOngoingTimeQuery = """
+            SELECT TIMEDIFF(NOW(), Date(activity_start_time))
+            FROM activity
+            WHERE streak_id = :streak_id
+            AND activity_end_time IS NULL;
+            """;
+
+    String accmulateWeekTimeByIdQuery = """
+            select sum(activity_time) as `accumulate_time`
+            from activity
+            where DATE_SUB(curdate(), INTERVAL 7 Day) <= Date(activity_start_time)
+            AND streak_id = :streak_id
+            """;
+
     Optional<Activity> findById(int id);
 
     /**
@@ -81,6 +103,33 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
     Optional<List<List<String>>> accumulateQuery6Weeks(@Param("streak_id") int streakId);
 
     Optional<Activity> findTopByStreakIdOrderByActivityStartTimeDesc(Streak streak);
+
+    /**
+     * streak id 각각에 대해 한 주간의 누적 시간을 구하는 메소드
+     *
+     * @param streakIds
+     * @return
+     */
+    @Query(value = accumulateWeekTimeQuery, nativeQuery = true)
+    Optional<List<List<Integer>>> accumulateWeekTime(@Param("streak_ids") List<Integer> streakIds);
+
+    /**
+     * streak id에 대해 현재 진행 시간을 구하는 메소드
+     *
+     * @param streakId
+     * @return
+     */
+    @Query(value = findOngoingTimeQuery, nativeQuery = true)
+    Optional<Integer> findOngoingTime(@Param("streak_id") int streakId);
+
+    /**
+     * streak id에 대해 한 주간의 누적 시간을 구하는 메소드
+     *
+     * @param streakId
+     * @return
+     */
+    @Query(value = accmulateWeekTimeByIdQuery, nativeQuery = true)
+    Optional<Integer> accmulateWeekTime(@Param("streak_id") int streakId);
 }
 
 
