@@ -31,6 +31,7 @@ type Cheering = {
 type ChildProps = {
   streakId: string;
   categoryId: string;
+  tagList: string[];
 };
 
 const access_token = localStorage.getItem('access_token');
@@ -162,6 +163,7 @@ const DraggableScreen = () => {
   };
 
   let cheeringMent: Cheering[] = [];
+  // const cheeringMent: Cheering[] = [];
 
   // 응원글 갱신
   const fetchCheering = async () => {
@@ -183,7 +185,7 @@ const DraggableScreen = () => {
       console.log(cheeringMent);
     } catch (error) {
       // console.error('Error fetching sentences:', error);
-      console.log('Error fetching sentences:', error);
+      console.log('Error fetching 응원글:', error);
     }
   };
 
@@ -217,31 +219,31 @@ const DraggableScreen = () => {
       dispatch(setMyAccumalteTime(response.data.myAccumulateTime));
     } catch (error) {
       // console.error('Error fetching sentences:', error);
-      console.log('Error fetching sentences:', error);
+      console.log('Error fetching 라이벌:', error);
     }
   };
 
   // 라이벌 목록 갱신
-  const updateRival = async () => {
-    try {
-      const response = await axios.get(UPDATE_RIVAL_URL, {
-        headers: {
-          Authorization: 'Bearer ' + access_token,
-          'Content-Type': 'application/json',
-        },
-        params: { streakId: streakId, categoryId: categoryId },
-      });
+  // const updateRival = async () => {
+  //   try {
+  //     const response = await axios.get(UPDATE_RIVAL_URL, {
+  //       headers: {
+  //         Authorization: 'Bearer ' + access_token,
+  //         'Content-Type': 'application/json',
+  //       },
+  //       params: { streakId: streakId, categoryId: categoryId },
+  //     });
 
-      // Dispatch action to store the sentences in Redux
-      // dispatch(setActiveMentList(response.data.sentences));
-      // console.log(startMentList);
+  //     // Dispatch action to store the sentences in Redux
+  //     // dispatch(setActiveMentList(response.data.sentences));
+  //     // console.log(startMentList);
 
-      console.log(response.data);
-    } catch (error) {
-      // console.error('Error fetching sentences:', error);
-      console.log('Error fetching sentences:', error);
-    }
-  };
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     // console.error('Error fetching sentences:', error);
+  //     console.log('Error fetching sentences:', error);
+  //   }
+  // };
 
   // =======================================================
   // 비동기 로직 끝
@@ -252,26 +254,26 @@ const DraggableScreen = () => {
     // 렌더링 시 최초 실행
     fetchStartSentences();
     fetchActiveSentences();
-    fetchCheering();
+
     fetchRival();
-    // // 1초 대기
+    // // 3초 대기
     const timer = setTimeout(() => {
       setIsLoadingOver(true);
-    }, 5000);
+    }, 3000);
 
     // 응원글, 라이벌 갱신은 1분 단위로 진행
     const interval = setInterval(() => {
+      fetchCheering();
       fetchRival();
-      console.log();
       // setTimeout(fetchCheering, 30000); // 30초 뒤에 fetchRival 호출
-    }, 6000); // 1분마다 fetchCheering 호출
+    }, 60000); // 1분마다 fetchCheering 호출
 
     // return () => clearTimeout(timer);
     return () => {
       clearInterval(interval); // 컴포넌트가 언마운트될 때 interval 클리어
       clearTimeout(timer);
     };
-  }, []);
+  }, [myActivityInfo]);
 
   return (
     <div

@@ -40,6 +40,9 @@ const ActiveFullScreen = (props: Props) => {
   const myAccumulateTime = useAppSelector(
     state => state.stateSetter.myAccumulateTime
   );
+  const myActivityTagList = useAppSelector(
+    state => state.stateSetter.myActivityTagList
+  );
 
   // state to store time
   const [time, setTime] = useState(
@@ -149,28 +152,29 @@ const ActiveFullScreen = (props: Props) => {
     .toString()
     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-  const tags = [
-    {
-      id: 1,
-      tag: '클라이밍',
-    },
-    {
-      id: 3,
-      tag: '열심히',
-    },
-    {
-      id: 2,
-      tag: '운동',
-    },
-  ];
+  // const tags = [
+  //   {
+  //     id: 1,
+  //     tag: '클라이밍',
+  //   },
+  //   {
+  //     id: 3,
+  //     tag: '열심히',
+  //   },
+  //   {
+  //     id: 2,
+  //     tag: '운동',
+  //   },
+  // ];
 
+  const tags = myActivityTagList;
   return (
     <div className="z-10 stopwatch-container bg-chaeum-blue-300 w-[307.16px] h-full">
       <div className="max-w-[307.16px] mx-auto overflow-hidden">
         <div className="text-5xl mt-5"> 채움 중 ...</div>
         <div className="mt-5">
-          {tags.map(tag => (
-            <Tag tag={tag.tag} key={tag.id} color="blue"></Tag>
+          {tags.map((tag, index) => (
+            <Tag tag={tag} key={index} color="blue"></Tag>
           ))}
         </div>
         <div className="text-5xl mt-10">{formattedTime}</div>

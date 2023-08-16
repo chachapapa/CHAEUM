@@ -36,6 +36,9 @@ export type State = {
   // 내 정보
   myActivityInfo: MyActivity;
 
+  // 내 활동 태그
+  myActivityTagList: string[];
+
   // 내 활동 누적시간
   myAccumulateTime: number;
 
@@ -71,6 +74,7 @@ const initialState: State = {
   startMentList: ['동기 부여 멘트를 불러오는 중입니다.'],
   activeMentList: ['동기 부여 멘트를 생성중입니다.'],
   myAccumulateTime: 0,
+  myActivityTagList: [],
 };
 
 // 2. slice 생성 : createSlice
@@ -140,6 +144,11 @@ const Slice = createSlice({
       state.myAccumulateTime = action.payload;
     },
 
+    // 내 활동 태그 정보
+    setMyActivityTagList: (state, action: PayloadAction<string[]>) => {
+      state.myActivityTagList = action.payload;
+    },
+
     // 라이벌 목록 정보 갱신
     setRivalInfoList: (state, action: PayloadAction<RivalActivity[]>) => {
       state.rivalInfoList = action.payload;
@@ -176,6 +185,7 @@ export const {
   setMyStreakInfo,
   setMyActivityInfo,
   setMyAccumalteTime,
+  setMyActivityTagList,
   setRivalInfoList,
   setStartMentList,
   setActiveMentList,

@@ -42,8 +42,9 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
     // const streakId = 24;
     const streakId = props.streakId;
     const categoryId = props.categoryId;
+    const tagList = props.tagList;
     // const categoryId = 18;
-    navigate('/active', { state: { streakId, categoryId } });
+    navigate('/active', { state: { streakId, categoryId, tagList } });
   };
 
   const duration = (): string => {
