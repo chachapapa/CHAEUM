@@ -18,6 +18,7 @@ import {
 } from '../../features/states/states';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../hooks/reduxHooks';
+
 type Cheering = {
   nickname: string;
   comments: string;

@@ -174,18 +174,21 @@ const ResultPage = () => {
               <RivalCard
                 name={rivalInfoList[0].nickname}
                 tag={rivalInfoList[0].categoryMiddle}
+                profile={rivalInfoList[0].profileImageUrl}
               ></RivalCard>
             </div>
             <div className="float-left; w-24">
               <RivalCard
                 name={rivalInfoList[1].nickname}
                 tag={rivalInfoList[1].categoryMiddle}
+                profile={rivalInfoList[1].profileImageUrl}
               ></RivalCard>
             </div>
             <div className="float-left; w-48">
               <RivalCard
                 name={rivalInfoList[2].nickname}
                 tag={rivalInfoList[2].categoryMiddle}
+                profile={rivalInfoList[2].profileImageUrl}
               ></RivalCard>
             </div>
           </div>

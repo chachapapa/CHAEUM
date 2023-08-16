@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../styles/activecardwave.css';
 import { WaveColor } from '../theme/WaveColorTheme';
 import { useAppSelector } from '../../hooks/reduxHooks';
+import filled from '@material-tailwind/react/theme/components/timeline/timelineIconColors/filled';
 
 /*
   사용법
@@ -83,7 +84,7 @@ const NewActiveInfoCard = (props: Props) => {
     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
   return (
-    <div className="relative flex overflow-auto rounded-lg shadow-xl">
+    <div className="relative flex overflow-auto">
       <div className="flex flex-col justify-around w-full m-2">
         <div className="text-5xl z-20">{formattedTime}</div>
       </div>
@@ -124,12 +125,7 @@ const NewActiveInfoCard = (props: Props) => {
             y="0"
             className={`${waveSecond} opacity-50`}
           />
-          <use
-            xlinkHref="#gentle-wave-front"
-            x="48"
-            y="0"
-            className={`${waveFirst} opacity-50`}
-          />
+          <use xlinkHref="#gentle-wave-front" x="48" y="0" fill="#aae8ed" />
         </g>
       </svg>
       {/* <div className="relative h-16">

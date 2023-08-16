@@ -82,7 +82,7 @@ export const RivalCard = ({ name, tag, profile }: RivalPropsType) => {
 
         <g clipPath="url(#circle-clip)">
           <image
-            xlinkHref="../temp1.jpg"
+            xlinkHref={profile}
             x="60"
             y="50"
             width="75"

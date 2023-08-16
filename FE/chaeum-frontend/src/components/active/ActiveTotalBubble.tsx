@@ -204,44 +204,73 @@ const ActiveTotalBubble = (props: Props) => {
           <NewActiveInfoCard time={times[4]}></NewActiveInfoCard>
         </div>
       ) : (
-        <div className="z-0 absolute bottom-0 w-full h-[450px] custom-scale-100 right-0">
+        <div className="z-0 absolute bottom-0 w-full h-[350px] custom-scale-100 right-0">
           {/* <NewWave color="chaeumblue"></NewWave> */}
           <NewActiveInfoCard time={times[4]}></NewActiveInfoCard>
 
-          <div className="bg-chaeum-blue-300 max-w-full h-[387px]">
+          <div className="bg-[#aae8ed] max-w-full h-[287px]">
             <div className=" mx-auto overflow-hidden">
-              <Carousel>
+              <div className="text-lg text-chaeum-blue-800 mt-6">
+                CHAE:UM 이 응원합니다!!
+              </div>
+              <Carousel
+                autoplay
+                autoplayDelay-500
+                loop
+                navigation={({ setActiveIndex, activeIndex, length }) => (
+                  <div className="absolute bottom-1 left-2/4 z-50 flex -translate-x-2/4 gap-2">
+                    {new Array(length).fill('').map((_, i) => (
+                      <span
+                        key={i}
+                        className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
+                          activeIndex === i ? 'w-0 bg-white' : 'w-0 bg-white/50'
+                        }`}
+                        onClick={() => setActiveIndex(i)}
+                      />
+                    ))}
+                  </div>
+                )}
+                prevArrow={({ handlePrev }) => null}
+                nextArrow={({ handleNext }) => null}
+              >
                 {props.startMent.map((ment, index) => (
                   <div
                     key={index}
-                    className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center"
+                    className="bg-[#aae8ed] p-4 w-300 h-200 items-center"
                   >
-                    <Card>
-                      <PhraseCard
-                        title="동기부여 멘트"
-                        ment={ment}
-                      ></PhraseCard>
-                    </Card>
+                    <div>{ment}</div>
                   </div>
                 ))}
               </Carousel>
-
-              <Carousel>
-                {props.activeMent.map((ment, index) => (
+              <Carousel
+                autoplay
+                autoplayDelay-500
+                loop
+                navigation={({ setActiveIndex, activeIndex, length }) => (
+                  <div className="absolute bottom-1 left-2/4 z-50 flex -translate-x-2/4 gap-2">
+                    {new Array(length).fill('').map((_, i) => (
+                      <span
+                        key={i}
+                        className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
+                          activeIndex === i ? 'w-0 bg-white' : 'w-0 bg-white/50'
+                        }`}
+                        onClick={() => setActiveIndex(i)}
+                      />
+                    ))}
+                  </div>
+                )}
+                prevArrow={({ handlePrev }) => null}
+                nextArrow={({ handleNext }) => null}
+              >
+                {props.startMent.map((ment, index) => (
                   <div
                     key={index}
-                    className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center"
+                    className="bg-[#aae8ed] p-4 w-300 h-200 items-center"
                   >
-                    <Card>
-                      <PhraseCard
-                        title="맞춤형 동기부여 멘트"
-                        ment={ment}
-                      ></PhraseCard>
-                    </Card>
+                    <div>{ment}</div>
                   </div>
                 ))}
               </Carousel>
-
               <div className="mx-auto flex justify-center place-items-center pt-3">
                 <Button
                   className=" m-4 float-left; w-40"
