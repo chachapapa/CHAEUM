@@ -47,8 +47,12 @@ public class UserMypageInfo {
     @Column(name = "user_background_url")
     private String backgroundUrl;
 
+    @Column(name = "user_main_color")
+    private String mainColor;
+
     @Builder
-    public UserMypageInfo(UserPersonalInfo userPersonalInfo) {
+    public UserMypageInfo(UserPersonalInfo userPersonalInfo, String mainColor) {
         this.userPersonalInfo = userPersonalInfo;
+        this.mainColor = mainColor != null ? mainColor : "chaeumblue";
     }
 }

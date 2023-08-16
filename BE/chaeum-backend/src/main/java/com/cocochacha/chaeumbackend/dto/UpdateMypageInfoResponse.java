@@ -14,4 +14,5 @@ public class UpdateMypageInfoResponse {
     private String introduce;
     private String backgroundUrl;
     private String profileImageUrl;
+    private String mainColor;
 }

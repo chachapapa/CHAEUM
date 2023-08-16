@@ -42,7 +42,10 @@ public class UserMypageInfoService {
      */
     @Transactional
     public UpdateMypageInfoResponse updateMypageInfoResponse(Long userId,
-            UpdateMypageInfoRequest updateMypageInfoRequest) throws IOException {
+            UpdateMypageInfoRequest updateMypageInfoRequest,
+            MultipartFile updateMypageProfileImage,
+            MultipartFile updateMypageBackgroundImage)
+            throws IOException {
 
         UserPersonalInfo userPersonalInfo = userPersonalInfoRepository.findById(userId)
                 .orElse(null);
@@ -75,14 +78,18 @@ public class UserMypageInfoService {
             userMypageInfo.setIntroduce(updateMypageInfoRequest.getIntroduce());
             updateMypageInfoResponse.setIntroduce(updateMypageInfoRequest.getIntroduce());
         }
-        if (!updateMypageInfoRequest.getBackgroundImage().isEmpty()) {
-            String backgroundUrl = saveFile(updateMypageInfoRequest.getBackgroundImage());
+        if (StringUtils.hasText(updateMypageInfoRequest.getMainColor())) {
+            userMypageInfo.setMainColor(updateMypageInfoRequest.getMainColor());
+            updateMypageInfoResponse.setMainColor(updateMypageInfoRequest.getMainColor());
+        }
+        if (!updateMypageProfileImage.isEmpty()) {
+            String backgroundUrl = saveFile(updateMypageProfileImage);
 
             userMypageInfo.setBackgroundUrl(backgroundUrl);
             updateMypageInfoResponse.setBackgroundUrl(backgroundUrl);
         }
-        if (!updateMypageInfoRequest.getProfileImage().isEmpty()) {
-            String profileImageUrl = saveFile(updateMypageInfoRequest.getProfileImage());
+        if (!updateMypageBackgroundImage.isEmpty()) {
+            String profileImageUrl = saveFile(updateMypageBackgroundImage);
 
             userPersonalInfo.setProfileImageUrl(profileImageUrl);
             updateMypageInfoResponse.setProfileImageUrl(profileImageUrl);

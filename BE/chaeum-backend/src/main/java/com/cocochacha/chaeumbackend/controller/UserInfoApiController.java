@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 사용자 개인 정보를 다루는 API 컨트롤러입니다.
@@ -92,12 +94,15 @@ public class UserInfoApiController {
      */
     @PatchMapping("/mypage-info")
     public ResponseEntity<?> updateMypageInfo(
-            @RequestBody UpdateMypageInfoRequest updateMypageInfoRequest) {
+            @RequestPart UpdateMypageInfoRequest updateMypageInfoRequest,
+            @RequestPart MultipartFile updateMypageProfileImage,
+            @RequestPart MultipartFile updateMypageBackgroundImage) {
         Long userId = getUserIDFromAuthentication();
         UpdateMypageInfoResponse updateMypageInfoResponse = null;
         try {
             updateMypageInfoResponse = userMypageInfoService.updateMypageInfoResponse(
-                    userId, updateMypageInfoRequest);
+                    userId, updateMypageInfoRequest, updateMypageProfileImage,
+                    updateMypageBackgroundImage);
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -136,6 +141,7 @@ public class UserInfoApiController {
                 .introduce(userMypageInfo.getIntroduce())
                 .backgroundUrl(userMypageInfo.getBackgroundUrl())
                 .profileImageUrl(userPersonalInfo.getProfileImageUrl())
+                .mainColor(userMypageInfo.getMainColor())
                 .build();
 
         if (userMypageInfo.getId().equals(getUserIDFromAuthentication())) {
@@ -170,6 +176,7 @@ public class UserInfoApiController {
                     .nickname(userPersonalInfo.getNickname())
                     .mbti(userMypageInfo.getMbti())
                     .profileImageUrl(userPersonalInfo.getProfileImageUrl())
+                    .mainColor(userMypageInfo.getMainColor())
                     .build());
         }
 
