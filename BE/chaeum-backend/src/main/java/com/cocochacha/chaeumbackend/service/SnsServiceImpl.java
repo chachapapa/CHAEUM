@@ -253,6 +253,11 @@ public class SnsServiceImpl implements SnsService {
     public boolean createReply(CreateReplyRequest createReplyRequest,
                                UserPersonalInfo userPersonalInfo, boolean isCheer) {
 
+        Long rereplyId = -1L;
+
+        if(createReplyRequest.getRereplyId() != null)
+            rereplyId = createReplyRequest.getRereplyId();
+
         Reply reply = Reply.builder()
                 .isCheer(isCheer)
                 .content(createReplyRequest.getComment())
@@ -260,6 +265,7 @@ public class SnsServiceImpl implements SnsService {
                 .activityId(activityRepository.findById(createReplyRequest.getActivityId())
                         .orElse(null))
                 .userId(userPersonalInfo)
+                .rereplyId(rereplyId)
                 .build();
 
         return reply.equals(replyRepository.save(reply));
@@ -372,7 +378,7 @@ public class SnsServiceImpl implements SnsService {
                         .nickname(reply.getUserId().getNickname())
                         .build();
 
-                if (reply.getRereplyId() == null) {
+                if (reply.getRereplyId() == -1L) {
                     replySortList.add(replyResponse);
                 } else {
                     // 대댓글을 댓글의 해쉬맵 안에 넣어서 관리한다.
@@ -469,7 +475,7 @@ public class SnsServiceImpl implements SnsService {
                         .nickname(reply.getUserId().getNickname())
                         .build();
 
-                if (reply.getRereplyId() == null) {
+                if (reply.getRereplyId() == -1L) {
                     replySortList.add(replyResponse);
                 } else {
                     // 대댓글을 댓글의 해쉬맵 안에 넣어서 관리한다.
