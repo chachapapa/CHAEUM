@@ -8,6 +8,7 @@ import {
   Drawer,
   MyActivity,
   RivalActivity,
+  User,
 } from '../../components/Types';
 
 // 1. initial state type 생성
@@ -17,7 +18,6 @@ export type State = {
   initialSportsStreak: Streak;
   initialMyStreak: Streak;
   tabNumber: number;
-
 
   // 게시글 작성시 헤더 컨트롤 state
   articleWriteStep: number;
@@ -33,13 +33,13 @@ export type State = {
   modalState: Modal;
 
   //친구 닉네임 목록 관리
-  friendNicknameList : string[];
+  friendNicknameList: string[];
 
   //검색창 관리
-  isSearchBarOpened : boolean;
+  isSearchBarOpened: boolean;
 
   //유저 검색 결과
-  searchUserList : User[];
+  searchUserList: User[];
 
   // Streak Info. state
   myStreakInfo: StreakInfoType[][] | null;
@@ -74,9 +74,9 @@ const initialState: State = {
   imageList: [],
   drawerState: { isDrawerOpen: false, drawerType: '' },
   modalState: { isModalOpen: false, modalType: '', mainCategory: '' },
-  friendNicknameList : [],
-  isSearchBarOpened : false,
-  searchUserList : [],
+  friendNicknameList: [],
+  isSearchBarOpened: false,
+  searchUserList: [],
   myStreakInfo: null,
   myActivityInfo: {
     activityId: 0,
@@ -129,7 +129,6 @@ const Slice = createSlice({
       state.imageList = action.payload;
     },
 
-
     openDrawer: (state, action: PayloadAction<Drawer>) => {
       state.drawerState = action.payload;
     },
@@ -145,16 +144,15 @@ const Slice = createSlice({
       state.modalState.isModalOpen = false;
     },
 
-
-    setFriendNicknameList : (state, action: PayloadAction<string[]>)=>{
+    setFriendNicknameList: (state, action: PayloadAction<string[]>) => {
       state.friendNicknameList = action.payload;
     },
 
-    setIsSearchBarOpened : (state) => {
+    setIsSearchBarOpened: state => {
       state.isSearchBarOpened = !state.isSearchBarOpened;
     },
 
-    setSearchUserList : (state, action : PayloadAction<User[]>)=>{
+    setSearchUserList: (state, action: PayloadAction<User[]>) => {
       state.searchUserList = action.payload;
     },
 
