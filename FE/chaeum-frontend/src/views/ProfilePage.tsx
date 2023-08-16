@@ -219,11 +219,11 @@ const ProfilePage = () => {
     }
   };
 
-  useEffect(() => {
-    if (drawerState.drawerType === 'logout') setModalTypeKor('로그아웃');
-    else if (drawerState.drawerType === 'withdrawal')
-      setModalTypeKor('회원탈퇴');
-  }, [drawerState.drawerType]);
+  // useEffect(() => {
+  //   if (drawerState.drawerType === 'logout') setModalTypeKor('로그아웃');
+  //   else if (drawerState.drawerType === 'withdrawal')
+  //     setModalTypeKor('회원탈퇴');
+  // }, [drawerState.drawerType]);
 
   const [scrollY, setScrollY] = useState<number | undefined>(0);
   const onProfileScroll = (e: React.WheelEvent<HTMLDivElement>) => {
