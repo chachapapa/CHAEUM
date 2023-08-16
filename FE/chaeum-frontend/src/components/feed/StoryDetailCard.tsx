@@ -17,7 +17,7 @@ type User = {
 
 type Props = {
   story: Story;
-  closeStoryDetail: () => void;
+  closeStoryDetail: (e : React.MouseEvent) => void;
 };
 
 const ENCOURAGE_MESSAGE_URL =

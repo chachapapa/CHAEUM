@@ -1,6 +1,6 @@
 .water-fill {
     animation: wave 0.7s infinite linear, 
-               fill-up 10s infinite ease-out alternate;
+               fill-up 5s infinite ease-out alternate;
   }
 
 .water-waving {

@@ -26,9 +26,14 @@ import { openModal, closeModal } from '../features/states/states';
   feature/#256
   EntrancePage.tsx 에서 파일명만 바꿨습니다.
 */
+
+type Props = {
+  isProfilePage : boolean;
+}
+
 const ACCESS_TOKEN_URL = 'http://i9a810.p.ssafy.io:8080/api/token';
 
-const MainPage = () => {
+const MainPage = ({isProfilePage}:Props) => {
   //이후 쿠키 가져올 때 사용할 코드
   // const getCookie= (key:string) => {
   //   let result = null;
@@ -451,7 +456,7 @@ const MainPage = () => {
   return (
     <div className="w-full h-full">
       <div className="w-full flex flex-col items-center outline">
-        <ChaeumHeader isLogo={false} title="Streak" />
+        {isProfilePage?null:<ChaeumHeader isLogo={false} title="Streak" />}
         <div className="w-full flex-grow overflow-auto  flex justify-center items-end flex-col min-h-vh transition-all z-0">
           <div className="list flex flex-col items-center wrap-scroll w-full h-full mx-auto transition-all ease-out duration-300">
             <div className="category w-full mb-4 transition duration-300 ease-in-out">
@@ -503,7 +508,7 @@ const MainPage = () => {
             </div>
           </div>
         </div>
-        <ChaeumNav />
+        {isProfilePage?null:<ChaeumNav />}
         {isDrawerOpen ? (
           <div className="visible z-[9999] bg-white">
             {isDrawerOpen ? (

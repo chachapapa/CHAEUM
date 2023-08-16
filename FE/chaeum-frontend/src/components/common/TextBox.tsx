@@ -6,6 +6,7 @@ type Props = {
   height: string;
   label?: string;
   isDuplicationTested?: number;
+  setIsDuplicationTested? : React.Dispatch<React.SetStateAction<number>>;
   setNickname?: React.Dispatch<React.SetStateAction<string>>;
   setAnotherStreak? : React.Dispatch<React.SetStateAction<Streak>>;
 };
@@ -13,7 +14,9 @@ type Props = {
 const TextBox = (props: Props) => {
 
   const onTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (props.setNickname) {
+    console.log(props);
+    if (props.setNickname !==undefined && props.setIsDuplicationTested !== undefined) {
+      props.setIsDuplicationTested(0);
       props.setNickname(e.target.value);
     }else if(props.setAnotherStreak){
       props.setAnotherStreak({categoryMain:'기타', categoryMiddle:e.target.value});

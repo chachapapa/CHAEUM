@@ -17,6 +17,8 @@ const FeedMain = () => {
   // const [isArticleLoading, setIsArticleLoading] = useState<boolean>(false);
   const [articleList, setArticleList] = useState<Article[]>([]);
   const [storyList, setStoryList] = useState<Story[]>([]);
+  const [cardTransitionOver, setCardTransitionOver] = useState<boolean>(true);
+  const [isNavigateButtonClicked, setIsNavigateButtonClicked] = useState<boolean>(false);
   let isArticleLoading = false;
 
   useEffect(() => {
@@ -48,7 +50,6 @@ const FeedMain = () => {
     //       console.log('스토리 가져오기 실패');
     //     }
     //   });
-
 
     setStoryList([
       {
@@ -83,7 +84,6 @@ const FeedMain = () => {
       },
     ]);
 
-
     setArticleList([
       {
         id: 1,
@@ -106,8 +106,7 @@ const FeedMain = () => {
         },
         likeCount: 5,
         commentCount: 15,
-        content:
-          '윽엑 더미데이터 한땀한땀 적어 넣기 여간 귀찮은게 아닌걸',
+        content: '윽엑 더미데이터 한땀한땀 적어 넣기 여간 귀찮은게 아닌걸',
         imageList: [
           '../chacha1.jpg',
           '../chacha2.png',
@@ -122,8 +121,11 @@ const FeedMain = () => {
           },
           {
             activityId: 1,
-            user: { nickName: '지나가는 서울대생', profileImage: './chacha1.jpg' },
-            content: '11수 하면 그만이야~~~',
+            user: {
+              nickName: '지나가는 서울대생',
+              profileImage: './chacha1.jpg',
+            },
+            content: '11수 하면 그만이야~~~말줄임 테스트',
           },
         ],
         commentList: [
@@ -146,8 +148,8 @@ const FeedMain = () => {
         date: 'Mar 16, 2020',
         dateTime: '2020-03-16',
         activityInfo: {
-          id: 1,
-          streakId: 1,
+          id: 2,
+          streakId: 2,
           streak: {
             categoryMain: '운동',
             categoryMiddle: '클라이밍',
@@ -195,13 +197,13 @@ const FeedMain = () => {
         ],
       },
       {
-        id: 2,
+        id: 3,
         user: { nickName: 'chacha', profileImage: '../chacha1.jpg' },
         date: 'Mar 16, 2020',
         dateTime: '2020-03-16',
         activityInfo: {
-          id: 1,
-          streakId: 1,
+          id: 3,
+          streakId: 3,
           streak: {
             categoryMain: '운동',
             categoryMiddle: '클라이밍',
@@ -225,12 +227,12 @@ const FeedMain = () => {
         ],
         encourageMessageList: [
           {
-            activityId: 2,
+            activityId: 3,
             user: { nickName: 'coco', profileImage: '코코' },
             content: '댓글 1',
           },
           {
-            activityId: 2,
+            activityId: 3,
             user: { nickName: 'lulu', profileImage: '룰루' },
             content: '댓글 2',
           },
@@ -242,27 +244,30 @@ const FeedMain = () => {
             content: '댓글 1',
           },
           {
-            activityId: 2,
+            activityId: 3,
             user: { nickName: 'lulu', profileImage: '룰루' },
             content: '댓글 2',
           },
         ],
-      }
-
-      
-
+      },
     ]);
-
-
   }, []);
 
+
   const onStoryClicked = (story: Story) => {
+    setCardTransitionOver(false);
     setDetailedStory(story);
     setIsStoryOpened(true);
   };
 
-  const closeStoryDetail = () => {
-    setIsStoryOpened(false);
+  const closeStoryDetail = (e: React.MouseEvent) => {
+    if (
+      e.target === document.querySelector('.background') ||
+      e.target === document.querySelector('.fa-solid')
+    ) {
+      setIsStoryOpened(false);
+      setTimeout(() => setCardTransitionOver(true), 200);
+    }
   };
 
   const target = useRef<HTMLDivElement>(null);
@@ -304,7 +309,13 @@ const FeedMain = () => {
   const observer = new IntersectionObserver(callback, options);
 
   return (
-    <div className="relative overflow-auto flex-grow">
+    <div
+      className={
+        isStoryOpened
+          ? 'relative overflow-hidden flex-grow'
+          : 'relative overflow-auto flex-grow'
+      }
+    >
       <div className="flex bg-white p-5 overflow-auto">
         {storyList.map(story => (
           <NewStoryCard
@@ -316,10 +327,13 @@ const FeedMain = () => {
       </div>
       <div
         className={
-          isStoryOpened
-            ? 'flex absolute top-0 left-0 w-full h-full bg-black bg-opacity-30 transition-all z-50 justify-center items-center'
-            : 'absolute opacity-0 transition-all'
+          isStoryOpened && !cardTransitionOver
+            ? 'background flex absolute top-0 left-0 w-full h-full bg-black bg-opacity-30 transition-all duration-200  z-50 justify-center items-center'
+            : !isStoryOpened && !cardTransitionOver
+              ? 'flex absolute top-0 left-0 w-full h-full opacity-0 transition-all duration-200  z-0 justify-center items-center'
+              : ''
         }
+        onClick={closeStoryDetail}
       >
         {detailedStory && isStoryOpened ? (
           <StoryDetailCard
@@ -328,19 +342,18 @@ const FeedMain = () => {
           ></StoryDetailCard>
         ) : null}
       </div>
-      {/* {articleList.map((article,index) => (
-        <ArticleCard article={article} key={index}></ArticleCard>
-      ))} */}
 
       <div className="bg-gray-100 mt-3">
         <div className="max-w-7xl">
           <div className="w-full">
             {articleList.map(article => (
-              <ArticleCard
-                article={article}
-                key={article.id}
-                setArticleList={setArticleList}
-              ></ArticleCard>
+              <div key={article.id}>
+                <ArticleCard
+                  article={article}
+                  setArticleList={setArticleList}
+                  index={article.id}
+                ></ArticleCard>
+              </div>
             ))}
           </div>
         </div>

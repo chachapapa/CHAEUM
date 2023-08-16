@@ -15,8 +15,8 @@ const GenderButton: React.FC<ButtonProps> = ({
 }) => {
   const baseClasses = 'p-2 border-2 cursor-pointer w-40';
   const selectedClasses = isSelected
-    ? 'bg-blue-500 text-white'
-    : 'bg-gray-300 text-gray-700';
+    ? 'bg-chaeum-blue-500 text-white border-none'
+    : 'bg-white text-gray-700 border-none';
 
   return (
     <Button className={`${baseClasses} ${selectedClasses}`} onClick={onClick}>

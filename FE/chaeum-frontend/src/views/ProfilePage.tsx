@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import React, { useEffect, useState } from 'react';
+import React, { ReactComponentElement, useEffect, useState } from 'react';
 import AnimatedLogo from '../components/common/AnimatedLogo';
 import TextButton from '../components/common/TextButton';
 import ProfileHeader from '../components/profile/ProfileHeader';
@@ -26,15 +26,69 @@ import { ReactComponent as LogoText } from '../assets/chaeum_logo_text.svg';
 
 import { openDrawer, openModal, closeModal } from '../features/states/states';
 import InputTag from '../components/common/InputTag';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import GenderButton from '../components/profile/GenderButton';
-/*
-  feature/#256
-  EntrancePage.tsx 에서 파일명만 바꿨습니다.
-*/
+import { User } from '../components/Types';
+import '../components/styles/profiletab.css';
+import axios from 'axios';
 
-const EnterancePage = () => {
-  const introduceText = '밑의 항목은 임시로 Page를 그대로 넣어놨습니다';
+const USER_INFO_URL = 'http://i9a810.p.ssafy.io:8080/api/user/mypage-info';
+const AccessToken = localStorage.getItem('access_token');
+
+const ProfilePage = () => {
+  const location = useLocation();
+  const userNickname = decodeURI(location.pathname.split('/')[2]);
+  // const params = useSearchParams
+  const [user, setUser] = useState<User>({ nickName: '', profileImage: '' });
+
+  useEffect(() => {
+    // 렌더링 제대로 안되면 이걸로 해보자
+    const getUserInfo = async () => {
+      try {
+        const res = await axios.get(`${USER_INFO_URL}`, {
+          headers: { Authorization: `Bearer ${AccessToken}` },
+          params: { nickname: userNickname },
+        });
+        console.log(res.data);
+        setUser({
+          nickName: res.data.nickname,
+          profileImage: res.data.profileImageUrl,
+          age: res.data.age,
+          gender: res.data.gender,
+          mbti: res.data.mbti,
+          introduction: res.data.introduce,
+          height: res.data.height,
+          weight: res.data.weight,
+        });
+      } catch (e) {
+        console.log('유저 정보가 없습니다.');
+      }
+    };
+    getUserInfo();
+    console.log(user);
+    // axios
+    //   .get(`${USER_INFO_URL}`, {
+    //     headers: { Authorization: `Bearer ${AccessToken}` },
+    //     params: { nickname: { userNickname } },
+    //   })
+    //   .then(res => {
+    //     console.log(res);
+    //     if (res.data) {
+    //       setUser(res.data);
+    //     } else {
+    //       console.log('유저 정보가 없어용');
+    //     }
+    //   });
+
+    // setUser({
+    //   nickName: '차차아버님',
+    //   profileImage: '../chacha1.jpg',
+    //   introduction: '★☆한달안에 보라색 도전.☆★',
+    //   gender: 'm',
+    //   mbti: 'esfj',
+    //   age: 27,
+    // });
+  }, []);
 
   const mbtiList: string[] = [
     'ISTJ',
@@ -55,15 +109,14 @@ const EnterancePage = () => {
     'ENTJ',
   ];
 
-  const genderList: string[] = ['남자', '여자'];
-
   const drawerType = useAppSelector(state => state.stateSetter.drawerType);
   const isDrawerOpen = useAppSelector(state => state.stateSetter.isDrawerOpen);
   const { modalState } = useAppSelector(state => state.stateSetter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const [modalTypeKor, setModalTypeKor] = useState<string>('');
+  const [isLogoutButtonClicked, setIsLogoutButtonClicked] =
+    useState<boolean>(false);
   const [goMypageModify, setGoMypageModify] = useState(false);
   const overlayProps = {
     className: 'w-full h-full fixed',
@@ -82,20 +135,59 @@ const EnterancePage = () => {
         })
       );
   };
-  const modifyMyProfile = () => {
-    // 내 정보를 디비에 보내고
-    setGoMypageModify(true);
-    setTimeout(() => {
-      dispatch(closeModal());
-      setGoMypageModify(false);
-    }, 1500);
+  const registMyData = () => {
+
+    console.log(user);
+    axios
+      .patch(
+        `${USER_INFO_URL}`,
+        JSON.stringify({
+          nickname: user.nickName,
+          profileImageUrl: user.profileImage,
+          gender: user.gender,
+          age: user.age,
+          weight: user.weight,
+          height: user.height,
+          mbti: user.mbti,
+          introduce: user.introduction,
+        }),
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .then(res => {
+        console.log(res);
+        if (res) {
+          setGoMypageModify(true);
+          setTimeout(() => {
+            dispatch(closeModal());
+            setGoMypageModify(false);
+          }, 500);
+        }
+      });
 
     // 창닫기
   };
+
+  const onMbtiChange = (value: string | undefined) => {
+    setUser(prev => ({
+      ...prev,
+      mbti: value,
+    }));
+  };
+
   const logOutButtonClick = () => {
     // 로그아웃 or 회원탈퇴 기능
     console.log('logout button clicked!!');
-    dispatch(openDrawer('logout'));
+
+    setTimeout(() => {
+      setIsLogoutButtonClicked(true);
+      dispatch(openDrawer('logout'));
+    }, 500);
+
     console.log('logout state updated!!');
   };
 
@@ -103,11 +195,6 @@ const EnterancePage = () => {
     console.log('로그아웃 버튼클릭');
     navigate('/entrance');
     dispatch(closeDrawer());
-  };
-
-  const friendProfile = (nickName: string) => {
-    const des = `/mypage/${nickName}`;
-    navigate(des);
   };
 
   // 성별 버튼
@@ -118,6 +205,17 @@ const EnterancePage = () => {
       setSelectedButton(null); // 이미 선택된 버튼을 다시 클릭한 경우 선택 상태를 취소
     } else {
       setSelectedButton(buttonIndex);
+      if (buttonIndex === 0) {
+        setUser(prev => ({
+          ...prev,
+          gender: 'm',
+        }));
+      } else if (buttonIndex === 1) {
+        setUser(prev => ({
+          ...prev,
+          gender: 'f',
+        }));
+      }
     }
   };
 
@@ -126,48 +224,41 @@ const EnterancePage = () => {
     else if (drawerType === 'withdrawal') setModalTypeKor('회원탈퇴');
   }, [drawerType]);
 
+  const [scrollY, setScrollY] = useState<number | undefined>(0);
+  const onProfileScroll = (e: React.WheelEvent<HTMLDivElement>) => {
+    setScrollY(document.getElementById('box')?.scrollTop);
+    console.log(scrollY);
+  };
+
   return (
-    <div className="w-full flex flex-col items-center outline">
-      {/* <div className="w-[452px] h-[932px] flex flex-col items-center outline"> */}
-      {/* <ChaeumHeader isLogo></ChaeumHeader> */}
-      {/* <ProfileHeader></ProfileHeader> */}
-      <div className="flex flex-row justify-between items-center sticky top-0 left-0 w-100% min-h-[56px] bg-white">
-        <LogoText height="auto" width="10rem" className="px-2" />
-
-        <div className="px-2">
-          <div className="w-[70px] ml-12 flex flex-row-reverse justify-between">
-            {/* 추후 icon button 모달로 수정 */}
-            <i
-              className="fa-solid fa-user-pen text-2xl text-chaeum-blue-500 cursor-pointer"
-              onClick={modifyButtonClick}
-            ></i>
-            <i
-              className="fa-solid fa-right-from-bracket text-2xl text-chaeum-blue-500"
-              onClick={logOutButtonClick}
-            ></i>
-          </div>
-        </div>
-      </div>
-
-      {/* header nav 제외한 중앙 영역 */}
-      <div className="w-full relative justify-center overflow-hidden item-center">
-        {/* 프로필 카드는 absolute 로 높이 설정 */}
-        <div className="z-10 absolute w-full flex justify-center items-center h-2/3">
-          <MyProfileCard
-            name="코코"
-            longest={300}
-            age={12}
-            mbti="ISTJ"
-            profile="../chacha1.jpg"
-            onClick={() => {
-              console.log('내 프로필');
-            }}
-          ></MyProfileCard>
-        </div>
-
+    <div className="flex flex-col w-full h-full bg-white outline outline-1">
+      {user ? (
+        <ChaeumHeader isLogo={false} title="Profile"></ChaeumHeader>
+      ) : (
+        <ChaeumHeader isLogo></ChaeumHeader>
+      )}
+      <div
+        className={
+          scrollY !== undefined && scrollY > 314
+            ? 'relative w-full overflow-scroll'
+            : 'relative w-full flex-grow overflow-auto items-center'
+        }
+        onScroll={onProfileScroll}
+        id="box"
+      >
+        <MyProfileCard
+          name={user.nickName}
+          longest={300}
+          age={user.age}
+          mbti={user.mbti}
+          profileImage={user.profileImage}
+          onClick={() => {
+            console.log('내 프로필');
+          }}
+        ></MyProfileCard>
         {/* 배경사진 */}
         <div
-          className="w-full"
+          className="w-full min-h-[200px]"
           style={{
             maxHeight: '200px', // 높이를 최대 200px로 제한
             overflow: 'hidden', // 넘치는 부분은 숨김 처리
@@ -185,153 +276,126 @@ const EnterancePage = () => {
 
         {/* 내 소개 */}
         <div className="mt-16 h-[50px] overflow-hidden text-sm">
-          {introduceText}
+          {user.introduction}
         </div>
 
-        <Card className="border-4 w-full">
-          <ButtonApp></ButtonApp>
-        </Card>
+        {/* <div className={scrollY !==undefined && scrollY > 314? 'sticky top-[56px]': 'w-full'}> */}
+        <div className="w-full">
+          <ButtonApp scrollY={scrollY}></ButtonApp>
+        </div>
       </div>
-      <ChaeumNav />
-      {/* 로그아웃 */}
-      {isDrawerOpen ? (
+
+      {/* 설정 */}
+      {isDrawerOpen && !isLogoutButtonClicked ? (
         <div className="visible z-[9999] bg-white">
-          {isDrawerOpen ? (
+          {isDrawerOpen && !isLogoutButtonClicked ? (
+            <BottomDrawer
+              title="계정 설정"
+              button1="프로필 수정"
+              button2="로그아웃"
+              openChk={true}
+              type="setting"
+              modifyButtonClick={modifyButtonClick}
+              logOutButtonClick={logOutButtonClick}
+            />
+          ) : (
+            <BottomDrawer
+              title="계정 설정"
+              button1="프로필 수정"
+              button2="로그아웃"
+              openChk={true}
+              type="setting"
+              modifyButtonClick={modifyButtonClick}
+              logOutButtonClick={logOutButtonClick}
+            />
+          )}
+        </div>
+      ) : !isDrawerOpen && !isLogoutButtonClicked ? (
+        <div className="invisible transition-all delay-500 z-[9999] bg-white">
+          {isDrawerOpen && !isLogoutButtonClicked ? (
+            <BottomDrawer
+              title="계정 설정"
+              button1="프로필 수정"
+              button2="로그아웃"
+              openChk={true}
+              type="setting"
+              modifyButtonClick={modifyButtonClick}
+              logOutButtonClick={logOutButtonClick}
+            />
+          ) : (
+            <BottomDrawer
+              title="계정 설정"
+              button1="프로필 수정"
+              button2="로그아웃"
+              openChk={true}
+              type="setting"
+              modifyButtonClick={modifyButtonClick}
+              logOutButtonClick={logOutButtonClick}
+            />
+          )}
+        </div>
+      ) : isDrawerOpen && isLogoutButtonClicked ? (
+        <div className="visible z-[9999] bg-white">
+          {isDrawerOpen && !isLogoutButtonClicked ? (
             <BottomDrawer
               title="로그아웃"
-              content="로그아웃 하시겠습니까?"
               button1="로그아웃"
-              button2="취소하기"
+              button2="취소"
+              type="logout"
               openChk={true}
             />
           ) : (
-            // BottomDrawer 에는 navigate가 없어서 커스터마이징 하기위해 직접 작성
-            // <Drawer
-            //   overlayProps={overlayProps}
-            //   placement="bottom"
-            //   open={isDrawerOpen}
-            //   onClose={() => dispatch(closeDrawer())}
-            //   className={
-            //     'm-center z-[9997] p-4 rounded-t-lg fixed flex flex-col justify-between !max-w-[46.15vh] !inset-x-0 '
-            //   }
-            // >
-            //   <div className="mb-6 grid grid-cols-3 items-center justify-between grid-rows-1">
-            //     <div></div>
-            //     <span className="text-lg justify-center">로그아웃</span>
-            //     <IconButton
-            //       className="justify-self-end"
-            //       variant="text"
-            //       color="blue-gray"
-            //       onClick={() => dispatch(closeDrawer())}
-            //     >
-            //       <svg
-            //         xmlns="http://www.w3.org/2000/svg"
-            //         fill="none"
-            //         viewBox="0 0 24 24"
-            //         strokeWidth={2}
-            //         stroke="currentColor"
-            //         className="h-5 w-5"
-            //       >
-            //         <path
-            //           strokeLinecap="round"
-            //           strokeLinejoin="round"
-            //           d="M6 18L18 6M6 6l12 12"
-            //         />
-            //       </svg>
-            //     </IconButton>
-            //   </div>
-            //   <Typography variant="h6" color="blue-gray">
-            //     로그아웃 하시겠습니까?
-            //   </Typography>
-            //   <div>
-            //     {/* <TextButton
-            //       type="warning"
-            //       size="medium"
-            //       label="로그아웃"
-            //       callback={() => {
-            //         logout();
-            //       }}
-            //       className="my-1"
-            //     ></TextButton> */}
-
-            //     <div className="flex justify-center h-14 w-full ">
-            //       <div
-            //         className="flex w-full items-center justify-center bg-red-400 hover:bg-red-700 text-white font-bold rounded text-md px-6 py-3 w-64"
-            //         onClick={logout}
-            //       >
-            //         <div className={'flex items-center justify-center gap-x-8'}>
-            //           로그아웃
-            //         </div>
-            //       </div>
-            //     </div>
-
-            //     <TextButton
-            //       type="gray"
-            //       size="medium"
-            //       label="취소하기"
-            //       callback={() => dispatch(closeDrawer())}
-            //       className="my-1"
-            //     ></TextButton>
-            //   </div>
-            // </Drawer>
             <BottomDrawer
               title="로그아웃"
-              content="로그아웃 하시겠습니까?"
               button1="로그아웃"
-              button2="취소하기"
-              openChk={false}
+              button2="취소"
+              type="logout"
+              openChk={true}
             />
           )}
         </div>
       ) : (
         <div className="invisible transition-all delay-500 z-[9999] bg-white">
-          {isDrawerOpen ? (
+          {isDrawerOpen && isLogoutButtonClicked ? (
             <BottomDrawer
               title="로그아웃"
-              content="로그아웃 하시겠습니까?"
               button1="로그아웃"
-              button2="취소하기"
+              button2="취소"
+              type="logout"
               openChk={true}
             />
           ) : (
             <BottomDrawer
               title="로그아웃"
-              content="로그아웃 하시겠습니까?"
               button1="로그아웃"
-              button2="취소하기"
-              openChk={false}
+              button2="취소"
+              type="logout"
+              openChk={true}
             />
           )}
         </div>
       )}
       {/* 내 정보 수정 */}
       {modalState.isModalOpen ? (
-        <div className="fixed flex flex-2 justify-center items-center flex-col shrink-0 inset-0 w-full h-full pointer-events-auto z-[9995] bg-chaeum-gray-300 bg-opacity-60 backdrop-blur-lg transition-all duration-300">
-          <div className="w-[46.15vh] flex flex-col justify-center items-center">
-            <span className="font-bold text-2xl m-8 w-full">
+        <div className="absolute flex justify-center items-center flex-col shrink-0 inset-0 w-full h-full pointer-events-auto z-[9995] bg-chaeum-gray-300 bg-opacity-60 backdrop-blur-md transition-all duration-300">
+          <div className="w-10/12 flex flex-col justify-center items-center">
+            <span className="font-bold text-2xl m-8 w-full text-chaeum-gray-900">
               내정보 수정하기
             </span>
             <div className="w-full flex flex-col">
               <span className="text-start m-1 text-sm text-black">내 소개</span>
 
-              <InputTag label="간단히 나를 소개해주세요." width="w-full mb-5" />
+              <InputTag
+                label="간단히 나를 소개해주세요."
+                width="w-full mb-5"
+                setUser={setUser}
+                for="introduction"
+              />
             </div>
 
             <div className=" flex flex-col w-full mb-5">
               <div className="w-full flex flex-col">
                 <span className="text-start m-1 text-sm text-black">성별</span>
-                {/* Select 방식 성별 */}
-                {/* <Select
-                  placeholder="성별을 선택하세요."
-                  className={
-                    'h-10 bg-white w-full bg-opacity-50 border-[1px] focus:border-2 border-chaeum-gray-500/80 focus:border-blue-500'
-                  }
-                >
-                  {genderList.map(gender => (
-                    <Option key={gender}>{gender}</Option>
-                  ))}
-                  {}
-                </Select> */}
 
                 <div className="flex space-x-4 justify-center">
                   <GenderButton
@@ -352,11 +416,13 @@ const EnterancePage = () => {
                   className={
                     'h-10 bg-white w-full bg-opacity-50 border-[1px] focus:border-2 border-chaeum-gray-500/80 focus:border-blue-500'
                   }
+                  onChange={onMbtiChange}
                 >
-                  {mbtiList.map(mbti => (
-                    <Option key={mbti}>{mbti}</Option>
+                  {mbtiList.map((mbti, index) => (
+                    <Option key={index} value={mbti}>
+                      {mbti}
+                    </Option>
                   ))}
-                  {}
                 </Select>
 
                 <div className="flex flex-row justify-center">
@@ -367,6 +433,8 @@ const EnterancePage = () => {
                     <InputTag
                       label="키를 입력해주세요!"
                       className="w-full mb-5"
+                      setUser={setUser}
+                      for="height"
                     />
                   </div>
                 </div>
@@ -378,19 +446,21 @@ const EnterancePage = () => {
                     <InputTag
                       label="몸무게를 입력해주세요!"
                       className="w-full mb-5"
+                      setUser={setUser}
+                      for="weight"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="transition-all duration-300 opacity-100 w-full my-8">
+            <div className="transition-all duration-300 opacity-100 w-full mt-8">
               <div className="buttons flex flex-col w-full justify-center items-center gap-y-5">
                 <TextButton
                   label="수정하기"
-                  type="warning"
+                  type="primary"
                   className="h-12 w-full"
-                  callback={modifyMyProfile}
+                  callback={registMyData}
                 />
 
                 <TextButton
@@ -401,7 +471,7 @@ const EnterancePage = () => {
                 />
               </div>
 
-              <div className="text-center my-4 p-2 rounded-lg transition-all duration-500 w-full">
+              <div className="text-center mt-4 p-2 rounded-lg transition-all duration-500 w-full">
                 {goMypageModify ? (
                   <span className="bg-chaeum-blue-700 bg-opacity-70 p-2 text-xs text-white rounded-lg transition-all duration-500  w-full">
                     내 정보를 수정했어요!
@@ -416,10 +486,12 @@ const EnterancePage = () => {
           </div>
         </div>
       ) : (
-        <div className="bg-opacity-0 transition-all duration-500 opacity-0 text-opacity-0 ease-in"></div>
+        <div className="hidden w-full h-full absolute bg-chaeum-gray-300 bg-opacity-0 transition-all duration-1000 opacity-0 text-opacity-0 ease-in"></div>
+        // absolute flex justify-center items-center flex-col shrink-0 inset-0 w-full h-full pointer-events-auto z-[9995] bg-chaeum-gray-300 bg-opacity-60 backdrop-blur-md transition-all duration-300
       )}
+      <ChaeumNav />
     </div>
   );
 };
 
-export default EnterancePage;
+export default ProfilePage;
