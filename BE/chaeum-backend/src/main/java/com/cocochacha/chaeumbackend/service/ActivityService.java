@@ -2,15 +2,15 @@ package com.cocochacha.chaeumbackend.service;
 
 import com.cocochacha.chaeumbackend.domain.*;
 import com.cocochacha.chaeumbackend.dto.*;
-import com.cocochacha.chaeumbackend.repository.ActivityRepository;
+import com.cocochacha.chaeumbackend.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.cocochacha.chaeumbackend.repository.CategoryRepository;
-import com.cocochacha.chaeumbackend.repository.ReplyRepository;
-import com.cocochacha.chaeumbackend.repository.StreakRepository;
+import com.pkslow.ai.AIClient;
+import com.pkslow.ai.GoogleBardClient;
+import com.pkslow.ai.domain.Answer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,8 @@ public class ActivityService {
     private final CategoryRepository categoryRepository;
     @Autowired
     private final ReplyRepository replyRepository;
+    @Autowired
+    private final UserMypageInfoRepository userMypageInfoRepository;
 
     /**
      * 활동을 시작하면 필요한 정보를 가공해서 Controller에 넘겨주는 메소드
@@ -114,7 +116,28 @@ public class ActivityService {
      * @return 시작시 사용자가 받는 멘트 목록
      */
     public StartMessageResponse startMessage(StartMessageRequest startMessageRequest, UserPersonalInfo userPersonalInfo) {
-        List<String> sentences = createSentence("일단은 확인하기");
+        UserMypageInfo userMypageInfo = userMypageInfoRepository.findById(userPersonalInfo.getId()).orElse(null);
+
+        int categoryId = startMessageRequest.getCategoryId();
+
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+
+        if (category == null) {
+            throw new NoSuchElementException("null 값!");
+        }
+
+        String doing = "하는 일 : " + category.getCategoryMiddle();
+        String mbti = "";
+
+        if (userMypageInfo.getMbti() != null) {
+            mbti = "MBTI : " + userMypageInfo.getMbti();
+        }
+
+//        String prompt = doing + mbti + ", 이 정보를 이용해서 동기부여가 될만한 문장만 5개만 알려줘";
+
+        String prompt = doing + mbti + ", 이 정보를 이용해서 동기부여가 될만한 문장을 0. 1. 2. 3. 4. 5. 6. 7. 8. 9. 으로 해서 10개만 알려줘";
+
+        List<String> sentences = createSentence(prompt);
         StartMessageResponse startMessageResponsege = StartMessageResponse.builder()
                 .sentences(sentences)
                 .build();
@@ -194,14 +217,20 @@ public class ActivityService {
             파싱하는 과정은 어렵지 않으니 그냥 아무거나 넘기는 것으로 할 것
          */
 
-//        AIClient client = new GoogleBardClient("ZgjP_v4J5GQyCQWfzgTnY582o6rgDGYbjeTHHhAVjfGmDBJWxYN-AfZSU7uT7tBrBidvRg.");
-//        Answer answer = client.ask("오늘 저녁 추천해줘");
+        AIClient client = new GoogleBardClient("ZgjP_v4J5GQyCQWfzgTnY582o6rgDGYbjeTHHhAVjfGmDBJWxYN-AfZSU7uT7tBrBidvRg.");
+
+        Answer answer1 = client.ask(prompt);
 
         List<String> sentences = new ArrayList<>();
-        sentences.add("모든게 그대론데");
-        sentences.add("우리는 변해있네");
-        sentences.add("헤어지지 못하는 여자");
-        sentences.add("떠나가지 못하는 남자");
+
+        for (String a : answer1.getChosenAnswer().split("\n")) {
+            if (a.length() == 0) {
+                continue;
+            }
+            if (a.charAt(0) >= '0' && a.charAt(0) <= '9'){
+                sentences.add(a.split("\\d.")[1]);
+            }
+        }
 
         return sentences;
     }
