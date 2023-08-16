@@ -8,6 +8,7 @@ import com.cocochacha.chaeumbackend.dto.DeleteReplyRequest;
 import com.cocochacha.chaeumbackend.dto.GetActiveResponse;
 import com.cocochacha.chaeumbackend.dto.GetPostRequest;
 import com.cocochacha.chaeumbackend.dto.GetPostResponse;
+import com.cocochacha.chaeumbackend.dto.GetReplyResponse;
 import com.cocochacha.chaeumbackend.service.SnsService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import java.io.IOException;
@@ -52,6 +53,16 @@ public class SnsController {
         List<GetActiveResponse> getActiveResponseList = snsService.getActiveResponseList(
                 userPersonalInfo);
         return new ResponseEntity<>(getActiveResponseList, HttpStatus.OK);
+    }
+
+    @GetMapping("/active/comment")
+    public ResponseEntity<?> getActiveReplyList(@RequestParam int activityId){
+
+        List<GetReplyResponse> replyResponses = snsService.getReplyByActivity(activityId);
+
+        if(replyResponses == null)
+            return new ResponseEntity<>("액티비티 없어요", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     /**

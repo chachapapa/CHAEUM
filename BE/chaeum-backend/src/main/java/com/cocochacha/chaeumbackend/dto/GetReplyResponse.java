@@ -15,5 +15,7 @@ public class GetReplyResponse {
     private boolean isCheer;
     private Long rereplyId;
     private String replyTime;
+    private String profileUrl;
+    private String nickname;
     private List<GetReplyResponse> replies;
 }

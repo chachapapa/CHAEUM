@@ -368,6 +368,8 @@ public class SnsServiceImpl implements SnsService {
                         .content(reply.getContent())
                         .isCheer(reply.getIsCheer())
                         .rereplyId(reply.getRereplyId())
+                        .profileUrl(reply.getUserId().getProfileImageUrl())
+                        .nickname(reply.getUserId().getNickname())
                         .build();
 
                 if (reply.getRereplyId() == null) {
@@ -463,6 +465,8 @@ public class SnsServiceImpl implements SnsService {
                         .content(reply.getContent())
                         .isCheer(reply.getIsCheer())
                         .rereplyId(reply.getRereplyId())
+                        .profileUrl(reply.getUserId().getProfileImageUrl())
+                        .nickname(reply.getUserId().getNickname())
                         .build();
 
                 if (reply.getRereplyId() == null) {
@@ -505,6 +509,54 @@ public class SnsServiceImpl implements SnsService {
         }
 
         return postResponseList;
+    }
+
+    @Override
+    public List<GetReplyResponse> getReplyByActivity(int activityId) {
+
+        Activity activity = activityRepository.findById(activityId).orElse(null);
+
+        if(activity == null){
+            return null;
+        }
+
+        // 포스트에 해당하는 댓글들 가져오기
+        List<Reply> replyList = replyRepository
+                .findAllByActivityIdAndReplyDeletedIsFalse(activity);
+
+
+        // 댓글들을 가져와서 대댓글과 댓글로 정렬하기
+        List<GetReplyResponse> replySortList = new ArrayList<>();
+        Map<Long, List<GetReplyResponse>> replyMap = new HashMap<>();
+
+        // 댓글들을 가져와서 대댓글, 댓글로 분류하기
+        for (Reply reply : replyList) {
+
+            GetReplyResponse replyResponse = GetReplyResponse.builder()
+                    .replyId(reply.getReplyId())
+                    .content(reply.getContent())
+                    .isCheer(reply.getIsCheer())
+                    .rereplyId(reply.getRereplyId())
+                    .profileUrl(reply.getUserId().getProfileImageUrl())
+                    .nickname(reply.getUserId().getNickname())
+                    .build();
+
+            if (reply.getRereplyId() == null) {
+                replySortList.add(replyResponse);
+            } else {
+                // 대댓글을 댓글의 해쉬맵 안에 넣어서 관리한다.
+                replyMap.computeIfAbsent(reply.getRereplyId(), k -> new ArrayList<>())
+                        .add(replyResponse);
+            }
+        }
+
+        for (GetReplyResponse replyResponse : replySortList) {
+            List<GetReplyResponse> replies = replyMap.getOrDefault(replyResponse.getReplyId(),
+                    Collections.emptyList());
+            replyResponse.setReplies(replies);
+        }
+
+        return replySortList;
     }
 
     /**
