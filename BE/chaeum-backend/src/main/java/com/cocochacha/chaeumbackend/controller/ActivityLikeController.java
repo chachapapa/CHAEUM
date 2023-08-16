@@ -68,8 +68,10 @@ public class ActivityLikeController {
         ViewLikeActivityRequest viewLikeActivityRequest = new ViewLikeActivityRequest();
         viewLikeActivityRequest.setActivityId(activityId);
 
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+
         try {
-            ViewLikeActivityResponse viewLikeActivityResponse = activityLikeService.viewLikeActivity(viewLikeActivityRequest);
+            ViewLikeActivityResponse viewLikeActivityResponse = activityLikeService.viewLikeActivity(viewLikeActivityRequest, userPersonalInfo);
             return new ResponseEntity<>(viewLikeActivityResponse, HttpStatus.OK);
         } catch (NoSuchElementException NSEE) {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
@@ -87,8 +89,10 @@ public class ActivityLikeController {
         ViewLikePostRequest viewLikePostRequest = new ViewLikePostRequest();
         viewLikePostRequest.setPostId(postId);
 
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+
         try {
-            ViewLikePostResponse viewLikePostResponse = activityLikeService.viewLikePost(viewLikePostRequest);
+            ViewLikePostResponse viewLikePostResponse = activityLikeService.viewLikePost(viewLikePostRequest, userPersonalInfo);
             return new ResponseEntity<>(viewLikePostResponse, HttpStatus.OK);
         } catch (NoSuchElementException NSEE) {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
