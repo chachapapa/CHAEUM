@@ -4,7 +4,7 @@ import { useAppSelector } from '../../../hooks/reduxHooks';
 import MainPage from '../../../views/MainPage';
 import CustomIconButton from '../../common/CustomIconButton';
 import { StreakCardCarousel } from '../../main/StreakCardCarousel';
-import { StreakCardInfoType } from '../../Types';
+import { StreakInfoType } from '../../Types';
 import axios from 'axios';
 
 //url 수정 필요
@@ -15,9 +15,9 @@ const ScreenOne = () => {
   const location = useLocation();
   const userNickname = decodeURI(location.pathname.split('/')[2]);
   // const myNickname = useAppSelector(state => state.stateSetter.nickname);
-  const [studyActive, setStudyActive] = useState<StreakCardInfoType[]>([]);
-  const [exerciseActive, setExerciseActive] = useState<StreakCardInfoType[]>([]);
-  const [othersActive, setOthersActive] = useState<StreakCardInfoType[]>([]);
+  const [studyActive, setStudyActive] = useState<StreakInfoType[]>([]);
+  const [exerciseActive, setExerciseActive] = useState<StreakInfoType[]>([]);
+  const [othersActive, setOthersActive] = useState<StreakInfoType[]>([]);
 
   useEffect(() => {
     // axios

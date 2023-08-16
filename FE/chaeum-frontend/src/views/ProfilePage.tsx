@@ -88,6 +88,7 @@ const ProfilePage = () => {
     //   mbti: 'esfj',
     //   age: 27,
     // });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const mbtiList: string[] = [
@@ -109,9 +110,7 @@ const ProfilePage = () => {
     'ENTJ',
   ];
 
-  const drawerType = useAppSelector(state => state.stateSetter.drawerType);
-  const isDrawerOpen = useAppSelector(state => state.stateSetter.isDrawerOpen);
-  const { modalState } = useAppSelector(state => state.stateSetter);
+  const { modalState, drawerState } = useAppSelector(state => state.stateSetter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [modalTypeKor, setModalTypeKor] = useState<string>('');
@@ -185,7 +184,7 @@ const ProfilePage = () => {
 
     setTimeout(() => {
       setIsLogoutButtonClicked(true);
-      dispatch(openDrawer('logout'));
+      dispatch(openDrawer({ drawerType: 'logout', isDrawerOpen: true }));
     }, 500);
 
     console.log('logout state updated!!');
@@ -219,11 +218,11 @@ const ProfilePage = () => {
     }
   };
 
-  useEffect(() => {
-    if (drawerState.drawerType === 'logout') setModalTypeKor('로그아웃');
-    else if (drawerState.drawerType === 'withdrawal')
-      setModalTypeKor('회원탈퇴');
-  }, [drawerState.drawerType]);
+  // useEffect(() => {
+  //   if (drawerState.drawerType === 'logout') setModalTypeKor('로그아웃');
+  //   else if (drawerState.drawerType === 'withdrawal')
+  //     setModalTypeKor('회원탈퇴');
+  // }, [drawerState.drawerType]);
 
   const [scrollY, setScrollY] = useState<number | undefined>(0);
   const onProfileScroll = (e: React.WheelEvent<HTMLDivElement>) => {
@@ -287,9 +286,9 @@ const ProfilePage = () => {
       </div>
 
       {/* 설정 */}
-      {isDrawerOpen && !isLogoutButtonClicked ? (
+      {drawerState.isDrawerOpen && !isLogoutButtonClicked ? (
         <div className="visible z-[9999] bg-white">
-          {isDrawerOpen && !isLogoutButtonClicked ? (
+          {drawerState.isDrawerOpen && !isLogoutButtonClicked ? (
             <BottomDrawer
               title="계정 설정"
               button1="프로필 수정"
@@ -311,9 +310,9 @@ const ProfilePage = () => {
             />
           )}
         </div>
-      ) : !isDrawerOpen && !isLogoutButtonClicked ? (
+      ) : !drawerState.isDrawerOpen && !isLogoutButtonClicked ? (
         <div className="invisible transition-all delay-500 z-[9999] bg-white">
-          {isDrawerOpen && !isLogoutButtonClicked ? (
+          {drawerState.isDrawerOpen && !isLogoutButtonClicked ? (
             <BottomDrawer
               title="계정 설정"
               button1="프로필 수정"
@@ -335,9 +334,9 @@ const ProfilePage = () => {
             />
           )}
         </div>
-      ) : isDrawerOpen && isLogoutButtonClicked ? (
+      ) : drawerState.isDrawerOpen && isLogoutButtonClicked ? (
         <div className="visible z-[9999] bg-white">
-          {isDrawerOpen && !isLogoutButtonClicked ? (
+          {drawerState.isDrawerOpen && !isLogoutButtonClicked ? (
             <BottomDrawer
               title="로그아웃"
               button1="로그아웃"
@@ -357,7 +356,7 @@ const ProfilePage = () => {
         </div>
       ) : (
         <div className="invisible transition-all delay-500 z-[9999] bg-white">
-          {isDrawerOpen && isLogoutButtonClicked ? (
+          {drawerState.isDrawerOpen && isLogoutButtonClicked ? (
             <BottomDrawer
               title="로그아웃"
               button1="로그아웃"

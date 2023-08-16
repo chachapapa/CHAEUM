@@ -63,8 +63,7 @@ const SignupPage = () => {
         } else {
           console.log(res.data);
           dispatch(setMyNickname(res.data.nickname));
-          setCurrentStep(3);
-          // navigate('/main');
+          navigate('/main');
         }
       } catch (e) {
         console.log('에러');
@@ -74,6 +73,7 @@ const SignupPage = () => {
     setTimeout(() => {
       setIsStarted(true);
     }, 500);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
   const onClickNext = () => {
