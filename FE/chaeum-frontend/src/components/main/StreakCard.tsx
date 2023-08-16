@@ -37,6 +37,14 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
 
   const goActive = () => {
     navigate('/active');
+
+    // 추후에 받아온 streakId, categoryId를 보내야 합니다.
+    // const streakId = 24;
+    const streakId = props.streakId;
+    const categoryId = props.categoryId;
+    const tagList = props.tagList;
+    // const categoryId = 18;
+    navigate('/active', { state: { streakId, categoryId, tagList } });
   };
 
   const duration = (): string => {

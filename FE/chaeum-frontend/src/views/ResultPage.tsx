@@ -11,6 +11,7 @@ import CommentList from '../components/feed/CommentList';
 import { RivalCard } from '../components/active/result/RivalCard';
 import { useNavigate } from 'react-router-dom';
 
+import { useAppSelector } from '../hooks/reduxHooks';
 /*
   Props
   시간은 2023-08-02 17:20:15 
@@ -38,22 +39,29 @@ type Comment = {
   content: string;
 };
 
+const access_token = localStorage.getItem('access_token');
+const COMPLETE_ACT_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
+
 const ResultPage = () => {
   // 임시 작성 =====================
-  const tags = [
-    {
-      id: 1,
-      tag: '클라이밍',
-    },
-    {
-      id: 3,
-      tag: '열심히',
-    },
-    {
-      id: 2,
-      tag: '운동',
-    },
-  ];
+  // const tags = [
+  //   {
+  //     id: 1,
+  //     tag: '클라이밍',
+  //   },
+  //   {
+  //     id: 3,
+  //     tag: '열심히',
+  //   },
+  //   {
+  //     id: 2,
+  //     tag: '운동',
+  //   },
+  // ];
+  const myActivityTagList = useAppSelector(
+    state => state.stateSetter.myActivityTagList
+  );
+  const tags = myActivityTagList;
 
   const commentListExample: Comment[] = [
     {
@@ -78,13 +86,60 @@ const ResultPage = () => {
     },
   ];
 
-  const startTime = '2023-08-02 14:03:21';
-  const endTime = '2023-08-02 14:07:21';
-  const activityTime = '00:04:00';
+  const myActivityInfo = useAppSelector(
+    state => state.stateSetter.myActivityInfo
+  );
+  const rivalInfoList = useAppSelector(
+    state => state.stateSetter.rivalInfoList
+  );
+
+  // const startTime = '2023-08-02 14:03:21';
+  const startTime = new Date(myActivityInfo.date);
+  const endTime = new Date();
+  // const activityTime = '00:04:00';
+  const activityTime = calculateTimeDifference(myActivityInfo.date);
+  function calculateTimeDifference(targetTime: string): string {
+    /*
+      현재 시간 - 활동 시작시간 을 빼면
+      라이벌이 활동중일때 accumulateTime + 해당 시간 차 만큼
+      활동시간을 갱신할 수 있습니다.
+    */
+
+    const currentTime = new Date();
+    const targetDate = new Date(targetTime);
+
+    const timeDifferenceInSeconds = Math.floor(
+      (currentTime.getTime() - targetDate.getTime()) / 1000
+    );
+
+    // Hours calculation
+    const hours = Math.floor(timeDifferenceInSeconds / 3600);
+
+    // Minutes calculation
+    const minutes = Math.floor((timeDifferenceInSeconds % 3600) / 60);
+
+    // Seconds calculation
+    const seconds = Math.floor((timeDifferenceInSeconds % 60) / 1);
+
+    const shours = String(hours).padStart(2, '0');
+    const sminutes = String(minutes).padStart(2, '0');
+    const sseconds = String(seconds).padStart(2, '0');
+
+    return `${shours}:${sminutes}:${sseconds}`;
+  }
+
+  const currentTimer = (now: Date) => {
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  };
 
   // 시간 분리
-  const sTime = startTime.split(' ')[1];
-  const eTime = endTime.split(' ')[1];
+  // const sTime = startTime.split(' ')[1];
+  // const eTime = endTime.split(' ')[1];
+  const sTime = currentTimer(startTime);
+  const eTime = currentTimer(endTime);
 
   // Routes
   const navigate = useNavigate();
@@ -104,8 +159,8 @@ const ResultPage = () => {
         <div className=" bg-chaeum-blue-300 outline outline-1 h-full">
           {/* 태그 */}
           <div className="pt-20">
-            {tags.map(tag => (
-              <Tag tag={tag.tag} key={tag.id} color="blue"></Tag>
+            {tags.map((tag, index) => (
+              <Tag tag={tag} key={index} color="blue"></Tag>
             ))}
           </div>
           <div className="text-5xl pt-12">채움 완료</div>
@@ -116,13 +171,22 @@ const ResultPage = () => {
 
           <div className="flex justify-center place-items-center">
             <div className="float-left; ml-12 w-24">
-              <RivalCard name="coco" tag="#코딩"></RivalCard>
+              <RivalCard
+                name={rivalInfoList[0].nickname}
+                tag={rivalInfoList[0].categoryMiddle}
+              ></RivalCard>
             </div>
             <div className="float-left; w-24">
-              <RivalCard name="rulu" tag="#음주"></RivalCard>
+              <RivalCard
+                name={rivalInfoList[1].nickname}
+                tag={rivalInfoList[1].categoryMiddle}
+              ></RivalCard>
             </div>
             <div className="float-left; w-48">
-              <RivalCard name="맥주" tag="#콸콸콸"></RivalCard>
+              <RivalCard
+                name={rivalInfoList[2].nickname}
+                tag={rivalInfoList[2].categoryMiddle}
+              ></RivalCard>
             </div>
           </div>
           <div className="mx-auto flex justify-center place-items-center pt-10">
@@ -153,8 +217,8 @@ const ResultPage = () => {
 
           {/* 태그 */}
           <div className="pt-2">
-            {tags.map(tag => (
-              <Tag tag={tag.tag} key={tag.id} color="blue"></Tag>
+            {tags.map((tag, index) => (
+              <Tag tag={tag} key={index} color="blue"></Tag>
             ))}
           </div>
           <div className="text-5xl pt-4">{activityTime}</div>

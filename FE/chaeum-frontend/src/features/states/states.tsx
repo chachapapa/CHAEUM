@@ -6,7 +6,8 @@ import {
   ImageFile,
   StreakInfoType,
   Drawer,
-  User
+  MyActivity,
+  RivalActivity,
 } from '../../components/Types';
 
 // 1. initial state type 생성
@@ -42,6 +43,24 @@ export type State = {
 
   // Streak Info. state
   myStreakInfo: StreakInfoType[][] | null;
+
+  // 내 정보
+  myActivityInfo: MyActivity;
+
+  // 내 활동 태그
+  myActivityTagList: string[];
+
+  // 내 활동 누적시간
+  myAccumulateTime: number;
+
+  // 라이벌 목록
+  rivalInfoList: RivalActivity[];
+
+  // 활동 시작 동기부여 문구
+  startMentList: string[];
+
+  // 활동 시작 동기부여 문구
+  activeMentList: string[];
 };
 // 1-1. initial state 객체 생성
 const initialState: State = {
@@ -59,7 +78,17 @@ const initialState: State = {
   isSearchBarOpened : false,
   searchUserList : [],
   myStreakInfo: null,
-
+  myActivityInfo: {
+    activityId: 0,
+    streakId: 0,
+    categoryId: 0,
+    date: '',
+  },
+  rivalInfoList: [],
+  startMentList: ['동기 부여 멘트를 불러오는 중입니다.'],
+  activeMentList: ['동기 부여 멘트를 생성중입니다.'],
+  myAccumulateTime: 0,
+  myActivityTagList: [],
 };
 
 // 2. slice 생성 : createSlice
@@ -133,6 +162,35 @@ const Slice = createSlice({
       state.myStreakInfo = action.payload;
     },
 
+    // 내 활동 정보
+    setMyActivityInfo: (state, action: PayloadAction<MyActivity>) => {
+      state.myActivityInfo = action.payload;
+    },
+
+    // 내 누적시간 정보
+    setMyAccumalteTime: (state, action: PayloadAction<number>) => {
+      state.myAccumulateTime = action.payload;
+    },
+
+    // 내 활동 태그 정보
+    setMyActivityTagList: (state, action: PayloadAction<string[]>) => {
+      state.myActivityTagList = action.payload;
+    },
+
+    // 라이벌 목록 정보 갱신
+    setRivalInfoList: (state, action: PayloadAction<RivalActivity[]>) => {
+      state.rivalInfoList = action.payload;
+    },
+
+    // 시작 동기부여 멘트
+    setStartMentList: (state, action: PayloadAction<string[]>) => {
+      state.startMentList = action.payload;
+    },
+
+    // 활동중 동기부여 멘트
+    setActiveMentList: (state, action: PayloadAction<string[]>) => {
+      state.activeMentList = action.payload;
+    },
   },
 });
 
@@ -156,6 +214,12 @@ export const {
   setIsSearchBarOpened,
   setSearchUserList,
   setMyStreakInfo,
+  setMyActivityInfo,
+  setMyAccumalteTime,
+  setMyActivityTagList,
+  setRivalInfoList,
+  setStartMentList,
+  setActiveMentList,
 } = Slice.actions;
 // 3-2. export default slice.reducer
 export default Slice.reducer;
