@@ -155,7 +155,7 @@ const ResultPage = () => {
 
   return (
     <div className="w-full flex flex-col items-center outline">
-      <Carousel className="w-[307px] h-full">
+      <Carousel className="w-full h-full">
         <div className=" bg-chaeum-blue-300 outline outline-1 h-full">
           {/* 태그 */}
           <div className="pt-20">

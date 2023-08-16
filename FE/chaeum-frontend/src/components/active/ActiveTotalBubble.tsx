@@ -208,7 +208,7 @@ const ActiveTotalBubble = (props: Props) => {
           {/* <NewWave color="chaeumblue"></NewWave> */}
           <NewActiveInfoCard time={times[4]}></NewActiveInfoCard>
 
-          <div className="bg-chaeum-blue-300 max-w-[307px] h-[387px]">
+          <div className="bg-chaeum-blue-300 max-w-full h-[387px]">
             <div className=" mx-auto overflow-hidden">
               <Carousel>
                 {props.startMent.map((ment, index) => (

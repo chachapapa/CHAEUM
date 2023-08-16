@@ -169,7 +169,7 @@ const ActiveFullScreen = (props: Props) => {
 
   const tags = myActivityTagList;
   return (
-    <div className="z-10 stopwatch-container bg-chaeum-blue-300 w-[307.16px] h-full">
+    <div className="z-10 stopwatch-container bg-chaeum-blue-300 w-full h-full">
       <div className="max-w-[307.16px] mx-auto overflow-hidden">
         <div className="text-5xl mt-5"> 채움 중 ...</div>
         <div className="mt-5">
