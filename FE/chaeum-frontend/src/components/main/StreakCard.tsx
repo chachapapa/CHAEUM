@@ -124,7 +124,7 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
               <>
                 <FontAwesomeIcon
                   icon={faTrashCan}
-                  className="text-chaeum-gray-600 text-xl "
+                  className="text-chaeum-gray-600 text-xl hover:cursor-pointer hover:text-chaeum-gray-900 active:text-chaeum-gray-900"
                   onClick={() => {
                     dispatch(
                       openDrawer({
@@ -137,7 +137,7 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
                 />
                 <FontAwesomeIcon
                   icon={faLock}
-                  className="text-chaeum-gray-600 text-xl pl-1.5"
+                  className="text-chaeum-gray-600 text-xl pl-1.5 hover:cursor-pointer hover:text-chaeum-gray-900 active:text-chaeum-gray-900"
                   onClick={() => {
                     dispatch(
                       openDrawer({
@@ -150,7 +150,7 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
                 />
                 <FontAwesomeIcon
                   icon={faPen}
-                  className="text-chaeum-gray-600 text-xl pl-1.5"
+                  className="text-chaeum-gray-600 text-xl pl-1.5 hover:cursor-pointer hover:text-chaeum-gray-900 active:text-chaeum-gray-900"
                   onClick={() => {
                     dispatch(
                       openModal({
@@ -167,7 +167,7 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
             ) : (
               <FontAwesomeIcon
                 icon={faLockOpen}
-                className="text-chaeum-gray-600 text-xl pl-1.5"
+                className="text-chaeum-gray-600 text-xl pl-1.5 hover:cursor-pointer hover:text-chaeum-gray-900 active:text-chaeum-gray-900"
                 onClick={() => {
                   dispatch(
                     openDrawer({
@@ -182,7 +182,7 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
             <FontAwesomeIcon
               onClick={settingToggle}
               icon={faMinus}
-              className="text-chaeum-gray-600 text-2xl pl-1.5"
+              className="text-chaeum-gray-600 text-xl pl-1.5 hover:cursor-pointer hover:text-chaeum-gray-900 active:text-chaeum-gray-900"
             />
           </div>
         ) : (
@@ -190,7 +190,7 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
             <FontAwesomeIcon
               onClick={settingToggle}
               icon={faGear}
-              className="text-chaeum-gray-600 text-xl"
+              className="text-chaeum-gray-600 text-xl hover:cursor-pointer hover:text-chaeum-gray-900 active:text-chaeum-gray-900"
             />
           </div>
         )}

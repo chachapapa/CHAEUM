@@ -25,6 +25,20 @@ export const FriendNoti = () => {
   const [applyList, setApplyList] = useState<nameListType[]>([]);
   const [render, setRender] = useState(true);
 
+  useEffect(() => {
+    axios
+      .get(`${url.APPLY_LIST_URL}`, {
+        headers: { Authorization: `Bearer ${AccessToken}` },
+      })
+      .then(res => {
+        setApplyList(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const mounted = useRef(false);
   useEffect(() => {
     if (!mounted.current) {
@@ -95,7 +109,7 @@ export const FriendNoti = () => {
         }
       )
       .then(res => {
-        alert(value + ' 님의 친구 요청을 수락했어요.\n 오늘부터 1일 💕');
+        alert(value + ' 님의 친구 요청을 수락했어요.\n오늘부터 1일 💕');
       })
       .then(res => {
         setRender(!render);
@@ -103,6 +117,10 @@ export const FriendNoti = () => {
       .catch(err => {
         console.log(err);
       });
+  };
+
+  const goProfile = (nickname: string) => {
+    window.location.replace(`/profile/${nickname}`);
   };
 
   return (
@@ -125,9 +143,10 @@ export const FriendNoti = () => {
               className="flex flex-row justify-between items-center p-2"
             > */}
               <img
-                className="relative inline-block h-6 w-6 rounded-full object-cover object-center"
+                className="relative inline-block h-6 w-6 rounded-full object-cover object-center hover:cursor-pointer"
                 alt="placeholder"
                 src={info.profileUrl}
+                onClick={() => goProfile(info.nickname)}
               />
               <div className="text-xs text-start pr-1 justify-self-start px-1 ">
                 <span className="font-bold">{info.nickname} </span>님의
