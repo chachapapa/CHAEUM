@@ -144,18 +144,18 @@ const ResultPage = () => {
   // Routes
   const navigate = useNavigate();
   const goToShare = () => {
-    console.log('go to feed write page');
+    // console.log('go to feed write page');
     navigate('/feed/write');
   };
 
   const goToMain = () => {
-    console.log('go to main write page');
+    // console.log('go to main write page');
     navigate('/main');
   };
 
   return (
     <div className="w-full flex flex-col items-center outline">
-      <Carousel className="w-[307px] h-full">
+      <Carousel className="w-full h-full">
         <div className=" bg-chaeum-blue-300 outline outline-1 h-full">
           {/* 태그 */}
           <div className="pt-20">
@@ -174,18 +174,21 @@ const ResultPage = () => {
               <RivalCard
                 name={rivalInfoList[0].nickname}
                 tag={rivalInfoList[0].categoryMiddle}
+                profile={rivalInfoList[0].profileImageUrl}
               ></RivalCard>
             </div>
             <div className="float-left; w-24">
               <RivalCard
                 name={rivalInfoList[1].nickname}
                 tag={rivalInfoList[1].categoryMiddle}
+                profile={rivalInfoList[1].profileImageUrl}
               ></RivalCard>
             </div>
             <div className="float-left; w-48">
               <RivalCard
                 name={rivalInfoList[2].nickname}
                 tag={rivalInfoList[2].categoryMiddle}
+                profile={rivalInfoList[2].profileImageUrl}
               ></RivalCard>
             </div>
           </div>

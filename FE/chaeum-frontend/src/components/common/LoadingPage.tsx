@@ -11,7 +11,7 @@ const LoadingPage = (props: Props) => {
       // className="mx-auto w-max"
       className="mx-auto w-max"
     >
-      <div className="flex w-96 h-[700px] bg-white items-center">
+      <div className="flex w-full h-[700px] bg-white items-center">
         <svg
           className={
             props.isFadingOut

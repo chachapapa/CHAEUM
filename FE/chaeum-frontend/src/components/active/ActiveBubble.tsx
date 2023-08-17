@@ -32,10 +32,9 @@ const ActiveBubble = ({
   const myActivityInfo = useAppSelector(
     state => state.stateSetter.myActivityInfo
   );
-  const [bubbleTime, setTime] = useState(
-    rivalInfoList[4].accumulateTime +
-      calculateTimeDifference(myActivityInfo.date)
-  );
+  let inputTime = rivalInfoList[4].accumulateTime;
+  if (active) inputTime += calculateTimeDifference(myActivityInfo.date);
+  const [bubbleTime, setTime] = useState(inputTime);
 
   function calculateTimeDifference(targetTime: string): number {
     /*
