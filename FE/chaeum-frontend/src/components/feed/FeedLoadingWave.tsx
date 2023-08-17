@@ -12,7 +12,7 @@ const FeedLoadingWave = ({target} : Props) => {
 
 
   return (
-    <div className='w-full h-10' ref={target}>
+    <div className='w-full' ref={target}>
       <svg
           className='flex items-center mx-auto justify-self-center '
           version="1.1"

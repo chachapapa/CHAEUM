@@ -8,7 +8,7 @@ export const ChaeumNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentTab = useAppSelector(state => state.stateSetter.tabNumber);
-  const myNickName = useAppSelector(state => state.stateSetter.nickname);
+  const myNickName = useAppSelector(state => state.userStateSetter.userStateSetter.nickname);
   const dispatch = useAppDispatch();
 
   // console.log('렌더링시 state 내 탭번호' + currentTab);

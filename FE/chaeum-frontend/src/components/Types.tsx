@@ -1,7 +1,7 @@
 type User = {
-  nickName: string;
-  profileImage: string;
-  introduction? : string;
+  nickname: string;
+  profileImageUrl: string;
+  introduce? : string;
   gender? : string;
   mbti? : string;
   age? : number;
@@ -10,13 +10,15 @@ type User = {
 };
 
 type Activity = {
-  id: number;
   streakId: number;
-  streak: Streak;
-  category: string;
-  color: ColorVariation;
+  streakName : string;
+  streakColor : ColorVariation;
+  tagList : string[];
+  categoryId: number;
+  date : string;
   startTime: string;
   endTime: string;
+  elapsedTime : string;
 };
 
 type MyActivity = {
@@ -39,24 +41,32 @@ type RivalActivity = {
 };
 
 type Comment = {
-  user: User;
-  activityId: number;
+  profileUrl: string;
+  nickname : string;
+  activityId?: number;
   content: string;
   replyId?: number;
+  rereplyId? : number;
+  replyTime? : string;
+  replies? : string[];
+  cheer? : boolean;
 };
 
 type Article = {
-  id: number;
-  user: User;
-  date: string;
-  dateTime: string;
-  activityInfo: Activity;
-  likeCount: number;
-  commentCount: number;
-  content: string;
-  imageList: string[];
-  encourageMessageList: Comment[];
-  commentList: Comment[];
+  postId : number;
+  activityId : number;
+  profileUrl : string;
+  nickname : string;
+  postContent : string;
+  postTime : string;
+  commentList : Comment[];
+  encourageMessageList : Comment[];
+  tagList : string[];
+  imageList : string[];
+  friend : boolean;
+  streakColor: ColorVariation;
+  likeCount : number;
+  commentCount : number;
 };
 
 type ImageFile = {
@@ -85,20 +95,22 @@ type ColorVariation =
   | 'sky'
   | 'blue'
   | 'violet'
+  | 'purple'
   | 'fuchsia'
   | 'pink'
   | 'rose'
-  | 'chaeum-blue';
+  | 'chaeumblue'
+  | 'deactive'
 
 type Story = {
-  activityId: number;
-  id: number;
-  nickname: string;
-  title: string;
-  profileImg: string;
-  color: ColorVariation;
-  tag: string[];
-  time: number;
+  friendName : string;
+  activeStartTime : string;
+  streakName : string;
+  streakId : number;
+  activityId : number;
+  profileUrl : string;
+  streakColor : ColorVariation;
+  tagList : string[];
 };
 
 type Streak = {
@@ -165,11 +177,11 @@ export type {
 export interface StreakInfoType {
   streakId: number;
   streakName: string;
-  streakColor: string;
+  streakColor: ColorVariation;
   streakActive: boolean;
   streakDeleted: boolean;
   categoryId: number;
-  continueDays: number;
+  continueDays?: number;
   tagList: string[];
   activeHistoryList: string[][]; // 2023-08-10 10:00:10
 }

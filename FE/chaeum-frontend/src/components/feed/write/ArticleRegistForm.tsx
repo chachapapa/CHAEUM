@@ -17,37 +17,19 @@ type Props = {
 
 const ArticleRegistForm = ({ activity }: Props) => {
   const navigate = useNavigate();
-  const startTime: Date = new Date(activity.startTime);
-  const endTime: Date = new Date(activity.endTime);
-  const elapsedTime = endTime.getTime() - startTime.getTime();
-  console.log(elapsedTime / 1000 / 60 / 60);
-  const date =
-    startTime.getFullYear() +
-    '년 ' +
-    startTime.getMonth() +
-    '월 ' +
-    startTime.getDay() +
-    '일';
-  const startTimeFormed = activity.startTime.split(' ')[1];
-  const endTimeFormed = activity.endTime.split(' ')[1];
 
-  const hour = Math.floor(elapsedTime / 3600000);
-  const minute = Math.floor((elapsedTime - hour * 3600000) / 60000);
-  const second = (elapsedTime - hour * 3600000 - minute * 60000) / 1000;
-  const elapsedTimeFormed = hour + '시간 ' + minute + '분 ' + second + '초';
-
-  const [articleContent, setArticleContent] = useState<string>('');
-  const [imageList, setImageList] = useState<ImageFile[]>([]);
+  // const [articleContent, setArticleContent] = useState<string>('');
+  // const [imageList, setImageList] = useState<ImageFile[]>([]);
 
   return (
     <div className="w-full flex flex-col items-center">
-      {activity.streak.streakName && activity.streak.streakTag ? (
+      {activity.streakName && activity.tagList ? (
         <ActivityUploadCard
-          color={activity.color}
-          tag={activity.streak.streakTag}
-          date={date}
-          title={activity.streak.streakName}
-          startToEndTime={`${startTimeFormed} ~ ${endTimeFormed}`}
+          color={activity.streakColor}
+          tag={activity.tagList}
+          date={activity.date}
+          title={activity.streakName}
+          startToEndTime={`${activity.startTime} ~ ${activity.endTime}`}
         />
       ) : null}
       <div className="flex flex-col mt-7 w-11/12 ">
@@ -66,7 +48,7 @@ const ArticleRegistForm = ({ activity }: Props) => {
           <i className="fa-regular fa-image mx-2"></i>
           사진/동영상 업로드
         </label>
-        <ImageUpload imageList={imageList}/>
+        <ImageUpload/>
       </div>
     </div>
   );

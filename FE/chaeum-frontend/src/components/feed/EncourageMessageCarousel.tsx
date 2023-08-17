@@ -14,7 +14,6 @@ const EncourageMessageCarousel = (props:Props) => {
       className="rounded-lg mb-3"
       autoplay
       loop
-      
       navigation={({ setActiveIndex, activeIndex, length }) => (
         <div className="absolute bottom-1 left-2/4 z-50 flex -translate-x-2/4 gap-2">
           {new Array(length).fill('').map((_, i) => (
@@ -71,7 +70,7 @@ const EncourageMessageCarousel = (props:Props) => {
           <div className="absolute h-full w-full grid justify-items-start items-center bg-gray-100 pl-2">
             <div className="flex h-full w-11/12 ">
               <img
-                src={encourageMessage.user.profileImage}
+                src={encourageMessage.profileUrl}
                 alt=""
                 className="w-7 h-7 rounded-full bg-gray-50 mr-2 self-center"
               />
@@ -83,7 +82,7 @@ const EncourageMessageCarousel = (props:Props) => {
                   className="opacity-80 text-sm overflow-hidden whitespace-nowrap text-ellipsis"
                 >
                   <span className="font-semibold mr-2">
-                    {encourageMessage.user.nickName}
+                    {encourageMessage.nickname}
                   </span>
                   <span>{encourageMessage.content}</span>
                 </Typography>

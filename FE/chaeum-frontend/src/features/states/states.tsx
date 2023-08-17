@@ -13,7 +13,8 @@ import {
 
 // 1. initial state type 생성
 export type State = {
-  nickname: string;
+  // nickname: string;
+  myProfileImageUrl : string;
   initialStudyStreak: Streak;
   initialSportsStreak: Streak;
   initialMyStreak: Streak;
@@ -23,6 +24,7 @@ export type State = {
   articleWriteStep: number;
 
   // 게시글 업로드를 위한 컨텐츠 state
+  activityId : number;
   articleContent: string;
   imageList: ImageFile[];
 
@@ -37,9 +39,6 @@ export type State = {
 
   //검색창 관리
   isSearchBarOpened: boolean;
-
-  //유저 검색 결과
-  searchUserList: User[];
 
   // Streak Info. state
   myStreakInfo: StreakInfoType[][] | null;
@@ -64,19 +63,20 @@ export type State = {
 };
 // 1-1. initial state 객체 생성
 const initialState: State = {
-  nickname: '차차아버님',
+  // nickname: '',
+  myProfileImageUrl: '',
   initialStudyStreak: { categoryMain: '공부', categoryMiddle: '기타' },
   initialSportsStreak: { categoryMain: '운동', categoryMiddle: '기타' },
   initialMyStreak: { categoryMain: '기타', categoryMiddle: '기타' },
   tabNumber: 0,
   articleWriteStep: 0,
+  activityId : 0,
   articleContent: '',
   imageList: [],
   drawerState: { isDrawerOpen: false, drawerType: '' },
   modalState: { isModalOpen: false, modalType: '', mainCategory: '' },
   friendNicknameList: [],
   isSearchBarOpened: false,
-  searchUserList: [],
   myStreakInfo: null,
   myActivityInfo: {
     activityId: 0,
@@ -92,13 +92,18 @@ const initialState: State = {
 };
 
 // 2. slice 생성 : createSlice
+
 const Slice = createSlice({
   name: 'stateSetter',
   initialState,
   reducers: {
     // reducer의 각각은 action의 역할을 함. state의 변화를 구현. immer.js를 내장하고 있어 return이 필요없다.
-    setMyNickname: (state, action: PayloadAction<string>) => {
-      state.nickname = action.payload;
+    // setMyNickname: (state, action: PayloadAction<string>) => {
+    //   state.nickname = action.payload;
+    // },
+
+    setMyProfileImageUrl : (state, action: PayloadAction<string>) => {
+      state.myProfileImageUrl = action.payload;
     },
 
     setInitialStudyStreak: (state, action: PayloadAction<Streak>) => {
@@ -120,6 +125,9 @@ const Slice = createSlice({
     setArticleWriteStep: (state, action: PayloadAction<number>) => {
       state.articleWriteStep = action.payload;
     },
+    setActivityId : (state, action : PayloadAction<number>) => {
+      state.activityId = action.payload;
+    },
 
     setArticleContent: (state, action: PayloadAction<string>) => {
       state.articleContent = action.payload;
@@ -129,6 +137,9 @@ const Slice = createSlice({
       state.imageList = action.payload;
     },
 
+    deleteImageList : (state, action: PayloadAction<string>) => {
+      state.imageList = state.imageList.filter(image => image.url !== action.payload);
+    },
     openDrawer: (state, action: PayloadAction<Drawer>) => {
       state.drawerState = action.payload;
     },
@@ -145,16 +156,18 @@ const Slice = createSlice({
     },
 
     setFriendNicknameList: (state, action: PayloadAction<string[]>) => {
-      state.friendNicknameList = action.payload;
+      state.friendNicknameList = state.friendNicknameList.concat(action.payload);
+    },
+
+    deleteFriendNicknameList : (state, action: PayloadAction<string>) => {
+      const index = state.friendNicknameList.indexOf(action.payload);
+      state.friendNicknameList = state.friendNicknameList.splice(index,1);
     },
 
     setIsSearchBarOpened: state => {
       state.isSearchBarOpened = !state.isSearchBarOpened;
     },
 
-    setSearchUserList: (state, action: PayloadAction<User[]>) => {
-      state.searchUserList = action.payload;
-    },
 
     setMyStreakInfo: (state, action: PayloadAction<StreakInfoType[][]>) => {
       state.myStreakInfo = action.payload;
@@ -197,20 +210,23 @@ const Slice = createSlice({
 // 3-1. export actions
 export const {
   setCurrentTab,
-  setMyNickname,
+  // setMyNickname,
+  setMyProfileImageUrl,
   setInitialStudyStreak,
   setInitialSportsStreak,
   setInitialMyStreak,
   setArticleWriteStep,
+  setActivityId,
   setArticleContent,
   setImageList,
+  deleteImageList,
   openDrawer,
   closeDrawer,
   openModal,
   closeModal,
   setFriendNicknameList,
+  deleteFriendNicknameList,
   setIsSearchBarOpened,
-  setSearchUserList,
   setMyStreakInfo,
   setMyActivityInfo,
   setMyAccumalteTime,

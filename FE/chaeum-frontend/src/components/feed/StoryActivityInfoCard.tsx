@@ -6,7 +6,7 @@ import { ColorVariation, Story } from '../Types';
 type Props = {
   color: ColorVariation;
   story: Story;
-  closeStoryDetail: (e : React.MouseEvent) => void;
+  closeStoryDetail: (e: React.MouseEvent) => void;
 };
 
 const StoryActivityInfoCard = ({ color, story, closeStoryDetail }: Props) => {
@@ -21,12 +21,32 @@ const StoryActivityInfoCard = ({ color, story, closeStoryDetail }: Props) => {
   const BottomSecond = WaveBottomColor({ color: color, weight3 });
   const BottomThird = WaveBottomColor({ color: color, weight2 });
   const backgroundColor = WaveBottomColor({ color: color, weight0 });
-  const [time, setTime] = useState(story.time);
+  const startTime: Date = new Date(story.activeStartTime);
+  const [time, setTime] = useState(
+    calculateTimeDifference(story.activeStartTime)
+  );
+
+  function calculateTimeDifference(targetTime: string): number {
+    /*
+      현재 시간 - 활동 시작시간 을 빼면
+      라이벌이 활동중일때 accumulateTime + 해당 시간 차 만큼
+      활동시간을 갱신할 수 있습니다.
+    */
+
+    const currentTime = new Date();
+    const targetDate = new Date(targetTime);
+
+    const timeDifferenceInSeconds = Math.floor(
+      (currentTime.getTime() - targetDate.getTime()) / 1000
+    );
+
+    return timeDifferenceInSeconds;
+  }
 
   useEffect(() => {
     // Update time every second
     const interval = setInterval(() => {
-      setTime(prevTime => prevTime + 100); // Increment time by 100 milliseconds (1 second)
+      setTime(time => time + 1); // Increment time by 100 milliseconds (1 second)
     }, 1000);
 
     // Cleanup the interval on component unmount
@@ -34,13 +54,13 @@ const StoryActivityInfoCard = ({ color, story, closeStoryDetail }: Props) => {
   }, []);
 
   // Hours calculation
-  const hours = Math.floor(time / 360000);
+  const hours = Math.floor(time / 3600);
 
   // Minutes calculation
-  const minutes = Math.floor((time % 360000) / 6000);
+  const minutes = Math.floor((time % 3600) / 60);
 
-  // Seconds calculation
-  const seconds = Math.floor((time % 6000) / 100);
+  // Seconds calculat
+  const seconds = Math.floor(time % 60);
 
   const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
     .toString()
@@ -57,29 +77,32 @@ const StoryActivityInfoCard = ({ color, story, closeStoryDetail }: Props) => {
         <div className="flex w-full items-center justify-between gap-x-4">
           <div className="flex items-center ml-3">
             <img
-              src={`${process.env.PUBLIC_URL}/${story.profileImg}`}
+              src={`${story.profileUrl}`}
               alt=""
               className="h-12 w-12 rounded-full bg-gray-50 mr-2"
             />
             <div>
               <p className="text-chaeum-gray-900 text-left text-lg">
-                {story.nickname}
+                {story.friendName}
               </p>
               <div
                 className={`text-xs ${BottomSecond} rounded-md py-0.5 px-1 w-fit`}
                 style={{ display: 'flex', flexWrap: 'wrap' }}
               >
                 <p className="text-chaeum-gray-900 text-left text-md font-bold">
-                  {story.title}
+                  {story.streakName}
                 </p>
               </div>
             </div>
           </div>
-          <div className="text-sm leading-6 mr-3">
-            {story.tag.map((tag, index) => (
-              <p className="text-black text-left" key={index}>
-                {tag}
-              </p>
+          <div className="flex text-sm py-0.5 px-1 gap-1 flex-wrap">
+            {story.tagList.map((tag, index) => (
+              <div
+                className="text-left px-1 py-0.5 whitespace-nowrap rounded-md"
+                key={index}
+              >
+                #{tag}
+              </div>
             ))}
           </div>
         </div>

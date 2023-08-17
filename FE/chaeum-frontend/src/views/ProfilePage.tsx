@@ -31,6 +31,7 @@ import GenderButton from '../components/profile/GenderButton';
 import { User } from '../components/Types';
 import '../components/styles/profiletab.css';
 import axios from 'axios';
+import ColorContainer from '../components/common/ColorContainer';
 
 const USER_INFO_URL = 'http://i9a810.p.ssafy.io:8080/api/user/mypage-info';
 const AccessToken = localStorage.getItem('access_token');
@@ -39,7 +40,7 @@ const ProfilePage = () => {
   const location = useLocation();
   const userNickname = decodeURI(location.pathname.split('/')[2]);
   // const params = useSearchParams
-  const [user, setUser] = useState<User>({ nickName: '', profileImage: '' });
+  const [user, setUser] = useState<User>({ nickname: '', profileImageUrl: '' });
 
   useEffect(() => {
     // 렌더링 제대로 안되면 이걸로 해보자
@@ -49,47 +50,110 @@ const ProfilePage = () => {
           headers: { Authorization: `Bearer ${AccessToken}` },
           params: { nickname: userNickname },
         });
-        console.log(res.data);
-        setUser({
-          nickName: res.data.nickname,
-          profileImage: res.data.profileImageUrl,
-          age: res.data.age,
-          gender: res.data.gender,
-          mbti: res.data.mbti,
-          introduction: res.data.introduce,
-          height: res.data.height,
-          weight: res.data.weight,
-        });
+        setUser(res.data);
       } catch (e) {
         console.log('유저 정보가 없습니다.');
       }
     };
     getUserInfo();
-    console.log(user);
-    // axios
-    //   .get(`${USER_INFO_URL}`, {
-    //     headers: { Authorization: `Bearer ${AccessToken}` },
-    //     params: { nickname: { userNickname } },
-    //   })
-    //   .then(res => {
-    //     console.log(res);
-    //     if (res.data) {
-    //       setUser(res.data);
-    //     } else {
-    //       console.log('유저 정보가 없어용');
-    //     }
-    //   });
 
-    // setUser({
-    //   nickName: '차차아버님',
-    //   profileImage: '../chacha1.jpg',
-    //   introduction: '★☆한달안에 보라색 도전.☆★',
-    //   gender: 'm',
-    //   mbti: 'esfj',
-    //   age: 27,
-    // });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // const handleColor = (value: string) => {
+  //   if (modalState.modalType === 'create') {
+  //     setPostParams(prevState => {
+  //       const newParams = { ...prevState };
+  //       newParams.streakColor = value;
+  //       return newParams;
+  //     });
+  //   } else {
+  //     setPatchParams(prevState => {
+  //       const newParams = { ...prevState };
+  //       newParams.streakColor = value;
+  //       return newParams;
+  //     });
+  //   }
+  // };
+
+  const colorArr = [
+    {
+      name: 'red',
+      color: 'bg-red-400',
+    },
+    {
+      name: 'orange',
+      color: 'bg-orange-400',
+    },
+    {
+      name: 'amber',
+      color: 'bg-amber-400',
+    },
+    {
+      name: 'yellow',
+      color: 'bg-yellow-400',
+    },
+    {
+      name: 'lime',
+      color: 'bg-lime-400',
+    },
+    {
+      name: 'green',
+      color: 'bg-green-400',
+    },
+    {
+      name: 'emerald',
+      color: 'bg-emerald-400',
+    },
+    {
+      name: 'teal',
+      color: 'bg-teal-400',
+    },
+    {
+      name: 'cyan',
+      color: 'bg-cyan-400',
+    },
+    {
+      name: 'chaeumblue',
+      color: 'bg-chaeum-blue-400',
+    },
+    {
+      name: 'sky',
+      color: 'bg-sky-400',
+    },
+    {
+      name: 'blue',
+      color: 'bg-blue-400',
+    },
+    {
+      name: 'indigo',
+      color: 'bg-indigo-400',
+    },
+    {
+      name: 'violet',
+      color: 'bg-violet-400',
+    },
+    {
+      name: 'purple',
+      color: 'bg-purple-400',
+    },
+    {
+      name: 'fuchsia',
+      color: 'bg-fuchsia-400',
+    },
+    {
+      name: 'pink',
+      color: 'bg-pink-400',
+    },
+    {
+      name: 'rose',
+      color: 'bg-rose-400',
+    },
+    {
+      name: 'slate',
+      color: 'bg-slate-400',
+    },
+  ];
 
   const mbtiList: string[] = [
     'ISTJ',
@@ -110,7 +174,9 @@ const ProfilePage = () => {
     'ENTJ',
   ];
 
-  const { modalState, drawerState } = useAppSelector(state => state.stateSetter);
+  const { modalState, drawerState } = useAppSelector(
+    state => state.stateSetter
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [modalTypeKor, setModalTypeKor] = useState<string>('');
@@ -135,20 +201,19 @@ const ProfilePage = () => {
       );
   };
   const registMyData = () => {
-
     console.log(user);
     axios
       .patch(
         `${USER_INFO_URL}`,
         JSON.stringify({
-          nickname: user.nickName,
-          profileImageUrl: user.profileImage,
+          nickname: user.nickname,
+          profileImageUrl: user.profileImageUrl,
           gender: user.gender,
           age: user.age,
           weight: user.weight,
           height: user.height,
           mbti: user.mbti,
-          introduce: user.introduction,
+          introduce: user.introduce,
         }),
         {
           headers: {
@@ -227,7 +292,7 @@ const ProfilePage = () => {
   const [scrollY, setScrollY] = useState<number | undefined>(0);
   const onProfileScroll = (e: React.WheelEvent<HTMLDivElement>) => {
     setScrollY(document.getElementById('box')?.scrollTop);
-    console.log(scrollY);
+    // console.log(scrollY);
   };
 
   return (
@@ -247,11 +312,11 @@ const ProfilePage = () => {
         id="box"
       >
         <MyProfileCard
-          name={user.nickName}
+          name={user.nickname}
           longest={300}
           age={user.age}
           mbti={user.mbti}
-          profileImage={user.profileImage}
+          profileImage={user.profileImageUrl}
           onClick={() => {
             console.log('내 프로필');
           }}
@@ -276,12 +341,12 @@ const ProfilePage = () => {
 
         {/* 내 소개 */}
         <div className="mt-16 h-[50px] overflow-hidden text-sm">
-          {user.introduction}
+          {user.introduce}
         </div>
 
         {/* <div className={scrollY !==undefined && scrollY > 314? 'sticky top-[56px]': 'w-full'}> */}
         <div className="w-full">
-          <ButtonApp scrollY={scrollY}></ButtonApp>
+          <ButtonApp scrollY={scrollY} userNickname={user.nickname}></ButtonApp>
         </div>
       </div>
 
@@ -451,6 +516,21 @@ const ProfilePage = () => {
                     />
                   </div>
                 </div>
+                {/* <div className="flex w-full overflow-auto overflow-y-hidden">
+                  {colorArr.map((container, idx) => (
+                    <ColorContainer
+                      key={idx}
+                      defaultChecked={
+                        patchParams.streakColor === container.name
+                          ? true
+                          : false
+                      }
+                      value={container.name}
+                      color={container.color}
+                      handleColor={handleColor}
+                    />
+                  ))}
+                </div> */}
               </div>
             </div>
 

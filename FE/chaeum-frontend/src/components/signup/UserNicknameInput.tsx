@@ -4,7 +4,7 @@ import TextButton from '../common/TextButton';
 import CommentInputBox from '../common/CommentInputBox';
 import axios from 'axios';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import { setMyNickname } from '../../features/states/states';
+import { setMyNickname } from '../../features/states/userStates';
 
 type Props = {
   currentStep: number;
@@ -32,7 +32,7 @@ const UserNicknameInput = ({
   const [nickname, setNickname] = useState<string>(' ');
   const [isStarted, setIsStarted] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const myNickname = useAppSelector(state => state.stateSetter.nickname);
+  const myNickname = useAppSelector(state => state.userStateSetter.userStateSetter.nickname);
 
   useEffect(() => {
     setTimeout(() => {

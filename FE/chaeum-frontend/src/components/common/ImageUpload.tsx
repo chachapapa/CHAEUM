@@ -1,18 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ColorVariation, ImageFile } from '../Types';
 import axios from 'axios';
-import { useAppDispatch } from '../../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { setImageList } from '../../features/states/states';
+import { deleteImageList } from '../../features/states/states';
 
 type Props ={
-  imageList : ImageFile[];
+  // imageList : ImageFile[];
 }
 
 
 
-const ImageUpload = ({imageList}:Props) => {
+const ImageUpload = () => {
   // 업로드할 파일들을 담을 State!
 
+  const imageList = useAppSelector(state => state.stateSetter.imageList);
   const dispatch = useAppDispatch();
   const imageInput = useRef<HTMLInputElement>(null);
 
@@ -23,6 +25,7 @@ const ImageUpload = ({imageList}:Props) => {
   };
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e);
     const temp = [];
     const imageToAdd = e.target.files;
     if (imageToAdd) {
@@ -35,6 +38,7 @@ const ImageUpload = ({imageList}:Props) => {
 
         temp.push(tmpImageFile);
       }
+      console.log(temp);
       dispatch(setImageList(temp.concat(imageList)));
     }
   };
@@ -50,7 +54,7 @@ const ImageUpload = ({imageList}:Props) => {
   );
 
   const onRemoveButtonClicked = (deleteUrl: string) => {
-    setImageList(imageList.filter(image => image.url !== deleteUrl));
+    dispatch(deleteImageList(deleteUrl));
   };
 
   return (
