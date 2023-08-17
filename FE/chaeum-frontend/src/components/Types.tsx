@@ -69,6 +69,7 @@ type Article = {
   imageList : string[];
   friend : boolean;
   streakColor: ColorVariation;
+  streakName : string;
   likeCount : number;
   commentCount : number;
 };
@@ -185,6 +186,8 @@ export interface StreakInfoType {
   streakActive: boolean;
   streakDeleted: boolean;
   categoryId: number;
+  categoryMain : string;
+  categoryMiddle : string;
   continueDays?: number;
   tagList: string[];
   activeHistoryList: string[][]; // 2023-08-10 10:00:10

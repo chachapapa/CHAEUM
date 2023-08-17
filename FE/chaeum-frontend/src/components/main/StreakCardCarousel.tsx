@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StreakCard } from './StreakCard';
 import { StreakInfoType } from '../Types';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -13,6 +13,12 @@ type CarouselPropsType = {
 };
 
 export const StreakCardCarousel = ({ activeList }: CarouselPropsType) => {
+  // const [List, setList] = useState<StreakInfoType[]>([]);
+  // useEffect(() => {
+  //   console.log('유즈이펙트');
+  //   setList(prev=>prev.concat(activeList));
+  // }, [activeList]);
+  // console.log(activeList);
   return (
     <>
       <Swiper
@@ -27,7 +33,7 @@ export const StreakCardCarousel = ({ activeList }: CarouselPropsType) => {
           .slice()
           .reverse()
           .map((obj, index) => {
-            // console.log(obj);
+            console.log(obj);
             return (
               <SwiperSlide className="slide-item" key={index}>
                 <StreakCard
@@ -37,6 +43,8 @@ export const StreakCardCarousel = ({ activeList }: CarouselPropsType) => {
                   streakActive={obj.streakActive}
                   streakDeleted={obj.streakDeleted}
                   categoryId={obj.categoryId}
+                  categoryMain={obj.categoryMain}
+                  categoryMiddle={obj.categoryMiddle}
                   continueDays={obj.continueDays}
                   tagList={obj.tagList}
                   activeHistoryList={obj.activeHistoryList}
