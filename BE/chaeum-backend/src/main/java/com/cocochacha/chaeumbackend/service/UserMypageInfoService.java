@@ -11,6 +11,7 @@ import com.cocochacha.chaeumbackend.repository.UserPersonalInfoRepository;
 import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ public class UserMypageInfoService {
 
     private final UserMypageInfoRepository userMypageInfoRepository;
 
+    @Autowired
     AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")

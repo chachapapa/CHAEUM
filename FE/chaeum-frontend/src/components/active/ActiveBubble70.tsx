@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 // import '../../styles/cardwave.css';
 import '../styles/cardwave.css';
 import { RivalPropsType } from '../Types';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 interface BubblePropsType extends RivalPropsType {
   time: number;
@@ -25,12 +26,37 @@ const ActiveBubble = ({
   color1,
   color2,
 }: BubblePropsType) => {
-  const [bubbleTime, setTime] = useState(time);
+  const rivalInfoList = useAppSelector(
+    state => state.stateSetter.rivalInfoList
+  );
+  const myActivityInfo = useAppSelector(
+    state => state.stateSetter.myActivityInfo
+  );
+  let inputTime = time;
+  if (active) inputTime += calculateTimeDifference(myActivityInfo.date);
+  const [bubbleTime, setTime] = useState(inputTime);
+
+  function calculateTimeDifference(targetTime: string): number {
+    /*
+      현재 시간 - 활동 시작시간 을 빼면
+      라이벌이 활동중일때 accumulateTime + 해당 시간 차 만큼
+      활동시간을 갱신할 수 있습니다.
+    */
+
+    const currentTime = new Date();
+    const targetDate = new Date(targetTime);
+
+    const timeDifferenceInSeconds = Math.floor(
+      (currentTime.getTime() - targetDate.getTime()) / 1000
+    );
+
+    return timeDifferenceInSeconds;
+  }
 
   useEffect(() => {
     // Update time every second
     const interval = setInterval(() => {
-      if (active) setTime(bubbleTime => bubbleTime + 100); // Increment time by 100 milliseconds (1 second)
+      if (active) setTime(bubbleTime => bubbleTime + 1); // Increment time by 100 milliseconds (1 second)
     }, 1000);
 
     // Cleanup the interval on component unmount
@@ -40,13 +66,13 @@ const ActiveBubble = ({
   }, [active, bubbleTime]);
 
   // Hours calculation
-  const hours = Math.floor(bubbleTime / 360000);
+  const hours = Math.floor(bubbleTime / 3600);
 
   // Minutes calculation
-  const minutes = Math.floor((bubbleTime % 360000) / 6000);
+  const minutes = Math.floor((bubbleTime % 3600) / 60);
 
   // Seconds calculation
-  const seconds = Math.floor((bubbleTime % 6000) / 100);
+  const seconds = Math.floor((bubbleTime % 60) / 1);
 
   const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
     .toString()
@@ -160,7 +186,7 @@ const ActiveBubble = ({
           </defs>
         </svg>
 
-        {active ? (
+        {/* {active ? (
           <rect
             className="water-fill1"
             mask="url(#bubble_mask)"
@@ -181,10 +207,30 @@ const ActiveBubble = ({
             width="1600"
             height="100"
           />
-        ) : null}
+        ) : null} */}
+
+        <rect
+          className="water-fill2"
+          mask="url(#bubble_mask)"
+          fill="url(#water70_1)"
+          x="-400"
+          y="0"
+          width="1600"
+          height="50"
+        />
+        <rect
+          className="water-fill2"
+          mask="url(#bubble_mask)"
+          fill="url(#water70_2)"
+          x="-400"
+          y="0"
+          width="1600"
+          height="100"
+        />
+
         <g x="0" y="0" clipPath="url(#bubble-circle-clip)">
           <image
-            xlinkHref="../temp1.jpg"
+            xlinkHref={profile}
             x="60"
             y="40"
             width="75"

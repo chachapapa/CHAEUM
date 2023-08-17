@@ -55,6 +55,8 @@ public class FriendService {
                 return false;
             }
             // 원래 친구 였다가, 관계를 끊은 상태로 다시 친구 요청을 보낸 것
+            // 혹은 친구 신청을 취소하고 한 상태
+            createdAddDatabase(userPersonalInfoTo, userPersonalInfoFrom);
             return true;
         }
 
@@ -184,7 +186,6 @@ public class FriendService {
 
         String id = toId + "." + fromId;
         FriendCheck friendCheck = friendRepository.findByFriendRelationship(id).orElse(null);
-        System.out.println(friendCheck);
 
         if (friendCheck == null || !friendCheck.isCheck()) {
             // 둘이 친구 아님
@@ -235,7 +236,7 @@ public class FriendService {
      * @param userPersonalInfo 본인 아이디
      * @return 본인한테 친구 신청을 넣은 사람의 목록
      */
-    public List<UserPersonalInfo> addListFriend(UserPersonalInfo userPersonalInfo) {
+    public List<AddListFriendResponse> addListFriend(UserPersonalInfo userPersonalInfo) {
         // 나한테 친구 신청을 넣은 사람의 목록
         // 친구가 된 사람이 아니라 현재 친구 신청을 넣은 사람의 목록을 보여주면 됨
         // 파라미터는 본인임
@@ -245,13 +246,41 @@ public class FriendService {
             throw new NoSuchElementException("null 값!");
         }
 
-        List<UserPersonalInfo> userPersonalInfoList = new ArrayList<>();
+        List<AddListFriendResponse> returnList = new ArrayList<>();
+
 
         for (FriendAdd friendAdd : friendAddList) {
-            userPersonalInfoList.add(friendAdd.getToId());
+            if (friendAdd.isAdd()) {
+                AddListFriendResponse addListFriendResponse = AddListFriendResponse.builder()
+                        .nickname(friendAdd.getToId().getNickname())
+                        .profileUrl(friendAdd.getToId().getProfileImageUrl())
+                        .build();
+
+                returnList.add(addListFriendResponse);
+            }
         }
 
-        return userPersonalInfoList;
+        return returnList;
+    }
+
+    /**
+     * 본인과 현재 친구 신청 중인지 알려주는 메소드
+     *
+     * @param addMeFriendRequest nickname
+     * @param user user
+     * @return 본인과 현재 친구 신청 중이면 true, 아니라면 false
+     */
+    public boolean addMeFriend(AddMeFriendRequest addMeFriendRequest, UserPersonalInfo user) {
+        // 내가 현재 addMeFriend에 해당하는 사람한테 친구 신청을 보냈는지 궁금한 상황
+        UserPersonalInfo userPersonalInfo = findUserPersonalInfo(addMeFriendRequest.getNickname());
+
+        // to가 보낸 사람, from이 받는 사람
+        FriendAdd friendAdd = friendAddRepository.findByToIdAndFromId(user, userPersonalInfo).orElse(null);
+
+        if (friendAdd == null) {
+            throw new NoSuchElementException("null 값");
+        }
+        return friendAdd.isAdd();
     }
 
     /**
@@ -319,7 +348,7 @@ public class FriendService {
      */
     public void changeAddFriend(UserPersonalInfo userPersonalInfoFrom, UserPersonalInfo userPersonalInfoTo) {
         // from이 준 사람, to가 받은 사람
-        FriendAdd friendAdd = friendAddRepository.findByToIdAndFromId(userPersonalInfoTo, userPersonalInfoFrom).orElse(null);
+        FriendAdd friendAdd = friendAddRepository.findByToIdAndFromId(userPersonalInfoFrom, userPersonalInfoTo).orElse(null);
         friendAdd.changeIsAdd(false);
         friendAddRepository.save(friendAdd);
     }

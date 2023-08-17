@@ -3,87 +3,180 @@ import React, { useState } from 'react';
 import CommentInputBox from '../common/CommentInputBox';
 import axios from 'axios';
 import { Comment } from '../Types';
+import { useAppSelector } from '../../hooks/reduxHooks';
+import { stat } from 'fs';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type Props = {
   inputPlaceholder: string;
-  activityId: number;
+  activityId?: number;
+  postId?: number;
   setCommentList?: React.Dispatch<React.SetStateAction<Comment[]>>;
+  setCommentUpdateCount?: React.Dispatch<React.SetStateAction<number>>;
+  setEncourageMessageList?: React.Dispatch<React.SetStateAction<Comment[]>>;
   isLiked: boolean;
   setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
   commentOrEncourageMessage: 'comment' | 'encourageMessage';
 };
 
-const COMMENT_REGIST_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/comment';
-const LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/heart';
-const ENCOURAGE_MESSAGE_REGIST_URL =
-  'http://i9a810.p.ssafy.io:8080/api/sns/cheering';
+// const COMMENT_REGIST_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/comment';
+// const LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-post';
+// const ACTIVITY_LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-activity';
+// const DISLIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-post/cancel';
+// const ACTIVITY_DISLIKE_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/sns/like-activity/cancel';
+// const ENCOURAGE_MESSAGE_REGIST_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/sns/cheering';
 const AccessToken = localStorage.getItem('access_token');
 
 const CommentInput = ({
   activityId,
+  postId,
   setCommentList,
+  setCommentUpdateCount,
+  setEncourageMessageList,
   inputPlaceholder,
   commentOrEncourageMessage,
   isLiked,
   setIsLiked,
 }: Props) => {
   const [currentComment, setCurrentComment] = useState<string>('');
-
+  const myNickname = useAppSelector(
+    state => state.userStateSetter.userStateSetter.nickname
+  );
+  const myProfileImageUrl = useAppSelector(
+    state => state.stateSetter.myProfileImageUrl
+  );
   const onLikeButtonClicked = () => {
-    //좋아요 취소와 좋아요는 api를 공유함.
-    axios.post(
-      `${LIKE_URL}`,
-      { activityId: activityId },
-      { headers: { Authorization: `Bearer ${AccessToken}` } }
-    );
-    setIsLiked(prev => !prev);
+    if (commentOrEncourageMessage === 'comment') {
+      axios
+        .patch(
+          `${getApiUrl(API_ROUTES.ARTICLE_LIKE_URL)}`,
+          { postId: postId },
+          {
+            headers: {
+              Authorization: `Bearer ${AccessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(res => {
+          if (res) setIsLiked(prev => !prev);
+        });
+    } else if (commentOrEncourageMessage === 'encourageMessage') {
+      axios
+        .patch(
+          `${getApiUrl(API_ROUTES.ACTIVITY_LIKE_URL)}`,
+          { activityId: activityId },
+          {
+            headers: {
+              Authorization: `Bearer ${AccessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(res => {
+          if (res) setIsLiked(prev => !prev);
+        });
+    }
+  };
+
+  const onDislikeButtonClicked = () => {
+    if (commentOrEncourageMessage === 'comment') {
+      axios
+        .patch(
+          `${getApiUrl(API_ROUTES.ARTICLE_DISLIKE_URL)}`,
+          { postId: postId },
+          {
+            headers: {
+              Authorization: `Bearer ${AccessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(res => {
+          if (res) setIsLiked(prev => !prev);
+        });
+    } else if (commentOrEncourageMessage === 'encourageMessage') {
+      axios
+        .patch(
+          `${getApiUrl(API_ROUTES.ACTIVITY_DISLIKE_URL)}`,
+          { activityId: activityId },
+          {
+            headers: {
+              Authorization: `Bearer ${AccessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(res => {
+          if (res) setIsLiked(prev => !prev);
+        });
+    }
   };
 
   const registComment = () => {
+    console.log(currentComment);
     if (commentOrEncourageMessage === 'comment') {
-      // axios
-      //   .post(
-      //     `${COMMENT_REGIST_URL}`,
-      //     { activityId: activityId, reply: currentComment },
-      //     { headers: { Authorization: `Bearer ${AccessToken}` } }
-      //   )
-      //   .then(res => {
-      //     console.log(res);
-      //     if (res && setCommentList) {
-      //       setCommentList(prevList => [
-      //         ...prevList,
-      //         {
-      //           user: { nickName: 'chacha', profileImage: './chacha1.jpg' },
-      //           content: currentComment,
-      //           activityId: activityId,
-      //         },
-      //       ]);
-      //     } else {
-      //       console.log('댓글 등록 실패');
-      //     }
-      //   });
+      axios
+        .post(
+          `${getApiUrl(API_ROUTES.COMMENT_REGIST_URL)}`,
+          { activityId: activityId, comment: currentComment },
+          {
+            headers: {
+              Authorization: `Bearer ${AccessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(res => {
+          if (res && setCommentList) {
+            console.log('이프문 들어옴');
+            // setCommentList(prev => [
+            //   ...prev,
+            //   {
+            //     nickname: myNickname,
+            //     profileUrl: myProfileImageUrl,
+            //     content: currentComment,
+            //   },
+            // ]);
+            if (setCommentUpdateCount) setCommentUpdateCount(prev => prev + 1);
+            setCommentList(prev =>
+              prev.splice(prev.length, 0, {
+                nickname: myNickname,
+                profileUrl: myProfileImageUrl,
+                content: currentComment,
+              })
+            );
+          } else {
+            console.log('댓글 등록 실패');
+          }
+        });
     } else if (commentOrEncourageMessage === 'encourageMessage') {
-      // axios
-      //   .post(
-      //     `${ENCOURAGE_MESSAGE_REGIST_URL}`,
-      //     JSON.stringify({activityId: activityId, comment: currentComment }),
-      //     { headers: { Authorization: `Bearer ${AccessToken}` } }
-      //   )
-      //   .then(res => {
-      //     console.log(res);
-      //     if (res && setCommentList) {
-      //       setCommentList(prevList => [
-      //         ...prevList,
-      //         {
-      //           user: { nickName: 'chacha', profileImage: './chacha1.jpg' },
-      //           content: currentComment,
-      //           activityId: activityId,
-      //         },
-      //       ]);
-      //     } else {
-      //       console.log('응원글 등록 실패');
-      //     }
-      //   });
+      axios
+        .post(
+          `${getApiUrl(API_ROUTES.ENCOURAGE_WRITE_URL)}`,
+          JSON.stringify({ activityId: activityId, comment: currentComment }),
+          {
+            headers: {
+              Authorization: `Bearer ${AccessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(res => {
+          if (res && setEncourageMessageList) {
+            setEncourageMessageList(prev =>
+              prev.splice(prev.length, 0, {
+                nickname: myNickname,
+                profileUrl: myProfileImageUrl,
+                content: currentComment,
+              })
+            );
+          } else {
+            console.log('응원글 등록 실패');
+          }
+        });
     }
   };
 
@@ -112,7 +205,7 @@ const CommentInput = ({
         <IconButton
           variant="text"
           className="rounded-full hover:bg-chaeum-blue-500/10"
-          onClick={onLikeButtonClicked}
+          onClick={isLiked ? onDislikeButtonClicked : onLikeButtonClicked}
         >
           {isLiked ? (
             <svg

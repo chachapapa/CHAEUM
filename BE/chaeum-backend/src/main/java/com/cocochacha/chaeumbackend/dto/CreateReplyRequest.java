@@ -12,4 +12,5 @@ public class CreateReplyRequest {
     private int activityId;
     private String comment;
     private String createTime;
+    private Long rereplyId;
 }

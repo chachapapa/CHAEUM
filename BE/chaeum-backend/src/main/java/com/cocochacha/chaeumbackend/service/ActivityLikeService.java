@@ -88,42 +88,48 @@ public class ActivityLikeService {
     }
 
     /**
-     * 좋아요 수와 activityId를 합쳐서 반환해주는 메소드
+     * 좋아요 수와 activityId, 좋아요 여부를 합쳐서 반환해주는 메소드
      *
      * @param viewLikeActivityRequest activityId
-     * @return activityId, 좋아요 수
+     * @param userPersonalInfo userInfo
+     * @return 좋아요 수, activityId, 좋아요 여부
      */
-    public ViewLikeActivityResponse viewLikeActivity(ViewLikeActivityRequest viewLikeActivityRequest) {
+    public ViewLikeActivityResponse viewLikeActivity(ViewLikeActivityRequest viewLikeActivityRequest, UserPersonalInfo userPersonalInfo) {
         Activity activity = activityRepository.findById(viewLikeActivityRequest.getActivityId()).orElse(null);
         if (activity == null) {
             throw new NoSuchElementException("null 값!");
         }
         int cnt = viewLike(activity);
+        boolean isLike = isLike(activity, userPersonalInfo);
 
         ViewLikeActivityResponse viewLikeActivityResponse = ViewLikeActivityResponse.builder()
                 .activityId(viewLikeActivityRequest.getActivityId())
                 .cnt(cnt)
+                .isLike(isLike)
                 .build();
 
         return  viewLikeActivityResponse;
     }
 
     /**
-     * 좋아요 수와 postId를 합쳐서 반환해주는 메소드
+     * 좋아요 수와 postId, 좋아요 여부를 합쳐서 반환해주는 메소드
      *
      * @param viewLikePostRequest postId
-     * @return postId, 좋아요 수
+     * @param userPersonalInfo userInfo
+     * @return 좋아요 수, postId, 좋아요 여부
      */
-    public ViewLikePostResponse viewLikePost(ViewLikePostRequest viewLikePostRequest) {
+    public ViewLikePostResponse viewLikePost(ViewLikePostRequest viewLikePostRequest, UserPersonalInfo userPersonalInfo) {
         Post post = postRepository.findById(viewLikePostRequest.getPostId()).orElse(null);
         if (post == null) {
             throw new NoSuchElementException("null 값!");
         }
         int cnt = viewLike(post.getActivity());
+        boolean isLike = isLike(post.getActivity(), userPersonalInfo);
 
         ViewLikePostResponse viewLikePostResponse = ViewLikePostResponse.builder()
                 .postId(viewLikePostRequest.getPostId())
                 .cnt(cnt)
+                .isLike(isLike)
                 .build();
 
         return viewLikePostResponse;
@@ -195,6 +201,23 @@ public class ActivityLikeService {
      */
     public int viewLike(Activity activity) {
         return activity.getLikeCnt();
+    }
+
+    /**
+     * 본인이 해당 게시글에 좋아요를 눌렀는지 여부를 알려주는 메소드
+     *
+     * @param activity activityId
+     * @param userPersonalInfo userInfo
+     * @return 해당 게시물에 좋아요를 눌렀다면 true, 아니면 false
+     */
+    public boolean isLike(Activity activity, UserPersonalInfo userPersonalInfo) {
+        ActivityLike activityLike = activityLikeRepository.findByActivityIdAndUserId(activity, userPersonalInfo)
+                .orElse(null);
+
+        if (activityLike == null || !activityLike.isLike()) {
+            return false;
+        }
+        return true;
     }
 
     /**

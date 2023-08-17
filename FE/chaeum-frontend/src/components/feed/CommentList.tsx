@@ -3,33 +3,42 @@ import React from 'react';
 import { Comment } from '../Types';
 import axios from 'axios';
 import { useAppSelector } from '../../hooks/reduxHooks';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type Props = {
   commentList: Comment[];
-  setCommentList: React.Dispatch<React.SetStateAction<Comment[]>>;
+  setCommentList?: React.Dispatch<React.SetStateAction<Comment[]>>;
 };
 
-const COMMENT_DELETE_URL =
-  'http://i9a810.p.ssafy.io:8080/api/sns/comment/delete';
+// const COMMENT_URL =
+// 'http://i9a810.p.ssafy.io:8080/api/sns/comment';
 const AccessToken = localStorage.getItem('access_token');
 
 const CommentList = ({ commentList, setCommentList }: Props) => {
-  const fixedNickname = useAppSelector(state => state.stateSetter.nickname);
+  const fixedNickname = useAppSelector(
+    state => state.userStateSetter.userStateSetter.nickname
+  );
 
   const onCommentDeleteButtonClick = (
     replyId: number | undefined,
-    index: number
+    index: number,
+    activityId: number | undefined
   ) => {
     axios
-      .put(
-        `${COMMENT_DELETE_URL}`,
-        { replyId: replyId },
-        { headers: { Authorization: `Bearer ${AccessToken}` } }
+      .patch(
+        `${getApiUrl(API_ROUTES.COMMENT_REGIST_URL)}`,
+        { replyId: replyId, activityId: activityId },
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
       )
       .then(res => {
         console.log(res);
-        if (res) {
-          setCommentList(prevList => prevList.splice(index, 1));
+        if (res && setCommentList) {
+          setCommentList(prev => prev.splice(index, 1));
         } else {
           console.log('댓글 삭제 실패');
         }
@@ -39,34 +48,37 @@ const CommentList = ({ commentList, setCommentList }: Props) => {
   return (
     <div className=" w-full p-1 pl-2 my-3">
       {commentList.map((comment, index) => (
-        <div className="w-full h-10 mb-1" key={index}>
+        <div className="w-full h-10 mb-2" key={index}>
           <div className="flex h-full justify-between items-center ">
-            <div className="flex h-full">
+            <div className="flex h-full items-center">
               <Avatar
-                src={comment.user.profileImage}
+                src={comment.profileUrl}
                 alt="avatar"
                 size="sm"
                 className="mr-2"
               />
-
               <div className="text-center self-center">
                 <Typography
                   variant="lead"
                   color="text-chaeum-gray-900"
-                  className="opacity-80 text-sm"
+                  className="flex flex-col opacity-80 text-sm"
                 >
-                  <span className="font-semibold mr-2">
-                    {comment.user.nickName}
+                  <span className="whitespace-nowrap font-semibold text-xs mr-2 text-start">
+                    {comment.nickname}
                   </span>
-                  <span>{comment.content}</span>
+                  <span className="text-start">{comment.content}</span>
                 </Typography>
               </div>
             </div>
-            {fixedNickname === comment.user.nickName ? (
+            {fixedNickname === comment.nickname ? (
               <i
                 className="fa-solid fa-trash"
                 onClick={() =>
-                  onCommentDeleteButtonClick(comment.replyId, index)
+                  onCommentDeleteButtonClick(
+                    comment.replyId,
+                    index,
+                    comment.activityId
+                  )
                 }
               ></i>
             ) : null}

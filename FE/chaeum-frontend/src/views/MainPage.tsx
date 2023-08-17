@@ -24,13 +24,10 @@ import { OverlayModal } from '../components/common/OverlayModal';
 */
 
 type Props = {
-  isProfilePage : boolean;
-}
+  isProfilePage: boolean;
+};
 
-const ACCESS_TOKEN_URL = 'http://i9a810.p.ssafy.io:8080/api/token';
-
-
-const MainPage = ({isProfilePage}:Props) => {
+const MainPage = ({ isProfilePage }: Props) => {
   // 모든 스트릭 정보 저정
   const [searchParams, setSearchParams] = useSearchParams();
   const token = searchParams.get('token');
@@ -60,7 +57,6 @@ const MainPage = ({isProfilePage}:Props) => {
         headers: { Authorization: `Bearer ${AccessToken}` },
       })
       .then(res => {
-        console.log(res);
         if (res.data) {
           setSportsMiddleCategroyList(res.data[0].categoryMiddleList);
           setStudyMiddleCategroyList(res.data[1].categoryMiddleList);
@@ -212,7 +208,6 @@ const MainPage = ({isProfilePage}:Props) => {
   const deactiveStreak = () => {
     // 스트릭을 정보를 디비에 보내고
     const param = { streakId: drawerState.streakId };
-    console.log(param);
     axios
       .patch(
         `${url.STREAK_ACTIVE_URL}`,
@@ -244,7 +239,9 @@ const MainPage = ({isProfilePage}:Props) => {
       {isInfo !== null ? (
         <>
           <div className="loaded w-full h-full flex flex-col items-center outline  transition-all duration-300">
-            {isProfilePage? null: <ChaeumHeader isLogo={false} title="Streak" />}
+            {isProfilePage ? null : (
+              <ChaeumHeader isLogo={false} title="Streak" />
+            )}
             <div className="w-full flex-grow overflow-auto  flex justify-center items-end flex-col min-h-vh transition-all z-0">
               <div className="list flex flex-col items-center wrap-scroll w-full h-full mx-auto transition-all ease-out duration-300">
                 <div className="category w-full mb-4 transition duration-300 ease-in-out">
@@ -296,7 +293,7 @@ const MainPage = ({isProfilePage}:Props) => {
                 </div>
               </div>
             </div>
-            {isProfilePage? null : <ChaeumNav />}
+            {isProfilePage ? null : <ChaeumNav />}
             {drawerState.isDrawerOpen ? (
               <div className="visible z-[9999] bg-white">
                 {drawerState.isDrawerOpen ? (

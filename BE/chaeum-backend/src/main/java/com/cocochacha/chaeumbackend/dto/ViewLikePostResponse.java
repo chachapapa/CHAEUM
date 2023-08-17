@@ -9,11 +9,13 @@ import lombok.Setter;
 public class ViewLikePostResponse {
     private int postId;
     private int cnt;
+    private boolean isLike;
 
     @Builder
-    public ViewLikePostResponse(int postId, int cnt) {
+    public ViewLikePostResponse(int postId, int cnt, boolean isLike) {
         this.postId = postId;
         this.cnt = cnt;
+        this.isLike = isLike;
     }
 }
 

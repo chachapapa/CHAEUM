@@ -5,13 +5,11 @@ import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { setImageList } from '../../features/states/states';
 import { deleteImageList } from '../../features/states/states';
 
-type Props ={
+type Props = {
   // imageList : ImageFile[];
-}
+};
 
-
-
-const ImageUpload = () => {
+const ProfileImageUpload = () => {
   // 업로드할 파일들을 담을 State!
 
   const imageList = useAppSelector(state => state.stateSetter.imageList);
@@ -39,13 +37,13 @@ const ImageUpload = () => {
         temp.push(tmpImageFile);
       }
       console.log(temp);
-      dispatch(setImageList(temp.concat(imageList)));
+      dispatch(setImageList(imageList.concat(temp)));
     }
   };
 
   const uploadButton = (
     <div
-      className="min-w-[250px] min-h-[250px] bg-gray-100 rounded-lg flex flex-col justify-center mr-5"
+      className="w-[100px] h-[100px] bg-gray-100 rounded-full flex flex-col justify-center"
       onClick={onUploadButtonClicked}
     >
       <i className="fa-solid fa-plus text-4xl"></i>
@@ -59,7 +57,7 @@ const ImageUpload = () => {
 
   return (
     <>
-      <div className="w-full flex overflow-auto">
+      <div className="w-full flex overflow-auto justify-center">
         <input
           type="file"
           accept="image/jpg, image/jpeg, image/png"
@@ -68,30 +66,30 @@ const ImageUpload = () => {
           style={{ display: 'none' }}
           onChange={e => handleImage(e)}
         />
-        {imageList.map(image => (
+        {imageList.length > 1 ? (
           <div
-            key={image.url}
-            className="relative min-w-[250px] min-h-[250px] bg-gray-100 rounded-lg flex flex-col justify-center mr-5"
+            key={imageList[1].url}
+            className="relative w-[100px] h-[100px] bg-gray-100 rounded-lg flex flex-col justify-center"
           >
             <img
-              src={image.url}
-              alt={image.id}
-              className="w-[250px] h-[250px] rounded-lg z-0"
+              src={imageList[1].url}
+              alt={imageList[1].id}
+              className="w-[100px] h-[100px] rounded-lg z-0"
             ></img>
 
             <div
               className="absolute z-10 w-full h-full flex items-center justify-center rounded-lg bg-black opacity-0 hover:opacity-30 transition-opacity"
-              onClick={() => onRemoveButtonClicked(image.url)}
+              onClick={() => onRemoveButtonClicked(imageList[1].url)}
             >
               <i className="fa-solid fa-minus text-4xl text-white"></i>
             </div>
           </div>
-        ))}
-        {uploadButton}
+        ) : null}
+        {imageList.length > 1 ? null : uploadButton}
       </div>
       {/* <button onClick={fileUploadHandler}>파일 업로드 하기</button> */}
     </>
   );
 };
 
-export default ImageUpload;
+export default ProfileImageUpload;

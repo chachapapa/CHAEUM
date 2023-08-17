@@ -165,9 +165,28 @@ public class FriendController {
         // 즉 내가 지금 무시를 하고 있는 사람의 목록
         UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
         try {
-            List<UserPersonalInfo> userPersonalInfoList = friendService.addListFriend(userPersonalInfo);
-            return new ResponseEntity<>(userPersonalInfoList, HttpStatus.OK);
+            List<AddListFriendResponse> addListFriendResponses = friendService.addListFriend(userPersonalInfo);
+            return new ResponseEntity<>(addListFriendResponses, HttpStatus.OK);
         } catch (NoSuchElementException NCEE) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 내가 해당 사람한테 지금 친구 신청을 했는지 알려주는 메소드
+     *
+     * @param nickname nickname
+     * @return true면 현재 친구 신청 중, false면 현재 친구 신청 중이 아님
+     */
+    @GetMapping("/add/me")
+    public ResponseEntity<?> addMeFriend(@RequestParam String nickname) {
+        AddMeFriendRequest addMeFriendRequest = new AddMeFriendRequest();
+        addMeFriendRequest.setNickname(nickname);
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+        try {
+            return new ResponseEntity<>(friendService.addMeFriend(addMeFriendRequest, userPersonalInfo), HttpStatus.OK);
+        } catch(NoSuchElementException NSEE) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

@@ -9,7 +9,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import LoadingPage from '../components/common/LoadingPage';
 import axios from 'axios';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { setMyNickname } from '../features/states/states';
+import { setMyProfileImageUrl } from '../features/states/states';
+import { setMyNickname } from '../features/states/userStates';
 
 const SIGNUP_CHECK_URL = 'http://i9a810.p.ssafy.io:8080/api/user/me';
 const REGIST_STREAK_URL = 'http://i9a810.p.ssafy.io:8080/api/streak';
@@ -22,7 +23,7 @@ const SignupPage = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useAppDispatch();
-  const myNickname = useAppSelector(state => state.stateSetter.nickname);
+  const myNickname = useAppSelector(state => state.userStateSetter.userStateSetter.nickname);
 
   const studyMiddleCategory = useAppSelector(
     state => state.stateSetter.initialStudyStreak
@@ -62,9 +63,10 @@ const SignupPage = () => {
           setTimeout(() => setCurrentStep(1), 5500);
         } else {
           console.log(res.data);
+          // dispatch()
           dispatch(setMyNickname(res.data.nickname));
-          setCurrentStep(3);
-          // navigate('/main');
+          dispatch(setMyProfileImageUrl(res.data.profileImageUrl));
+          navigate('/main');
         }
       } catch (e) {
         console.log('에러');
@@ -74,6 +76,7 @@ const SignupPage = () => {
     setTimeout(() => {
       setIsStarted(true);
     }, 500);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
   const onClickNext = () => {

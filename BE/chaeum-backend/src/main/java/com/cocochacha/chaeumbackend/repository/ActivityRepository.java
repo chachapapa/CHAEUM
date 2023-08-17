@@ -34,7 +34,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 
     String accumulateTimeQuery6Weeks = """
             select max(activity_start_time) as `start_time` ,max(activity_end_time) as `end_time`, 
-            sum(activity_time) as `sum_time`, max(activity_is_post) as `activity_is_post`
+            sum(activity_time) as `sum_time`, max(activity_is_post) as `activity_is_post`, max(activity_id) as `activity_id`
             from (select * 
                     from activity
                     where DATE_SUB(curdate(), INTERVAL 43 Day) <= Date(activity_start_time) 
@@ -53,7 +53,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
             """;
 
     String findOngoingTimeQuery = """
-            SELECT TIMEDIFF(NOW(), Date(activity_start_time))
+            SELECT TIME_TO_SEC(TIMEDIFF(DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(activity_start_time, '%Y-%m-%d %H:%i:%s'))) + 32400
             FROM activity
             WHERE streak_id = :streak_id
             AND activity_end_time IS NULL;
@@ -80,10 +80,10 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
     /**
      * 한번 활동에 얼마나 했는지 구해서, 해당 데이터와 함께 DB에 넣는 메소드
      *
-     * @param activityEndTime 활동 끝난 시간
+     * @param activityEndTime   활동 끝난 시간
      * @param activityStartTime 활동 시작 시간
-     * @param streakId 스트릭 ID
-     * @param activityId 활동 내역 ID
+     * @param streakId          스트릭 ID
+     * @param activityId        활동 내역 ID
      */
     @Modifying
     @Query(value = activityTimeQuery, nativeQuery = true)

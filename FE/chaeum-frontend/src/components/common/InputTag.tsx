@@ -1,11 +1,13 @@
 import { Input } from '@material-tailwind/react';
 import React from 'react';
 import { User } from '../Types';
+import axios from 'axios';
 
 type Props = {
   label?: string;
   width?: string;
   className?: string;
+  searchKeyword?: string;
   setSearchKeyword?: React.Dispatch<React.SetStateAction<string>>;
   setUser?: React.Dispatch<React.SetStateAction<User>>;
   for?: string;
@@ -13,9 +15,14 @@ type Props = {
   onChange?: (value: string) => void; // onChange 콜백 추가
 };
 
+// const USER_SEARCH_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/user/nickname-search';
+const AccessToken = localStorage.getItem('access_token');
+
 const InputTag = ({ width = 'w-full', ...props }: Props) => {
   const onKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (props.setSearchKeyword) {
+      console.log('keyword');
       props.setSearchKeyword(e.target.value);
     } else if (props.setUser) {
       if (props.for === 'introduction') {
@@ -33,9 +40,9 @@ const InputTag = ({ width = 'w-full', ...props }: Props) => {
           ...prev,
           weight: e.target.value,
         }));
-      } else {
-        props.onChange(e.target.value);
       }
+    } else if (props.onChange !== undefined) {
+      props.onChange(e.target.value);
     }
   };
 

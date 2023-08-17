@@ -22,9 +22,10 @@
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.14.2",
     "react-scripts": "5.0.1",
+    "redux-persist": "^6.0.0",
+    "swiper": "^9.3.2",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4",
-    "swiper": "^9.3.2"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -63,7 +64,7 @@
     "@storybook/testing-library": "^0.2.0",
     "babel-plugin-named-exports-order": "^0.0.2",
     "eslint": "^8.45.0",
-    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-storybook": "^0.6.13",
     "prettier": "3.0.0",
     "prop-types": "^15.8.1",

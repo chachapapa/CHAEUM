@@ -2,7 +2,6 @@
 import React, { ReactComponentElement, useEffect, useState } from 'react';
 import AnimatedLogo from '../components/common/AnimatedLogo';
 import TextButton from '../components/common/TextButton';
-import ProfileHeader from '../components/profile/ProfileHeader';
 import { MyProfileCard } from '../components/profile/MyProfileCard';
 import { ChaeumHeader } from '../components/common/ChaeumHeader';
 import { ChaeumNav } from '../components/common/ChaeumNav';
@@ -28,9 +27,15 @@ import { openDrawer, openModal, closeModal } from '../features/states/states';
 import InputTag from '../components/common/InputTag';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import GenderButton from '../components/profile/GenderButton';
-import { User } from '../components/Types';
+import { ColorVariation, User } from '../components/Types';
 import '../components/styles/profiletab.css';
 import axios from 'axios';
+import ColorContainer from '../components/common/ColorContainer';
+import ImageUpload from '../components/common/ImageUpload';
+import BackgroundImageUpload from '../components/common/BackgroundImageUpload';
+import { getApiUrl } from '../apiConfig';
+import { API_ROUTES } from '../apiConfig';
+import ProfileImageUpload from '../components/common/ProfileImageUpload';
 
 const USER_INFO_URL = 'http://i9a810.p.ssafy.io:8080/api/user/mypage-info';
 const AccessToken = localStorage.getItem('access_token');
@@ -39,7 +44,7 @@ const ProfilePage = () => {
   const location = useLocation();
   const userNickname = decodeURI(location.pathname.split('/')[2]);
   // const params = useSearchParams
-  const [user, setUser] = useState<User>({ nickName: '', profileImage: '' });
+  const [user, setUser] = useState<User>({ nickname: '', profileImageUrl: '' });
 
   useEffect(() => {
     // 렌더링 제대로 안되면 이걸로 해보자
@@ -49,46 +54,99 @@ const ProfilePage = () => {
           headers: { Authorization: `Bearer ${AccessToken}` },
           params: { nickname: userNickname },
         });
-        console.log(res.data);
-        setUser({
-          nickName: res.data.nickname,
-          profileImage: res.data.profileImageUrl,
-          age: res.data.age,
-          gender: res.data.gender,
-          mbti: res.data.mbti,
-          introduction: res.data.introduce,
-          height: res.data.height,
-          weight: res.data.weight,
-        });
+        setUser(res.data);
+        if (res.data.gender === 'm') {
+          setSelectedButton(0);
+        } else if (res.data.gender === 'f') {
+          setSelectedButton(1);
+        }
       } catch (e) {
         console.log('유저 정보가 없습니다.');
       }
     };
     getUserInfo();
-    console.log(user);
-    // axios
-    //   .get(`${USER_INFO_URL}`, {
-    //     headers: { Authorization: `Bearer ${AccessToken}` },
-    //     params: { nickname: { userNickname } },
-    //   })
-    //   .then(res => {
-    //     console.log(res);
-    //     if (res.data) {
-    //       setUser(res.data);
-    //     } else {
-    //       console.log('유저 정보가 없어용');
-    //     }
-    //   });
 
-    // setUser({
-    //   nickName: '차차아버님',
-    //   profileImage: '../chacha1.jpg',
-    //   introduction: '★☆한달안에 보라색 도전.☆★',
-    //   gender: 'm',
-    //   mbti: 'esfj',
-    //   age: 27,
-    // });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const colorArr = [
+    {
+      name: 'red',
+      color: 'bg-red-400',
+    },
+    {
+      name: 'orange',
+      color: 'bg-orange-400',
+    },
+    {
+      name: 'amber',
+      color: 'bg-amber-400',
+    },
+    {
+      name: 'yellow',
+      color: 'bg-yellow-400',
+    },
+    {
+      name: 'lime',
+      color: 'bg-lime-400',
+    },
+    {
+      name: 'green',
+      color: 'bg-green-400',
+    },
+    {
+      name: 'emerald',
+      color: 'bg-emerald-400',
+    },
+    {
+      name: 'teal',
+      color: 'bg-teal-400',
+    },
+    {
+      name: 'cyan',
+      color: 'bg-cyan-400',
+    },
+    {
+      name: 'chaeumblue',
+      color: 'bg-chaeum-blue-400',
+    },
+    {
+      name: 'sky',
+      color: 'bg-sky-400',
+    },
+    {
+      name: 'blue',
+      color: 'bg-blue-400',
+    },
+    {
+      name: 'indigo',
+      color: 'bg-indigo-400',
+    },
+    {
+      name: 'violet',
+      color: 'bg-violet-400',
+    },
+    {
+      name: 'purple',
+      color: 'bg-purple-400',
+    },
+    {
+      name: 'fuchsia',
+      color: 'bg-fuchsia-400',
+    },
+    {
+      name: 'pink',
+      color: 'bg-pink-400',
+    },
+    {
+      name: 'rose',
+      color: 'bg-rose-400',
+    },
+    {
+      name: 'slate',
+      color: 'bg-slate-400',
+    },
+  ];
 
   const mbtiList: string[] = [
     'ISTJ',
@@ -109,10 +167,11 @@ const ProfilePage = () => {
     'ENTJ',
   ];
 
-  const drawerType = useAppSelector(state => state.stateSetter.drawerType);
-  const isDrawerOpen = useAppSelector(state => state.stateSetter.isDrawerOpen);
-  const { modalState } = useAppSelector(state => state.stateSetter);
+  const { modalState, drawerState } = useAppSelector(
+    state => state.stateSetter
+  );
   const dispatch = useDispatch();
+  const imageList = useAppSelector(state => state.stateSetter.imageList);
   const navigate = useNavigate();
   const [modalTypeKor, setModalTypeKor] = useState<string>('');
   const [isLogoutButtonClicked, setIsLogoutButtonClicked] =
@@ -136,28 +195,31 @@ const ProfilePage = () => {
       );
   };
   const registMyData = () => {
-
     console.log(user);
-    axios
-      .patch(
-        `${USER_INFO_URL}`,
-        JSON.stringify({
-          nickname: user.nickName,
-          profileImageUrl: user.profileImage,
+    console.log(imageList[0]);
+    const formData = new FormData();
+    const updateMypageInfoRequest = JSON.stringify({
           gender: user.gender,
-          age: user.age,
           weight: user.weight,
           height: user.height,
           mbti: user.mbti,
-          introduce: user.introduction,
-        }),
-        {
-          headers: {
-            Authorization: `Bearer ${AccessToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+          introduce: user.introduce,
+          mainColor: user.mainColor,
+    });
+    formData.append('updateMypageProfileImage', imageList[1].file);
+    formData.append('updateMypageBackgroundImage', imageList[0].file);
+    formData.append(
+      'updateMypageInfoRequest',
+      new Blob([updateMypageInfoRequest], { type: 'application/json' })
+    );
+
+    axios
+      .patch(`${getApiUrl(API_ROUTES.USER_MYPAGE_URL)}`, formData, {
+        headers: {
+          Authorization: `Bearer ${AccessToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      })
       .then(res => {
         console.log(res);
         if (res) {
@@ -167,7 +229,45 @@ const ProfilePage = () => {
             setGoMypageModify(false);
           }, 500);
         }
+      })
+      .catch(e => {
+        console.log(e);
       });
+
+
+
+ 
+    // axios
+    //   .patch(
+    //     `${USER_INFO_URL}`,
+    //     JSON.stringify({
+    //       nickname: user.nickname,
+    //       profileImageUrl: user.profileImageUrl,
+    //       gender: user.gender,
+    //       age: user.age,
+    //       weight: user.weight,
+    //       height: user.height,
+    //       mbti: user.mbti,
+    //       introduce: user.introduce,
+    //       mainColor: user.mainColor,
+    //     }),
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${AccessToken}`,
+    //         'Content-Type': 'application/json',
+    //       },
+    //     }
+    //   )
+    //   .then(res => {
+    //     console.log(res);
+    //     if (res) {
+    //       setGoMypageModify(true);
+    //       setTimeout(() => {
+    //         dispatch(closeModal());
+    //         setGoMypageModify(false);
+    //       }, 500);
+    //     }
+    //   });
 
     // 창닫기
   };
@@ -179,13 +279,17 @@ const ProfilePage = () => {
     }));
   };
 
+  const handleColor = (value: ColorVariation) => {
+    setUser(prev => ({ ...prev, mainColor: value }));
+  };
+
   const logOutButtonClick = () => {
     // 로그아웃 or 회원탈퇴 기능
     console.log('logout button clicked!!');
 
     setTimeout(() => {
       setIsLogoutButtonClicked(true);
-      dispatch(openDrawer('logout'));
+      dispatch(openDrawer({ drawerType: 'logout', isDrawerOpen: true }));
     }, 500);
 
     console.log('logout state updated!!');
@@ -219,16 +323,16 @@ const ProfilePage = () => {
     }
   };
 
-  useEffect(() => {
-    if (drawerState.drawerType === 'logout') setModalTypeKor('로그아웃');
-    else if (drawerState.drawerType === 'withdrawal')
-      setModalTypeKor('회원탈퇴');
-  }, [drawerState.drawerType]);
+  // useEffect(() => {
+  //   if (drawerState.drawerType === 'logout') setModalTypeKor('로그아웃');
+  //   else if (drawerState.drawerType === 'withdrawal')
+  //     setModalTypeKor('회원탈퇴');
+  // }, [drawerState.drawerType]);
 
   const [scrollY, setScrollY] = useState<number | undefined>(0);
   const onProfileScroll = (e: React.WheelEvent<HTMLDivElement>) => {
     setScrollY(document.getElementById('box')?.scrollTop);
-    console.log(scrollY);
+    // console.log(scrollY);
   };
 
   return (
@@ -248,11 +352,11 @@ const ProfilePage = () => {
         id="box"
       >
         <MyProfileCard
-          name={user.nickName}
+          name={user.nickname}
           longest={300}
           age={user.age}
           mbti={user.mbti}
-          profileImage={user.profileImage}
+          profileImage={user.profileImageUrl}
           onClick={() => {
             console.log('내 프로필');
           }}
@@ -266,7 +370,7 @@ const ProfilePage = () => {
           }}
         >
           <img
-            src="../chacha1.jpg"
+            src={user.backgroundUrl}
             alt="배경사진"
             className="w-full h-auto object-cover top-1/2 -translate-y-1/4"
             style={{
@@ -277,19 +381,19 @@ const ProfilePage = () => {
 
         {/* 내 소개 */}
         <div className="mt-16 h-[50px] overflow-hidden text-sm">
-          {user.introduction}
+          {user.introduce}
         </div>
 
         {/* <div className={scrollY !==undefined && scrollY > 314? 'sticky top-[56px]': 'w-full'}> */}
         <div className="w-full">
-          <ButtonApp scrollY={scrollY}></ButtonApp>
+          <ButtonApp scrollY={scrollY} userNickname={user.nickname}></ButtonApp>
         </div>
       </div>
 
       {/* 설정 */}
-      {isDrawerOpen && !isLogoutButtonClicked ? (
+      {drawerState.isDrawerOpen && !isLogoutButtonClicked ? (
         <div className="visible z-[9999] bg-white">
-          {isDrawerOpen && !isLogoutButtonClicked ? (
+          {drawerState.isDrawerOpen && !isLogoutButtonClicked ? (
             <BottomDrawer
               title="계정 설정"
               button1="프로필 수정"
@@ -311,9 +415,9 @@ const ProfilePage = () => {
             />
           )}
         </div>
-      ) : !isDrawerOpen && !isLogoutButtonClicked ? (
+      ) : !drawerState.isDrawerOpen && !isLogoutButtonClicked ? (
         <div className="invisible transition-all delay-500 z-[9999] bg-white">
-          {isDrawerOpen && !isLogoutButtonClicked ? (
+          {drawerState.isDrawerOpen && !isLogoutButtonClicked ? (
             <BottomDrawer
               title="계정 설정"
               button1="프로필 수정"
@@ -335,9 +439,9 @@ const ProfilePage = () => {
             />
           )}
         </div>
-      ) : isDrawerOpen && isLogoutButtonClicked ? (
+      ) : drawerState.isDrawerOpen && isLogoutButtonClicked ? (
         <div className="visible z-[9999] bg-white">
-          {isDrawerOpen && !isLogoutButtonClicked ? (
+          {drawerState.isDrawerOpen && !isLogoutButtonClicked ? (
             <BottomDrawer
               title="로그아웃"
               button1="로그아웃"
@@ -357,7 +461,7 @@ const ProfilePage = () => {
         </div>
       ) : (
         <div className="invisible transition-all delay-500 z-[9999] bg-white">
-          {isDrawerOpen && isLogoutButtonClicked ? (
+          {drawerState.isDrawerOpen && isLogoutButtonClicked ? (
             <BottomDrawer
               title="로그아웃"
               button1="로그아웃"
@@ -379,10 +483,10 @@ const ProfilePage = () => {
       {/* 내 정보 수정 */}
       {modalState.isModalOpen ? (
         <div className="absolute flex justify-center items-center flex-col shrink-0 inset-0 w-full h-full pointer-events-auto z-[9995] bg-chaeum-gray-300 bg-opacity-60 backdrop-blur-md transition-all duration-300">
-          <div className="w-10/12 flex flex-col justify-center items-center">
-            <span className="font-bold text-2xl m-8 w-full text-chaeum-gray-900">
-              내정보 수정하기
-            </span>
+          <span className="font-bold text-2xl m-8 w-full text-chaeum-gray-900">
+            내정보 수정하기
+          </span>
+          <div className="w-10/12 flex flex-col items-center h-[700px] overflow-auto">
             <div className="w-full flex flex-col">
               <span className="text-start m-1 text-sm text-black">내 소개</span>
 
@@ -391,6 +495,7 @@ const ProfilePage = () => {
                 width="w-full mb-5"
                 setUser={setUser}
                 for="introduction"
+                value={user.introduce}
               />
             </div>
 
@@ -418,6 +523,7 @@ const ProfilePage = () => {
                     'h-10 bg-white w-full bg-opacity-50 border-[1px] focus:border-2 border-chaeum-gray-500/80 focus:border-blue-500'
                   }
                   onChange={onMbtiChange}
+                  value={user.mbti}
                 >
                   {mbtiList.map((mbti, index) => (
                     <Option key={index} value={mbti}>
@@ -436,6 +542,7 @@ const ProfilePage = () => {
                       className="w-full mb-5"
                       setUser={setUser}
                       for="height"
+                      value={user.height}
                     />
                   </div>
                 </div>
@@ -449,7 +556,48 @@ const ProfilePage = () => {
                       className="w-full mb-5"
                       setUser={setUser}
                       for="weight"
+                      value={user.weight}
                     />
+                  </div>
+                </div>
+                <div>
+                <span className="text-start m-1 text-sm text-chaeum-gray-700">
+                          테마 컬러
+                        </span>
+                  <div className="flex w-full overflow-auto overflow-y-hidden">
+                    {colorArr.map((container, idx) => (
+                      <ColorContainer
+                        key={idx}
+                        defaultChecked={
+                          user.mainColor === container.name ? true : false
+                        }
+                        value={container.name}
+                        color={container.color}
+                        handleColor={handleColor}
+                      />
+                    ))}
+                  </div>
+                  <div>
+                    <div className="flex flex-col mt-3 w-full">
+                      <label className="self-start mb-1">
+                        <i className="fa-regular fa-image mx-2"></i>
+                        <span className="text-start m-1 text-sm text-chaeum-gray-700">
+                          프로필 사진 수정
+                        </span>
+                      </label>
+                      <ProfileImageUpload />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex flex-col mt-3 w-full">
+                      <label className="self-start mb-1">
+                        <i className="fa-regular fa-image mx-2"></i>
+                        <span className="text-start m-1 text-sm text-chaeum-gray-700">
+                          배경화면 수정{' '}
+                        </span>
+                      </label>
+                      <BackgroundImageUpload />
+                    </div>
                   </div>
                 </div>
               </div>

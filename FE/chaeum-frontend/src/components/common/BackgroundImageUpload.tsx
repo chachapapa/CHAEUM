@@ -5,13 +5,11 @@ import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { setImageList } from '../../features/states/states';
 import { deleteImageList } from '../../features/states/states';
 
-type Props ={
+type Props = {
   // imageList : ImageFile[];
-}
+};
 
-
-
-const ImageUpload = () => {
+const BackgroundImageUpload = () => {
   // 업로드할 파일들을 담을 State!
 
   const imageList = useAppSelector(state => state.stateSetter.imageList);
@@ -45,7 +43,7 @@ const ImageUpload = () => {
 
   const uploadButton = (
     <div
-      className="min-w-[250px] min-h-[250px] bg-gray-100 rounded-lg flex flex-col justify-center mr-5"
+      className="min-w-full min-h-[250px] bg-gray-100 rounded-lg flex flex-col justify-center"
       onClick={onUploadButtonClicked}
     >
       <i className="fa-solid fa-plus text-4xl"></i>
@@ -68,30 +66,30 @@ const ImageUpload = () => {
           style={{ display: 'none' }}
           onChange={e => handleImage(e)}
         />
-        {imageList.map(image => (
+        {imageList.length > 0 ? (
           <div
-            key={image.url}
-            className="relative min-w-[250px] min-h-[250px] bg-gray-100 rounded-lg flex flex-col justify-center mr-5"
+            key={imageList[0].url}
+            className="relative w-full h-[200px] bg-gray-100 rounded-lg flex flex-col justify-center"
           >
             <img
-              src={image.url}
-              alt={image.id}
-              className="w-[250px] h-[250px] rounded-lg z-0"
+              src={imageList[0].url}
+              alt={imageList[0].id}
+              className="w-full h-[200px] rounded-lg z-0"
             ></img>
 
             <div
               className="absolute z-10 w-full h-full flex items-center justify-center rounded-lg bg-black opacity-0 hover:opacity-30 transition-opacity"
-              onClick={() => onRemoveButtonClicked(image.url)}
+              onClick={() => onRemoveButtonClicked(imageList[0].url)}
             >
               <i className="fa-solid fa-minus text-4xl text-white"></i>
             </div>
           </div>
-        ))}
-        {uploadButton}
+        ) : null}
+        {imageList.length > 0 ? null : uploadButton}
       </div>
       {/* <button onClick={fileUploadHandler}>파일 업로드 하기</button> */}
     </>
   );
 };
 
-export default ImageUpload;
+export default BackgroundImageUpload;
