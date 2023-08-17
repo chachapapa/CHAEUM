@@ -10,8 +10,9 @@ import { Tag } from '../components/common/Tag';
 import CommentList from '../components/feed/CommentList';
 import { RivalCard } from '../components/active/result/RivalCard';
 import { useNavigate } from 'react-router-dom';
-
+import { setStartMentList } from '../features/states/states';
 import { useAppSelector } from '../hooks/reduxHooks';
+import { useDispatch } from 'react-redux';
 /*
   Props
   시간은 2023-08-02 17:20:15 
@@ -92,6 +93,9 @@ const ResultPage = () => {
   const rivalInfoList = useAppSelector(
     state => state.stateSetter.rivalInfoList
   );
+  const startMentList = useAppSelector(
+    state => state.stateSetter.startMentList
+  );
 
   // const startTime = '2023-08-02 14:03:21';
   const startTime = new Date(myActivityInfo.date);
@@ -143,13 +147,16 @@ const ResultPage = () => {
 
   // Routes
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const goToShare = () => {
-    // console.log('go to feed write page');
+    // 동기부여 멘트 초기화
+    dispatch(setStartMentList(['...동기부여 멘트를 생성중입니다...']));
     navigate('/feed/write');
   };
 
   const goToMain = () => {
     // console.log('go to main write page');
+    dispatch(setStartMentList(['...동기부여 멘트를 생성중입니다...']));
     navigate('/main');
   };
 

@@ -21,7 +21,11 @@ import { useDispatch } from 'react-redux';
     props로 받는 time을 number로 변환해서 사용
 
 */
-
+type Cheering = {
+  nickname: string;
+  comments: string;
+  profileUrl: string;
+};
 type Props = {
   // 드래그 크기에 따른 화면 배치
   size: 'small' | 'medium';
@@ -29,10 +33,8 @@ type Props = {
   // 활동 시작시 받는 멘트 목록
   startMent: string[];
 
-  // 활동 중 받는 멘트 목록
-  activeMent: string[];
-
   // 응원글 목록
+  cheeringMent: Cheering[];
 
   // 누적 시간
   // times: number[];
@@ -153,7 +155,7 @@ const ActiveTotalBubble = (props: Props) => {
 
     updateActivity();
 
-    navigate('/active/result');
+    navigate('/active/result', { state: props.cheeringMent });
   };
 
   if (!rivalInfoList) return <div>Loading..</div>;
