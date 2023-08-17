@@ -10,13 +10,13 @@ import java.util.List;
 @Setter
 public class CheeringCommentResponse {
     String nickname;
-    String comments;
+    String content;
     String profileUrl;
 
     @Builder
     public CheeringCommentResponse(String nickname, String comments, String profileUrl) {
         this.nickname = nickname;
-        this.comments = comments;
+        this.content = comments;
         this.profileUrl = profileUrl;
     }
 }
