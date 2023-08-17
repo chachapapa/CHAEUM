@@ -2,7 +2,6 @@
 import React, { ReactComponentElement, useEffect, useState } from 'react';
 import AnimatedLogo from '../components/common/AnimatedLogo';
 import TextButton from '../components/common/TextButton';
-import ProfileHeader from '../components/profile/ProfileHeader';
 import { MyProfileCard } from '../components/profile/MyProfileCard';
 import { ChaeumHeader } from '../components/common/ChaeumHeader';
 import { ChaeumNav } from '../components/common/ChaeumNav';

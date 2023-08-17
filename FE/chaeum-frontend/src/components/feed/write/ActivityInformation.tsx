@@ -32,7 +32,6 @@ const ActivityInformation = ({
   const startTime: Date = new Date(activity[0]);
 
   const elapsedTime = Number(activity[2]);
-  // console.log(elapsedTime / 1000 / 60 / 60);
   const date =
     startTime.getFullYear() +
     '년 ' +
@@ -43,9 +42,9 @@ const ActivityInformation = ({
   const startTimeFormed = activity[0].split(' ')[1];
   const endTimeFormed = activity[1].split(' ')[1];
 
-  const hour = Math.floor(elapsedTime / 3600000);
-  const minute = Math.floor((elapsedTime - hour * 3600000) / 60000);
-  const second = (elapsedTime - hour * 3600000 - minute * 60000) / 1000;
+  const hour = Math.floor(elapsedTime / 3600);
+  const minute = Math.floor((elapsedTime - hour * 3600) / 60);
+  const second = (elapsedTime - hour * 3600000 - minute * 60);
   const elapsedTimeFormed = hour + '시간 ' + minute + '분 ' + second + '초';
 
   const onWriteButtonClicked = () => {
@@ -88,7 +87,7 @@ const ActivityInformation = ({
           >
             <div className="flex w-full flex-col gap-0.5">
               <div className="flex items-center justify-between">
-                <div>
+                <div className='w-[250px] text-left'>
                   <Typography variant="h6">
                     {middleCategory.streakName}
                   </Typography>
