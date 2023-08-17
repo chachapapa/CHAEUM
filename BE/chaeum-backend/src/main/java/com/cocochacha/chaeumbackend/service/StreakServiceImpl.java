@@ -65,10 +65,10 @@ public class StreakServiceImpl implements StreakService {
         String color = createStreakRequest.getStreakColor();
         String name = createStreakRequest.getStreakName();
 
-        if(createStreakRequest.getStreakName() == null){
+        if(name.equals("")){
             name = createStreakRequest.getCategoryMiddle();
         }
-        if(color == null){
+        if(color.equals("")){
             color = "chaeumblue";
         }
 
