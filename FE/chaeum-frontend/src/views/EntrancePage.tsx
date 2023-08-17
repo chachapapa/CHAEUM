@@ -22,7 +22,7 @@ const EntrancePage = () => {
             label="카카오로 시작하기"
           />
         </Link>
-        <Link to={KAKAO_START_URL} className="w-3/4">
+        {/* <Link to={KAKAO_START_URL} className="w-3/4">
           <TextButton
             icon="naver"
             type="naver"
@@ -37,7 +37,7 @@ const EntrancePage = () => {
             size="medium"
             label="구글로 시작하기"
           />
-        </Link>
+        </Link> */}
       </div>
     </div>
   );
