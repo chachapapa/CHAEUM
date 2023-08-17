@@ -248,11 +248,11 @@ export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
         ) : null}
       </div>
       {openNoti ? (
-        <div className="absolute z-[5001] top-[56px] px-2 rounded-b-lg duration-300 bg-white w-[46.15vh] max-h-[300px] drop-shadow-[0_10px_3px_rgba(0,0,0,0.15)] ease-out">
+        <div className="absolute z-[4999] top-[56px] px-2 rounded-b-lg duration-300 bg-white w-[46.15vh] max-h-[300px] drop-shadow-[0_10px_3px_rgba(0,0,0,0.15)] ease-out">
           <FriendNoti></FriendNoti>
         </div>
       ) : (
-        <div className="absolute z-[5001] top-[56px] px-2 rounded-b-lg duration-300 bg-white w-[46.15vh] max-h-[300px] translate-x-0 translate-y-[-300px] translate-z-0 ease-in">
+        <div className="absolute z-[4999] top-[56px] px-2 rounded-b-lg duration-300 bg-white w-[46.15vh] max-h-[300px] translate-x-0 translate-y-[-300px] translate-z-0 ease-in">
           <FriendNoti></FriendNoti>
         </div>
       )}

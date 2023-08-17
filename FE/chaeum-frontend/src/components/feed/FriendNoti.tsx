@@ -25,6 +25,20 @@ export const FriendNoti = () => {
   const [applyList, setApplyList] = useState<nameListType[]>([]);
   const [render, setRender] = useState(true);
 
+  useEffect(() => {
+    axios
+      .get(`${url.APPLY_LIST_URL}`, {
+        headers: { Authorization: `Bearer ${AccessToken}` },
+      })
+      .then(res => {
+        setApplyList(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const mounted = useRef(false);
   useEffect(() => {
     if (!mounted.current) {
