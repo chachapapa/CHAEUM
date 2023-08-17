@@ -32,7 +32,7 @@ const ActiveBubble = ({
   const myActivityInfo = useAppSelector(
     state => state.stateSetter.myActivityInfo
   );
-  let inputTime = rivalInfoList[0].accumulateTime;
+  let inputTime = time;
   if (active) inputTime += calculateTimeDifference(myActivityInfo.date);
   const [bubbleTime, setTime] = useState(inputTime);
 
@@ -230,7 +230,7 @@ const ActiveBubble = ({
 
         <g x="0" y="0" clipPath="url(#bubble-circle-clip)">
           <image
-            xlinkHref={rivalInfoList[0].profileImageUrl}
+            xlinkHref={profile}
             x="60"
             y="40"
             width="75"
@@ -261,7 +261,7 @@ const ActiveBubble = ({
           fontSize="2.2rem"
           fill="#45495B"
         >
-          {rivalInfoList[0].nickname}
+          {name}
         </text>
         <text
           textAnchor="middle"
@@ -270,7 +270,7 @@ const ActiveBubble = ({
           fontSize="1.5rem"
           fill="#45495B"
         >
-          #{rivalInfoList[0].categoryMiddle}
+          #{tag}
         </text>
       </svg>
     </div>

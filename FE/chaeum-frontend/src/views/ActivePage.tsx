@@ -64,76 +64,31 @@ const ActivePage = () => {
   const fetchStartSentences = async () => {
     // console.log(access_token);
     try {
-      const response = await axios.get(START_MENT_URL, {
-        headers: {
-          Authorization: 'Bearer ' + access_token,
-          'Content-Type': 'application/json',
-        },
-        params: { categoryId: state.categoryId },
-      });
-
-      // Dispatch action to store the sentences in Redux
-      dispatch(setStartMentList(response.data.sentences));
-      // console.log(startMentList);
-      // console.log(response.data.sentences);
+      const response = await axios
+        .get(START_MENT_URL, {
+          headers: {
+            Authorization: 'Bearer ' + access_token,
+            'Content-Type': 'application/json',
+          },
+          params: { categoryId: state.categoryId },
+        })
+        .then(res => {
+          // Dispatch action to store the sentences in Redux
+          dispatch(setStartMentList(res.data.sentences));
+          // console.log(startMentList);
+          // console.log(res.data.sentences);
+        });
     } catch (error) {
       // console.error('Error fetching sentences:', error);
       console.log('Error startment fetching sentences:', error);
     }
   };
 
-  // 활동 중 동기부여 멘트
-  // const fetchActiveSentences = async () => {
-  //   try {
-  //     const response = await axios.get(ACTIVE_MENT_URL, {
-  //       headers: {
-  //         Authorization: 'Bearer ' + access_token,
-  //         'Content-Type': 'application/json',
-  //       },
-  //       params: {
-  //         categoryId: state.categoryId,
-  //         activityId: state.activityId,
-  //       },
-  //     });
-
-  //     // Dispatch action to store the sentences in Redux
-  //     dispatch(setActiveMentList(response.data.sentences));
-  //     // console.log(startMentList);
-  //     // console.log(response.data.sentences);
-  //   } catch (error) {
-  //     // console.error('Error fetching sentences:', error);
-  //     console.log('Error doing fetching sentences:', error);
-  //   }
-  // };
-
-  // // 응원글 갱신
-  // const fetchCheering = async () => {
-  //   try {
-  //     const response = await axios.get(CHEERING_URL, {
-  //       headers: {
-  //         Authorization: 'Bearer ' + access_token,
-  //         'Content-Type': 'application/json',
-  //       },
-  //       params: { activityId: myActivityInfo.activityId },
-  //     });
-
-  //     // Dispatch action to store the sentences in Redux
-  //     // dispatch(setActiveMentList(response.data.sentences));
-  //     // console.log(startMentList);
-
-  //     console.log(response.data);
-  //     cheeringMent = response.data;
-  //     console.log(cheeringMent);
-  //   } catch (error) {
-  //     // console.error('Error fetching sentences:', error);
-  //     console.log('Error fetching sentences:', error);
-  //   }
-  // };
-
   useEffect(() => {
     // 렌더링 시 최초 실행
     // 활동내역 생성
     dispatch(setMyActivityTagList(state.tagList));
+
     const createActivity = async () => {
       const PreData = {
         streakId: state.streakId,
@@ -145,63 +100,70 @@ const ActivePage = () => {
       dispatch(setMyActivityInfo(PreData));
 
       try {
-        const response = await axios.post(
-          MAKE_ACTIVITY_URL,
-          { streakId: state.streakId, date: currentTimer() },
-          {
-            headers: {
-              Authorization: 'Bearer ' + access_token,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        // response로 받은 data와 state로 넘겨받은 categoryId를 한번에 redux에 업데이트
-        const MergedData = {
-          streakId: state.streakId,
-          date: currentTimer(),
-          categoryId: state.categoryId,
-          activityId: response.data.activityId,
-        };
-
-        dispatch(setMyActivityInfo(MergedData));
-        // console.log('생성된 활동 정보 : ');
-        // console.log(response.data);
-
-        // 바로 라이벌 목록 갱신
-        const fetchRival = async () => {
-          try {
-            const response1 = await axios.get(RIVAL_URL, {
+        const response = await axios
+          .post(
+            MAKE_ACTIVITY_URL,
+            { streakId: state.streakId, date: currentTimer() },
+            {
               headers: {
                 Authorization: 'Bearer ' + access_token,
                 'Content-Type': 'application/json',
               },
-              params: {
-                streakId: state.streakId,
-                categoryId: state.categoryId,
-              },
-            });
+            }
+          )
+          .then(res => {
+            const MergedData = {
+              streakId: state.streakId,
+              date: currentTimer(),
+              categoryId: state.categoryId,
+              activityId: res.data.activityId,
+            };
 
-            // Dispatch action to store the sentences in Redux
-            // dispatch(setActiveMentList(response.data.sentences));
-            // console.log(startMentList);
+            dispatch(setMyActivityInfo(MergedData));
+            // console.log('생성된 활동 정보 : ');
+            // console.log(res.data);
 
-            // myAccumulateTime = response.data.myAccumulateTime;
-            // console.log(myAccumulateTime);
+            // 바로 라이벌 목록 갱신
+            const fetchRival = async () => {
+              try {
+                const response1 = await axios
+                  .get(RIVAL_URL, {
+                    headers: {
+                      Authorization: 'Bearer ' + access_token,
+                      'Content-Type': 'application/json',
+                    },
+                    params: {
+                      streakId: state.streakId,
+                      categoryId: state.categoryId,
+                    },
+                  })
+                  .then(res1 => {
+                    // Dispatch action to store the sentences in Redux
+                    // dispatch(setActiveMentList(response.data.sentences));
+                    // console.log(startMentList);
 
-            // 라이벌 리스트 리덕스 저장
-            // console.log(response1.data.rivalList[0]);
-            dispatch(setRivalInfoList(response.data.rivalList));
+                    // myAccumulateTime = response.data.myAccumulateTime;
+                    // console.log(myAccumulateTime);
 
-            // 누적시간 리덕스 저장
-            // console.log(response1.data.myAccmulateTime);
-            dispatch(setMyAccumalteTime(response1.data.myAccmulateTime));
-          } catch (error) {
-            // console.error('Error fetching sentences:', error);
-            console.log('Error rival fetching sentences:', error);
-          }
-        };
+                    // console.log(res1.data);
 
-        fetchRival();
+                    // 라이벌 리스트 리덕스 저장
+                    // console.log(res1.data.rivalList);
+                    dispatch(setRivalInfoList(res1.data.rivalList));
+
+                    // 누적시간 리덕스 저장
+                    // console.log(res1.data.myAccumulateTime);
+                    dispatch(setMyAccumalteTime(res1.data.myAccumulateTime));
+                  });
+              } catch (error) {
+                // console.error('Error fetching sentences:', error);
+                console.log('Error rival fetching sentences:', error);
+              }
+            };
+
+            fetchRival();
+          });
+        // response로 받은 data와 state로 넘겨받은 categoryId를 한번에 redux에 업데이트
       } catch (error) {
         // console.error('Error fetching sentences:', error);
         console.log('Error make fetching sentences:', error);

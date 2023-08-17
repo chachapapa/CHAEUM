@@ -163,7 +163,7 @@ const ActiveFullScreen = (props: Props) => {
     };
 
     updateActivity();
-    navigate('/active/result');
+    navigate('/active/result', { state: props.cheeringMent });
   };
 
   const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes

@@ -21,7 +21,11 @@ import { useDispatch } from 'react-redux';
     props로 받는 time을 number로 변환해서 사용
 
 */
-
+type Cheering = {
+  nickname: string;
+  comments: string;
+  profileUrl: string;
+};
 type Props = {
   // 드래그 크기에 따른 화면 배치
   size: 'small' | 'medium';
@@ -29,15 +33,19 @@ type Props = {
   // 활동 시작시 받는 멘트 목록
   startMent: string[];
 
-  // 활동 중 받는 멘트 목록
-  activeMent: string[];
-
   // 응원글 목록
+  cheeringMent: Cheering[];
 
   // 누적 시간
   // times: number[];
 };
-
+interface RivalData {
+  profileImageUrl: string;
+  nickname: string;
+  categoryMiddle: string;
+  accumulateTime: number;
+  active: boolean;
+}
 const ActiveTotalBubble = (props: Props) => {
   const rivalInfoList = useAppSelector(
     state => state.stateSetter.rivalInfoList
@@ -48,12 +56,76 @@ const ActiveTotalBubble = (props: Props) => {
   );
   const myStreakInfo = useAppSelector(state => state.stateSetter.myStreakInfo);
   // RivalActivity 배열에서 accumulateTime 값을 추출하여 times 배열에 저장
-  const profileImgList = rivalInfoList.map(rival => rival.profileImageUrl);
-  const nameList = rivalInfoList.map(rival => rival.nickname);
-  const tagList = rivalInfoList.map(rival => rival.categoryMiddle);
-  const times = rivalInfoList.map(rival => rival.accumulateTime);
-  const isActive = rivalInfoList.map(rival => !rival.active);
+  let profileImgList = rivalInfoList.map(rival => rival.profileImageUrl);
+  let nameList = rivalInfoList.map(rival => rival.nickname);
+  let tagList = rivalInfoList.map(rival => rival.categoryMiddle);
+  let times = rivalInfoList.map(rival => rival.accumulateTime);
+  let isActive = rivalInfoList.map(rival => rival.active);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchRival();
+      // updateRival();
+    }, 10000); // 1분마다 fetchCheering 호출
+
+    // return () => clearTimeout(timer);
+    return () => {
+      clearInterval(interval); // 컴포넌트가 언마운트될 때 interval 클리어
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [myActivityInfo]);
+
+  const RIVAL_URL = 'http://i9a810.p.ssafy.io:8080/api/streak/rival-list';
+  // 바로 라이벌 목록 갱신
+  const fetchRival = async () => {
+    try {
+      const response1 = await axios
+        .get(RIVAL_URL, {
+          headers: {
+            Authorization: 'Bearer ' + access_token,
+            'Content-Type': 'application/json',
+          },
+          params: {
+            streakId: myActivityInfo.streakId,
+            categoryId: myActivityInfo.categoryId,
+          },
+        })
+        .then(res1 => {
+          // Dispatch action to store the sentences in Redux
+          // dispatch(setActiveMentList(response.data.sentences));
+          // console.log(startMentList);
+
+          // myAccumulateTime = response.data.myAccumulateTime;
+          // console.log(myAccumulateTime);
+
+          // console.log(res1.data);
+
+          // 라이벌 리스트 리덕스 저장
+          // console.log(res1.data.rivalList);
+          // dispatch(setRivalInfoList(res1.data.rivalList));
+
+          profileImgList = res1.data.rivalList.map(
+            (item: RivalData) => item.profileImageUrl
+          );
+          nameList = res1.data.rivalList.map(
+            (item: RivalData) => item.nickname
+          );
+          tagList = res1.data.rivalList.map(
+            (item: RivalData) => item.categoryMiddle
+          );
+          times = res1.data.rivalList.map(
+            (item: RivalData) => item.accumulateTime
+          );
+          isActive = res1.data.rivalList.map((item: RivalData) => item.active);
+          // 누적시간 리덕스 저장
+          // console.log(res1.data.myAccumulateTime);
+          // dispatch(setMyAccumalteTime(res1.data.myAccumulateTime));
+        });
+    } catch (error) {
+      // console.error('Error fetching sentences:', error);
+      console.log('Error rival fetching sentences:', error);
+    }
+  };
   // let nameList: string[] = ['라이벌', '라이벌', '라이벌', '라이벌', '라이벌'];
   // let tagList: string[] = ['로딩중', '로딩중', '로딩중', '로딩중', '로딩중'];
   // let times: number[] = [0, 0, 0, 0, 0, 0];
@@ -63,8 +135,6 @@ const ActiveTotalBubble = (props: Props) => {
   // const tagList: string[] = ['로딩중', '로딩중', '로딩중', '로딩중', '로딩중'];
   // const times: number[] = [0, 0, 0, 0, 0, 0];
   // const isActive: boolean[] = [true, true, true, true, true];
-
-  // useEffect(() => {
 
   //   nameList = rivalInfoList.map(rival => rival.nickName);
   //   tagList = rivalInfoList.map(rival => rival.categoryMiddle);
@@ -153,7 +223,7 @@ const ActiveTotalBubble = (props: Props) => {
 
     updateActivity();
 
-    navigate('/active/result');
+    navigate('/active/result', { state: props.cheeringMent });
   };
 
   if (!rivalInfoList) return <div>Loading..</div>;
@@ -166,6 +236,7 @@ const ActiveTotalBubble = (props: Props) => {
           time={times[0]}
           active={isActive[0]}
           size={90}
+          profile={profileImgList[0]}
           color1={isActive[0] ? '#DDFFDD' : '#D3D3D3'}
           color2={isActive[0] ? '#00FF00' : '#D3D3D3'}
         ></ActiveBubble70>
@@ -178,6 +249,7 @@ const ActiveTotalBubble = (props: Props) => {
           time={times[1]}
           active={isActive[1]}
           size={90}
+          profile={profileImgList[1]}
           color1={isActive[1] ? '#FFFFDD' : '#D3D3D3'}
           color2={isActive[1] ? '#FFFF00' : '#D3D3D3'}
         ></ActiveBubble75>
@@ -189,8 +261,9 @@ const ActiveTotalBubble = (props: Props) => {
           time={times[2]}
           active={isActive[2]}
           size={90}
-          color1={isActive[1] ? '#DDFFFF' : '#D3D3D3'}
-          color2={isActive[1] ? '#00FFFF' : '#D3D3D3'}
+          profile={profileImgList[2]}
+          color1={isActive[2] ? '#DDFFFF' : '#D3D3D3'}
+          color2={isActive[2] ? '#00FFFF' : '#D3D3D3'}
         ></ActiveBubble80>
       </div>
       <div className="z-0 absolute top-2/3 left-1/3 custom-scale-200">
@@ -200,8 +273,9 @@ const ActiveTotalBubble = (props: Props) => {
           time={times[3]}
           active={isActive[3]}
           size={90}
-          color1={isActive[1] ? '#FFDDFF' : '#D3D3D3'}
-          color2={isActive[1] ? '#FF00FF' : '#D3D3D3'}
+          profile={profileImgList[3]}
+          color1={isActive[3] ? '#FFDDFF' : '#D3D3D3'}
+          color2={isActive[3] ? '#FF00FF' : '#D3D3D3'}
         ></ActiveBubble85>
       </div>
       <div className="z-0 absolute top-2/4 left-3/4 custom-scale-200">
@@ -211,8 +285,9 @@ const ActiveTotalBubble = (props: Props) => {
           time={times[4]}
           active={isActive[4]}
           size={90}
-          color1={isActive[1] ? '#FFDDDD' : '#D3D3D3'}
-          color2={isActive[1] ? '#FF0000' : '#D3D3D3'}
+          profile={profileImgList[4]}
+          color1={isActive[4] ? '#FFDDDD' : '#D3D3D3'}
+          color2={isActive[4] ? '#FF0000' : '#D3D3D3'}
         ></ActiveBubble>
       </div>
       {props.size === 'small' ? (
