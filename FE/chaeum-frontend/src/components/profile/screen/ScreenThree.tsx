@@ -3,14 +3,15 @@ import { MyProfileCard } from '../MyProfileCard';
 import InputTag from '../../common/InputTag';
 import CustomIconButton from '../../common/CustomIconButton';
 import { useLocation, useNavigate } from 'react-router-dom';
-import  FriendProfileCard from '../FriendProfileCard';
+import FriendProfileCard from '../FriendProfileCard';
 import axios from 'axios';
 import { useAppSelector } from '../../../hooks/reduxHooks';
 import { User } from '../../Types';
 import { IconButton } from '@material-tailwind/react';
+import { API_ROUTES, getApiUrl } from '../../../apiConfig';
 
-const FRIEND_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/user/list';
-const USER_SEARCH_URL = 'http://i9a810.p.ssafy.io:8080/api/user/nickname-search';
+// const FRIEND_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/user/list';
+// const USER_SEARCH_URL = 'http://i9a810.p.ssafy.io:8080/api/user/nickname-search';
 const AccessToken = localStorage.getItem('access_token');
 
 const ScreenThree = () => {
@@ -21,32 +22,35 @@ const ScreenThree = () => {
 
   useEffect(() => {
     axios
-      .get(`${FRIEND_LIST_URL}`, {
+      .get(`${getApiUrl(API_ROUTES.FRIEND_LIST_URL)}`, {
         headers: { Authorization: `Bearer ${AccessToken}` },
         params: { nickname: decodeURI(location.pathname.split('/')[2]) },
-      })  
+      })
       .then(res => {
         // console.log(res);
         if (res.data) {
           // console.log(res.data);
-          for(let i = 0 ; i< res.data.length ; i++){
-            const tmp : User = {nickname : res.data[i].nickname , profileImageUrl : res.data[i].profileUrl};
-            setFriendList(prev => [...prev,tmp]);
+          for (let i = 0; i < res.data.length; i++) {
+            const tmp: User = {
+              nickname: res.data[i].nickname,
+              profileImageUrl: res.data[i].profileUrl,
+            };
+            setFriendList(prev => [...prev, tmp]);
           }
         } else {
           console.log('카테고리 못가져옴 ㅎ');
         }
       });
-    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSearchButtonClick = () => {
     console.log('검색검색');
     axios
-      .get(`${USER_SEARCH_URL}`, {
+      .get(`${getApiUrl(API_ROUTES.USER_SEARCH_URL)}`, {
         headers: { Authorization: `Bearer ${AccessToken}` },
-        params: { keyword : searchKeyword },
+        params: { keyword: searchKeyword },
       })
       .then(res => {
         console.log(res.data);

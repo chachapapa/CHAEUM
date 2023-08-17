@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import TextButton from '../common/TextButton';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type nameListType = {
   nickname: string;
@@ -10,16 +11,16 @@ type nameListType = {
 export const FriendNoti = () => {
   // 1. 나한테 친구 신청을 한 사람 리스트 가져오기
   const AccessToken = localStorage.getItem('access_token');
-  type UrlObjType = {
-    [key in string]: string;
-  };
+  // type UrlObjType = {
+  //   [key in string]: string;
+  // };
 
-  const url: UrlObjType = {
-    APPLY_LIST_URL: 'http://i9a810.p.ssafy.io:8080/api/user/add/list', // GET
-    APPLY_ACCEPT_URL: 'http://i9a810.p.ssafy.io:8080/api/user/accept', // POST
-    APPLY_REJECT_URL: 'http://i9a810.p.ssafy.io:8080/api/user/reject', // PATCH
-    USER_INFO_URL: 'http://i9a810.p.ssafy.io:8080/api/user/nickname-search', // GET
-  };
+  // const url: UrlObjType = {
+  //   APPLY_LIST_URL: 'http://i9a810.p.ssafy.io:8080/api/user/add/list', // GET
+  //   APPLY_ACCEPT_URL: 'http://i9a810.p.ssafy.io:8080/api/user/accept', // POST
+  //   APPLY_REJECT_URL: 'http://i9a810.p.ssafy.io:8080/api/user/reject', // PATCH
+  //   USER_INFO_URL: 'http://i9a810.p.ssafy.io:8080/api/user/nickname-search', // GET
+  // };
 
   // const [nameList, setNameList] = useState<string[]>([]);
   const [applyList, setApplyList] = useState<nameListType[]>([]);
@@ -27,7 +28,7 @@ export const FriendNoti = () => {
 
   useEffect(() => {
     axios
-      .get(`${url.APPLY_LIST_URL}`, {
+      .get(`${getApiUrl(API_ROUTES.FRIEND_LIST_URL)}`, {
         headers: { Authorization: `Bearer ${AccessToken}` },
       })
       .then(res => {
@@ -45,7 +46,7 @@ export const FriendNoti = () => {
       mounted.current = true;
     } else {
       axios
-        .get(`${url.APPLY_LIST_URL}`, {
+        .get(`${getApiUrl(API_ROUTES.FRIEND_LIST_URL)}`, {
           headers: { Authorization: `Bearer ${AccessToken}` },
         })
         .then(res => {
@@ -67,7 +68,7 @@ export const FriendNoti = () => {
   const rejectApply = (value: string) => {
     axios
       .patch(
-        `${url.APPLY_REJECT_URL}`,
+        `${getApiUrl(API_ROUTES.FRIEND_REJECT_URL)}`,
         { nickname: value },
         {
           headers: {
@@ -99,7 +100,7 @@ export const FriendNoti = () => {
   const acceptApply = (value: string) => {
     axios
       .post(
-        `${url.APPLY_ACCEPT_URL}`,
+        `${getApiUrl(API_ROUTES.FRIEND_ACCEPT_URL)}`,
         { nickname: value },
         {
           headers: {

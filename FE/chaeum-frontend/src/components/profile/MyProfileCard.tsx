@@ -5,8 +5,12 @@ import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { Tag } from '../common/Tag';
 import ImageUpload from '../common/ImageUpload';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import { deleteFriendNicknameList, setFriendNicknameList } from '../../features/states/states';
+import {
+  deleteFriendNicknameList,
+  setFriendNicknameList,
+} from '../../features/states/states';
 import axios from 'axios';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 interface ProfileCardPropsType {
   name: string;
@@ -17,8 +21,8 @@ interface ProfileCardPropsType {
   onClick: () => void;
 }
 
-const FRIEND_REQUEST_URL = 'http://i9a810.p.ssafy.io:8080/api/user/add';
-const FRIEND_DELETE_URL = 'http://i9a810.p.ssafy.io:8080/api/user';
+// const FRIEND_REQUEST_URL = 'http://i9a810.p.ssafy.io:8080/api/user/add';
+// const FRIEND_DELETE_URL = 'http://i9a810.p.ssafy.io:8080/api/user';
 const AccessToken = localStorage.getItem('access_token');
 
 export const MyProfileCard = ({
@@ -29,7 +33,9 @@ export const MyProfileCard = ({
   profileImage,
   onClick,
 }: ProfileCardPropsType) => {
-  const myNickname = useAppSelector(state => state.userStateSetter.userStateSetter.nickname);
+  const myNickname = useAppSelector(
+    state => state.userStateSetter.userStateSetter.nickname
+  );
   const friendNicknameList = useAppSelector(
     state => state.stateSetter.friendNicknameList
   );
@@ -38,8 +44,8 @@ export const MyProfileCard = ({
   const onFriendButtonClick = () => {
     axios
       .post(
-        `${FRIEND_REQUEST_URL}`,
-        JSON.stringify({ nickname : name }),
+        `${getApiUrl(API_ROUTES.FRIEND_REQUEST_URL)}`,
+        JSON.stringify({ nickname: name }),
         {
           headers: {
             Authorization: `Bearer ${AccessToken}`,
@@ -59,9 +65,16 @@ export const MyProfileCard = ({
   const onDeleteButtonClick = () => {
     const deleteFriend = async () => {
       try {
-        const res = await axios.patch(`${FRIEND_DELETE_URL}`, { nickname: name },{
-          headers: { Authorization: `Bearer ${AccessToken}`,'Content-Type': 'application/json', },
-        });
+        const res = await axios.patch(
+          `${getApiUrl(API_ROUTES.FRIEND_DELETE_URL)}`,
+          { nickname: name },
+          {
+            headers: {
+              Authorization: `Bearer ${AccessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
         if (res.data === '삭제 완료') dispatch(deleteFriendNicknameList(name));
       } catch (e) {
         console.log('유저 정보가 없습니다.');

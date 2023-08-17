@@ -5,47 +5,44 @@ import CommentInputBox from '../common/CommentInputBox';
 import axios from 'axios';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { setMyNickname } from '../../features/states/userStates';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type Props = {
   currentStep: number;
   onClickNext: () => void;
   onClickBefore: () => void;
-  isDuplicationTested : number;
-  setIsDuplicationTested : React.Dispatch<React.SetStateAction<number>>;
+  isDuplicationTested: number;
+  setIsDuplicationTested: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const DUPLICATION_CHECK_URL =
-  'http://i9a810.p.ssafy.io:8080/api/user/duplication-check';
+// const DUPLICATION_CHECK_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/user/duplication-check';
 
 const AccessToken = localStorage.getItem('access_token');
-
-
 
 const UserNicknameInput = ({
   currentStep,
   onClickNext,
   onClickBefore,
   isDuplicationTested,
-  setIsDuplicationTested
+  setIsDuplicationTested,
 }: Props) => {
-
   const [nickname, setNickname] = useState<string>(' ');
   const [isStarted, setIsStarted] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const myNickname = useAppSelector(state => state.userStateSetter.userStateSetter.nickname);
+  const myNickname = useAppSelector(
+    state => state.userStateSetter.userStateSetter.nickname
+  );
 
   useEffect(() => {
     setTimeout(() => {
       setIsStarted(true);
     }, 300);
-  },[isStarted]);
-
-  
+  }, [isStarted]);
 
   const onClickTest = () => {
-
     axios
-      .get(`${DUPLICATION_CHECK_URL}`, {
+      .get(`${getApiUrl(API_ROUTES.CHECK_DUPLICATION_URL)}`, {
         params: { nickname: nickname },
         headers: { Authorization: `Bearer ${AccessToken}` },
       })
@@ -59,7 +56,6 @@ const UserNicknameInput = ({
         }
       });
   };
-
 
   return (
     <div
@@ -80,7 +76,7 @@ const UserNicknameInput = ({
           height="h-16"
           isDuplicationTested={isDuplicationTested}
           setIsDuplicationTested={setIsDuplicationTested}
-          setNickname = {setNickname}
+          setNickname={setNickname}
         />
       </div>
 

@@ -3,34 +3,42 @@ import React from 'react';
 import { Comment } from '../Types';
 import axios from 'axios';
 import { useAppSelector } from '../../hooks/reduxHooks';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type Props = {
   commentList: Comment[];
   setCommentList?: React.Dispatch<React.SetStateAction<Comment[]>>;
 };
 
-const COMMENT_URL =
-  'http://i9a810.p.ssafy.io:8080/api/sns/comment';
+// const COMMENT_URL =
+// 'http://i9a810.p.ssafy.io:8080/api/sns/comment';
 const AccessToken = localStorage.getItem('access_token');
 
 const CommentList = ({ commentList, setCommentList }: Props) => {
-  const fixedNickname = useAppSelector(state => state.userStateSetter.userStateSetter.nickname);
+  const fixedNickname = useAppSelector(
+    state => state.userStateSetter.userStateSetter.nickname
+  );
 
   const onCommentDeleteButtonClick = (
     replyId: number | undefined,
     index: number,
-    activityId : number | undefined,
+    activityId: number | undefined
   ) => {
     axios
       .patch(
-        `${COMMENT_URL}`,
-        { replyId: replyId, activityId : activityId },
-        { headers: { Authorization: `Bearer ${AccessToken}`, 'Content-Type': 'application/json' } }
+        `${getApiUrl(API_ROUTES.COMMENT_REGIST_URL)}`,
+        { replyId: replyId, activityId: activityId },
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
       )
       .then(res => {
         console.log(res);
         if (res && setCommentList) {
-          setCommentList(prev => prev.splice(index,1));
+          setCommentList(prev => prev.splice(index, 1));
         } else {
           console.log('댓글 삭제 실패');
         }
@@ -58,7 +66,7 @@ const CommentList = ({ commentList, setCommentList }: Props) => {
                   <span className="whitespace-nowrap font-semibold text-xs mr-2 text-start">
                     {comment.nickname}
                   </span>
-                  <span className='text-start'>{comment.content}</span>
+                  <span className="text-start">{comment.content}</span>
                 </Typography>
               </div>
             </div>
@@ -66,7 +74,11 @@ const CommentList = ({ commentList, setCommentList }: Props) => {
               <i
                 className="fa-solid fa-trash"
                 onClick={() =>
-                  onCommentDeleteButtonClick(comment.replyId, index, comment.activityId)
+                  onCommentDeleteButtonClick(
+                    comment.replyId,
+                    index,
+                    comment.activityId
+                  )
                 }
               ></i>
             ) : null}

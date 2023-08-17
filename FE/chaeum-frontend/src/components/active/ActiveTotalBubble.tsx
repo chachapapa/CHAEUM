@@ -16,6 +16,7 @@ import LoadingPage from '../common/LoadingPage';
 import axios from 'axios';
 import { setMyStreakInfo } from '../../features/states/states';
 import { useDispatch } from 'react-redux';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 /*
     추후 서버에서 받아올때는 날짜 형식으로 받아오므로
     props로 받는 time을 number로 변환해서 사용
@@ -158,8 +159,8 @@ const ActiveTotalBubble = (props: Props) => {
     alert('추후 업데이트 예정입니다 :(');
   };
 
-  const UPDATE_ACTIVITY_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
-  const STREAK_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/streak';
+  // const UPDATE_ACTIVITY_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
+  // const STREAK_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/streak';
   const access_token = localStorage.getItem('access_token');
 
   // 서버에 시간을 넘기기 위한 함수
@@ -180,7 +181,7 @@ const ActiveTotalBubble = (props: Props) => {
       try {
         const response = await axios
           .patch(
-            UPDATE_ACTIVITY_URL,
+            `${getApiUrl(API_ROUTES.ACTIVITY_UPDATE_URL)}`,
             {
               activityId: myActivityInfo.activityId,
               streakId: myActivityInfo.streakId,
@@ -195,7 +196,7 @@ const ActiveTotalBubble = (props: Props) => {
           )
           .then(() => {
             axios
-              .get(STREAK_LIST_URL, {
+              .get(`${getApiUrl(API_ROUTES.STREAK_LIST_URL)}`, {
                 headers: { Authorization: 'Bearer ' + access_token },
               })
               .then(res => {

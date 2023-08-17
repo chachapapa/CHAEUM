@@ -12,7 +12,7 @@ type Props = {
   setRegistActivity: React.Dispatch<React.SetStateAction<Activity | undefined>>;
 };
 
-const ACTIVITY_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/activity/list';
+// const ACTIVITY_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/activity/list';
 const AccessToken = localStorage.getItem('access_token');
 
 const ActivityList = ({ setRegistActivity }: Props) => {
@@ -33,7 +33,7 @@ const ActivityList = ({ setRegistActivity }: Props) => {
       }
     }
     console.log('완료');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // console.log(activityList);

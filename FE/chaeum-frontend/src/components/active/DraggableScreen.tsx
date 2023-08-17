@@ -16,6 +16,7 @@ import {
 import { useOutletContext } from 'react-router-dom';
 import LoadingPage from '../common/LoadingPage';
 import { RivalActivity } from '../Types';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 enum ScreenType {
   SMALL,
@@ -36,15 +37,15 @@ type ChildProps = {
 };
 
 const access_token = localStorage.getItem('access_token');
-const START_MENT_URL =
-  'http://i9a810.p.ssafy.io:8080/api/activity/message/starting';
-const ACTIVE_MENT_URL =
-  'http://i9a810.p.ssafy.io:8080/api/activity/message/doing';
-const CHEERING_URL =
-  'http://i9a810.p.ssafy.io:8080/api/activity/message/cheering';
-const RIVAL_URL = 'http://i9a810.p.ssafy.io:8080/api/streak/rival-list';
-const UPDATE_RIVAL_URL =
-  'http://i9a810.p.ssafy.io:8080/api/streak/rival-update';
+// const START_MENT_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/activity/message/starting';
+// const ACTIVE_MENT_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/activity/message/doing';
+// const CHEERING_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/activity/message/cheering';
+// const RIVAL_URL = 'http://i9a810.p.ssafy.io:8080/api/streak/rival-list';
+// const UPDATE_RIVAL_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/streak/rival-update';
 
 const DraggableScreen = () => {
   const [screenType, setScreenType] = useState<ScreenType>(ScreenType.SMALL);
@@ -121,13 +122,16 @@ const DraggableScreen = () => {
   const fetchStartSentences = async () => {
     // console.log(access_token);
     try {
-      const response = await axios.get(START_MENT_URL, {
-        headers: {
-          Authorization: 'Bearer ' + access_token,
-          'Content-Type': 'application/json',
-        },
-        params: { categoryId: myActivityInfo.categoryId },
-      });
+      const response = await axios.get(
+        `${getApiUrl(API_ROUTES.MENT_START_URL)}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + access_token,
+            'Content-Type': 'application/json',
+          },
+          params: { categoryId: myActivityInfo.categoryId },
+        }
+      );
 
       // Dispatch action to store the sentences in Redux
       dispatch(setStartMentList(response.data.sentences));
@@ -170,7 +174,7 @@ const DraggableScreen = () => {
   const fetchCheering = async () => {
     try {
       const response = await axios
-        .get(CHEERING_URL, {
+        .get(`${getApiUrl(API_ROUTES.ACTIVITY_ENCOURAGE_URL)}`, {
           headers: {
             Authorization: 'Bearer ' + access_token,
             'Content-Type': 'application/json',
@@ -198,7 +202,7 @@ const DraggableScreen = () => {
   const fetchRival = async () => {
     try {
       const response1 = await axios
-        .get(RIVAL_URL, {
+        .get(`${getApiUrl(API_ROUTES.RIVAL_LIST_URL)}`, {
           headers: {
             Authorization: 'Bearer ' + access_token,
             'Content-Type': 'application/json',
@@ -246,7 +250,7 @@ const DraggableScreen = () => {
     // console.log(rivalStreakIds);
     try {
       const response = await axios
-        .get(UPDATE_RIVAL_URL, {
+        .get(`${getApiUrl(API_ROUTES.RIVAL_UPDATE_URL)}`, {
           headers: {
             Authorization: 'Bearer ' + access_token,
             'Content-Type': 'application/json',

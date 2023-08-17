@@ -19,6 +19,7 @@ import {
 } from '../../features/states/states';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../hooks/reduxHooks';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type Cheering = {
   nickname: string;
@@ -98,8 +99,8 @@ const ActiveFullScreen = (props: Props) => {
     alert('추후 업데이트 예정입니다 :(');
   };
 
-  const UPDATE_ACTIVITY_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
-  const STREAK_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/streak';
+  // const UPDATE_ACTIVITY_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
+  // const STREAK_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/streak';
   const access_token = localStorage.getItem('access_token');
   const navigate = useNavigate();
 
@@ -121,7 +122,7 @@ const ActiveFullScreen = (props: Props) => {
       try {
         const response = await axios
           .patch(
-            UPDATE_ACTIVITY_URL,
+            `${getApiUrl(API_ROUTES.ACTIVITY_UPDATE_URL)}`,
             {
               activityId: myActivityInfo.activityId,
               streakId: myActivityInfo.streakId,
@@ -136,7 +137,7 @@ const ActiveFullScreen = (props: Props) => {
           )
           .then(() => {
             axios
-              .get(STREAK_LIST_URL, {
+              .get(`${getApiUrl(API_ROUTES.STREAK_LIST_URL)}`, {
                 headers: { Authorization: 'Bearer ' + access_token },
               })
               .then(res => {
