@@ -53,21 +53,31 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
     const today: Date = new Date();
     let curr: Date = new Date();
 
-    props.activeHistoryList?.some(element => {
-      const chkDate: Date = new Date(curr.setDate(curr.getDate() - 1));
-      const dateForm: string =
-        chkDate.getFullYear() +
-        '-' +
-        (chkDate.getMonth() + 1) +
-        '-' +
-        chkDate.getDate();
+    if (
+      props.activeHistoryList.length !== 0 &&
+      props.activeHistoryList[0][0].split(' ')[0] === toString(today)
+    ) {
+      props.activeHistoryList?.some(element => {
+        const chkDate: Date = curr;
+        const chkDateStr = toString(chkDate);
+        if (element[0].split(' ')[0] !== chkDateStr) return true;
 
-      // console.log(dateForm);
-      if (element[0] !== dateForm) return true;
+        todayDuration++;
+        curr = new Date(curr.setDate(curr.getDate() - 1));
+      });
+    } else if (
+      props.activeHistoryList.length !== 0 &&
+      props.activeHistoryList[0][0].split(' ')[0] !== toString(today)
+    ) {
+      props.activeHistoryList?.some(element => {
+        const chkDate: Date = new Date(curr.setDate(curr.getDate() - 1));
+        const chkDateStr = toString(chkDate);
+        if (element[0].split(' ')[0] !== chkDateStr) return true;
 
-      todayDuration++;
-      curr = chkDate;
-    });
+        todayDuration++;
+        curr = chkDate;
+      });
+    }
 
     const getStreakCnt = () => {
       const Date = today.getDate();
@@ -104,18 +114,17 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
         props.streakActive ? 'text-black' : 'text-chaeum-gray-500'
       } grid gap-x-1 grid-cols-3 grid-rows-3-auto w-full px-4 pt-4 rounded-lg border-2 m-4 mb-10 card shrink-0 h-fit`}
     >
-      <div className="card-header col-span-3 flex flex-row items-center justify-between">
-        <span className="title text-xl font-bold mb-2 ">
-          {props.streakName}
-        </span>
-
+      <div className="col-span-2 title text-xl font-bold mb-2 text-start text-ellipsis overflow-hidden whitespace-nowrap">
+        {props.streakName}
+      </div>
+      <div className="flex flex-row items-center justify-end">
         {isSettingOpen ? (
           <div className="flex flex-row justify-end items-center p-0.5 mb-2">
             {props.streakActive ? (
               <>
                 <FontAwesomeIcon
                   icon={faTrashCan}
-                  className="text-chaeum-gray-600 text-2xl "
+                  className="text-chaeum-gray-600 text-xl "
                   onClick={() => {
                     dispatch(
                       openDrawer({
@@ -128,7 +137,7 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
                 />
                 <FontAwesomeIcon
                   icon={faLock}
-                  className="text-chaeum-gray-600 text-2xl pl-1.5"
+                  className="text-chaeum-gray-600 text-xl pl-1.5"
                   onClick={() => {
                     dispatch(
                       openDrawer({
@@ -141,7 +150,7 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
                 />
                 <FontAwesomeIcon
                   icon={faPen}
-                  className="text-chaeum-gray-600 text-2xl pl-1.5"
+                  className="text-chaeum-gray-600 text-xl pl-1.5"
                   onClick={() => {
                     dispatch(
                       openModal({
@@ -158,7 +167,7 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
             ) : (
               <FontAwesomeIcon
                 icon={faLockOpen}
-                className="text-chaeum-gray-600 text-2xl pl-1.5"
+                className="text-chaeum-gray-600 text-xl pl-1.5"
                 onClick={() => {
                   dispatch(
                     openDrawer({
@@ -181,7 +190,7 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
             <FontAwesomeIcon
               onClick={settingToggle}
               icon={faGear}
-              className="text-chaeum-gray-600 text-2xl"
+              className="text-chaeum-gray-600 text-xl"
             />
           </div>
         )}
@@ -241,4 +250,30 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
 const OPEN_TYPE = {
   open: 'pb-2 h-96 ease-in-out overflow-scroll opacity-100 duration-700 transition-height',
   close: 'h-0 ease-in-out overflow-hidden duration-700 transition-height',
+};
+
+// 날짜 -> 스트링 타입
+const toString = (dateType: Date) => {
+  // 연도
+  const year = dateType.getFullYear();
+  // 월 : 1~9월엔 앞에 0 붙이기
+  const month: string | number =
+    dateType.getMonth() + 1 < 10
+      ? '0' + (dateType.getMonth() + 1)
+      : dateType.getMonth() + 1;
+  // 일: 1~9월엔 앞에 0 붙이기
+  const date: string | number =
+    dateType.getDate() < 10 ? '0' + dateType.getDate() : dateType.getDate();
+
+  // 현재 스트릭에 해당하는 날짜를 activeHistoryList가 갖고있는 날짜 형식으로 형변환
+  return year + '-' + month + '-' + date;
+};
+
+// 스트링 -> 날짜 타입
+const toDate = (strDate: string) => {
+  const split = strDate.split('-');
+  const y = parseInt(split[0]);
+  const m = parseInt(split[1]);
+  const d = parseInt(split[2]);
+  return new Date(y, m - 1, d);
 };
