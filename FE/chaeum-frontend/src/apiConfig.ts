@@ -15,7 +15,8 @@ export const API_ROUTES = {
   FRIEND_REJECT_URL: '/user/reject', // 친구 신청 거절(PATCH)
   FRIEND_CANCEL_URL: '/user/cancel', // 친구 신청 취소 (PATCH)
   FRIEND_SEARCH_URL: '/user/friend-nickname-search', // 마이페이지 친구 닉네임 검색(GET)
-  FRIEND_LIST_URL: '/user/list', // 닉네임에 해당하는 사람 친구 목록(GET), 나한테 친구 신청을 넣은 사람 목록(GET)
+  FRIEND_LIST_URL: '/user/list', // 닉네임에 해당하는 사람 친구 목록(GET)
+  FRIEND_APPLY_URL: '/user/add/list', // 나한테 친구 신청을 넣은 사람 목록(GET)
   FRIEND_BOOL_URL: '/user?nickname=', // 본인과 친구인지 확인(GET)
 
   // streak
@@ -31,7 +32,7 @@ export const API_ROUTES = {
   ARTICLE_LIST_URL: '/sns', // 게시글 목록(GET)
   ARTICLE_WRITE_URL: '/sns/create', // 게시글 작성(POST), 게시글 삭제(PATCH)
   ARTICLE_DELETE_URL: '/sns/delete', // 게시글 삭제(PATCH)
-  ARTICLE_LIKE_URL: 'sns/like-post', // post 좋아요(PATCH)
+  ARTICLE_LIKE_URL: '/sns/like-post', // post 좋아요(PATCH)
   ARTICLE_DISLIKE_URL: '/sns/like-post/cancel', // post 좋아요 취소(PATCH)
   COMMENT_REGIST_URL: '/sns/comment', // 게시글 댓글 작성(POST), 게시글 댓글 삭제(POST)
   STORY_LIST_URL: '/sns/active', // 스토리 목록(GET)
