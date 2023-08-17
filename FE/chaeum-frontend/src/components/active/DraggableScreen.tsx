@@ -385,10 +385,7 @@ const DraggableScreen = () => {
           {screenType === ScreenType.FULL && (
             <div className="w-full h-screen">
               {/* Full Screen 컨텐츠 */}
-              <ActiveFullScreen
-                cheeringMent={cheeringMent}
-                startMent={startMentList}
-              />
+              <ActiveFullScreen startMent={startMentList} />
             </div>
           )}
         </div>
