@@ -15,6 +15,7 @@ import {
   setMyActivityInfo,
   setRivalInfoList,
   setMyAccumalteTime,
+  setMyStreakInfo,
 } from '../../features/states/states';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../hooks/reduxHooks';
@@ -44,7 +45,7 @@ const ActiveFullScreen = (props: Props) => {
   const myActivityTagList = useAppSelector(
     state => state.stateSetter.myActivityTagList
   );
-
+  const myStreakInfo = useAppSelector(state => state.stateSetter.myStreakInfo);
   // state to store time
   const [time, setTime] = useState(
     myAccumulateTime + calculateTimeDifference(myActivityInfo.date)
@@ -98,6 +99,7 @@ const ActiveFullScreen = (props: Props) => {
   };
 
   const UPDATE_ACTIVITY_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
+  const STREAK_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/streak';
   const access_token = localStorage.getItem('access_token');
   const navigate = useNavigate();
 
@@ -117,20 +119,34 @@ const ActiveFullScreen = (props: Props) => {
     // 활동 종료
     const updateActivity = async () => {
       try {
-        const response = await axios.patch(
-          UPDATE_ACTIVITY_URL,
-          {
-            activityId: myActivityInfo.activityId,
-            streakId: myActivityInfo.streakId,
-            endTime: currentTimer(),
-          },
-          {
-            headers: {
-              Authorization: 'Bearer ' + access_token,
-              'Content-Type': 'application/json',
+        const response = await axios
+          .patch(
+            UPDATE_ACTIVITY_URL,
+            {
+              activityId: myActivityInfo.activityId,
+              streakId: myActivityInfo.streakId,
+              endTime: currentTimer(),
             },
-          }
-        );
+            {
+              headers: {
+                Authorization: 'Bearer ' + access_token,
+                'Content-Type': 'application/json',
+              },
+            }
+          )
+          .then(() => {
+            axios
+              .get(STREAK_LIST_URL, {
+                headers: { Authorization: 'Bearer ' + access_token },
+              })
+              .then(res => {
+                if (res.data) {
+                  dispatch(setMyStreakInfo(res.data));
+                } else {
+                  alert('문제있음');
+                }
+              });
+          });
 
         // Dispatch action to store the sentences in Redux
         // dispatch(setActiveMentList(response.data.sentences));
