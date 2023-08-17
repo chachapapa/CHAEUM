@@ -13,22 +13,31 @@ import ArticleRegistForm from './ArticleRegistForm';
 import ActivityList from './ActivityList';
 import { useAppSelector } from '../../../hooks/reduxHooks';
 import { useDispatch } from 'react-redux';
-
+import { useLocation } from 'react-router-dom';
 
 const FeedWritePage = () => {
-
-  const articleWriteStep = useAppSelector(state => state.stateSetter.articleWriteStep);
+  const articleWriteStep = useAppSelector(
+    state => state.stateSetter.articleWriteStep
+  );
+  const { state } = useLocation();
   const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [registActivity, setRegistActivity] = useState<Activity>();
 
+  if (registActivity === undefined) {
+    setRegistActivity(state.registActivity);
+  }
   const onClickNext = () => {
-    setCurrentStep(prev => prev+1);
+    setCurrentStep(prev => prev + 1);
   };
 
   return (
     <div className="overflow-auto flex flex-col flex-grow bg-white items-center">
-      {articleWriteStep === 1? <ActivityList setRegistActivity={setRegistActivity}/> : articleWriteStep === 2 && registActivity ? <ArticleRegistForm activity={registActivity}/> : null}
+      {articleWriteStep === 1 ? (
+        <ActivityList setRegistActivity={setRegistActivity} />
+      ) : articleWriteStep === 2 && registActivity ? (
+        <ArticleRegistForm activity={registActivity} />
+      ) : null}
     </div>
   );
 };

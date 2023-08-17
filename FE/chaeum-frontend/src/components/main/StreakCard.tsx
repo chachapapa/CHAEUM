@@ -14,15 +14,22 @@ import {
   faChevronUp,
   faLockOpen,
 } from '@fortawesome/free-solid-svg-icons';
-import { StreakInfoType } from '../Types';
+import { Activity, StreakInfoType } from '../Types';
 import { TextColor } from '../theme/TextColorTheme';
 import { ActiveColor } from '../theme/ActiveColorTheme';
 import { StreakRank } from './StreakRank';
 import ActiveInformation from './ActiveInformation';
-import { openDrawer, openModal } from '../../features/states/states';
+import {
+  openDrawer,
+  openModal,
+  setActivityId,
+  setArticleWriteStep,
+} from '../../features/states/states';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getCategory } from './StreakCategoryList';
+import ActivityInformation from '../feed/write/ActivityInformation';
+import { useAppDispatch } from '../../hooks/reduxHooks';
 
 export const StreakCard = ({ ...props }: StreakInfoType) => {
 
@@ -101,15 +108,87 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
     SetIsListOpen(!isListOpen);
   };
 
-  const userlistSample = [
-    { profile: '../chacha1.jpg', userName: 'rank1', durtime: '03:56:15' },
-    { profile: '../chacha2.png', userName: 'rank2', durtime: '02:11:07' },
-    { profile: '../temp1.jpg', userName: 'rank3', durtime: '02:09:27' },
-    { profile: '../temp2.jpg', userName: 'rank4', durtime: '01:33:48' },
-    { profile: '../temp3.png', userName: 'rank5', durtime: '01:05:22' },
-  ];
-
   const dispatch = useDispatch();
+  const appDispatch = useAppDispatch();
+
+  const [registActivity, setRegistActivity] = useState<Activity>();
+
+  const goWrite = (active: string[]) => {
+    appDispatch(setActivityId(Number(active[4])));
+    appDispatch(setArticleWriteStep(2));
+    const object = {
+      categoryId: props.categoryId,
+      elapsedTime:
+        Math.floor(Number(active[2]) / 3600) +
+        '시간 ' +
+        Math.floor(
+          (Number(active[2]) - Math.floor(Number(active[2]) / 3600) * 3600) / 60
+        ) +
+        '분 ' +
+        (Number(active[2]) -
+          Math.floor(Number(active[2]) / 3600) * 3600 -
+          Math.floor(
+            (Number(active[2]) - Math.floor(Number(active[2]) / 3600) * 3600) /
+              60
+          ) *
+            60) +
+        '초',
+      endTime: active[1].split(' ')[1],
+      startTime: active[0].split(' ')[1],
+      date:
+        active[0].split(' ')[0].split('-')[0] +
+        '년 ' +
+        active[0].split(' ')[0].split('-')[1] +
+        '월 ' +
+        active[0].split(' ')[0].split('-')[2] +
+        '일 ',
+      streakColor: props.streakColor,
+      streakId: props.streakId,
+      streakName: props.streakName,
+      tagList: props.tagList,
+    };
+    setRegistActivity({
+      categoryId: props.categoryId,
+      elapsedTime:
+        Math.floor(Number(active[2]) / 3600) +
+        '시간 ' +
+        Math.floor(
+          (Number(active[2]) - Math.floor(Number(active[2]) / 3600) * 3600) / 60
+        ) +
+        '분 ' +
+        (Number(active[2]) -
+          Math.floor(Number(active[2]) / 3600) * 3600 -
+          Math.floor(
+            (Number(active[2]) - Math.floor(Number(active[2]) / 3600) * 3600) /
+              60
+          ) *
+            60) +
+        '초',
+      endTime: active[1].split(' ')[1],
+      startTime: active[0].split(' ')[1],
+      date:
+        active[0].split(' ')[0].split('-')[0] +
+        '년 ' +
+        active[0].split(' ')[0].split('-')[1] +
+        '월 ' +
+        active[0].split(' ')[0].split('-')[2] +
+        '일 ',
+      streakColor: props.streakColor,
+      streakId: props.streakId,
+      streakName: props.streakName,
+      tagList: props.tagList,
+    });
+    writeForm(object);
+  };
+
+  const writeForm = (object: Activity) => {
+    navigate('/feed/write', {
+      state: {
+        articleWriteStep: 2,
+        registActivity: object,
+      },
+    });
+  };
 
   return (
     <div
@@ -244,7 +323,41 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
             icon={isListOpen ? faChevronUp : faChevronDown}
             className="text-chaeum-gray-600 pt-2 text-xl "
           />
-          <div className={isListOpen ? OPEN_TYPE.open : OPEN_TYPE.close}></div>
+          {isListOpen ? (
+            <div className="pb-2 max-h-40 ease-in-out overflow-scroll opacity-100 duration-700 transition-height">
+              {props.activeHistoryList.map((active, index) => (
+                <div key={index} className="w-full">
+                  <div>
+                    <ActivityInformation
+                      middleCategory={props}
+                      activity={active}
+                      key={index}
+                      setRegistActivity={setRegistActivity}
+                      callback={() => goWrite(active)}
+                    />
+                    <hr className="my-3"></hr>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="h-0 ease-in-out overflow-hidden duration-700 transition-height">
+              {props.activeHistoryList.map((active, index) => (
+                <div key={index} className="w-full">
+                  <div>
+                    <ActivityInformation
+                      middleCategory={props}
+                      activity={active}
+                      key={index}
+                      setRegistActivity={setRegistActivity}
+                      callback={() => goWrite(active)}
+                    />
+                    <hr className="my-3"></hr>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

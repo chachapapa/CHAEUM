@@ -411,6 +411,7 @@ public class SnsServiceImpl implements SnsService {
                     .imageList(fileList)
                     .isFriend(true)
                     .streakColor(post.getActivity().getStreakId().getStreakColor())
+                    .streakName(post.getActivity().getStreakId().getStreakName())
                     .build();
 
             if (cnt++ <= friendCnt) {
@@ -508,6 +509,7 @@ public class SnsServiceImpl implements SnsService {
                     .imageList(fileList)
                     .isFriend(true)
                     .streakColor(post.getActivity().getStreakId().getStreakColor())
+                    .streakName(post.getActivity().getStreakId().getStreakName())
                     .build();
 
             // dto 리스트에 저장

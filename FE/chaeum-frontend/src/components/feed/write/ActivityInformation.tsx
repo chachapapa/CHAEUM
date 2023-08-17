@@ -11,40 +11,45 @@ import { Activity, Article, StreakInfoType } from '../../Types';
 import { start } from 'repl';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../hooks/reduxHooks';
-import { setActivityId, setArticleWriteStep } from '../../../features/states/states';
+import {
+  setActivityId,
+  setArticleWriteStep,
+} from '../../../features/states/states';
 
 type Props = {
   middleCategory: StreakInfoType;
   activity: string[];
   setRegistActivity: React.Dispatch<React.SetStateAction<Activity | undefined>>;
+  callback?(): void;
 };
 
 const ActivityInformation = ({
   middleCategory,
   activity,
   setRegistActivity,
+  callback,
 }: Props) => {
   const dispatch = useAppDispatch();
   const color = middleCategory.streakColor;
   const weight3 = 'w3';
   const backgroundColor = WaveBottomColor({ color, weight3 });
-
+  const disabledColor = WaveBottomColor({ weight3 });
   const startTime: Date = new Date(activity[0]);
 
   const elapsedTime = Number(activity[2]);
   const date =
-    startTime.getFullYear() +
+    activity[0].split(' ')[0].split('-')[0] +
     '년 ' +
-    startTime.getMonth() +
+    activity[0].split(' ')[0].split('-')[1] +
     '월 ' +
-    startTime.getDay() +
-    '일';
+    activity[0].split(' ')[0].split('-')[2] +
+    '일 ';
   const startTimeFormed = activity[0].split(' ')[1];
   const endTimeFormed = activity[1].split(' ')[1];
 
   const hour = Math.floor(elapsedTime / 3600);
   const minute = Math.floor((elapsedTime - hour * 3600) / 60);
-  const second = (elapsedTime - hour * 3600000 - minute * 60);
+  const second = elapsedTime - hour * 3600 - minute * 60;
   const elapsedTimeFormed = hour + '시간 ' + minute + '분 ' + second + '초';
 
   const onWriteButtonClicked = () => {
@@ -59,7 +64,6 @@ const ActivityInformation = ({
       streakName: middleCategory.streakName,
       tagList: middleCategory.tagList,
     });
-    console.log(Number(activity[4]));
     dispatch(setActivityId(Number(activity[4])));
     dispatch(setArticleWriteStep(2));
   };
@@ -87,7 +91,7 @@ const ActivityInformation = ({
           >
             <div className="flex w-full flex-col gap-0.5">
               <div className="flex items-center justify-between">
-                <div className='w-[250px] text-left'>
+                <div className="w-[250px] text-left">
                   <Typography variant="h6">
                     {middleCategory.streakName}
                   </Typography>
@@ -114,12 +118,21 @@ const ActivityInformation = ({
                 <button className="outline outline-1 w-20 h-6 text-sm items-center rounded-md text-chaeum-gray-900 outline-chaeum-gray-300 hover:bg-chaeum-gray-300 mr-2 transition-all">
                   응원글 보기
                 </button>
-                <button
-                  className={`w-16 h-6 text-sm items-center rounded-md text-white ${backgroundColor}`}
-                  onClick={onWriteButtonClicked}
-                >
-                  공유하기
-                </button>
+                {activity[3] === '0' ? (
+                  <button
+                    className={`w-20 h-6 text-sm items-center rounded-md text-white ${backgroundColor}`}
+                    onClick={callback ? callback : onWriteButtonClicked}
+                  >
+                    공유하기
+                  </button>
+                ) : (
+                  <button
+                    disabled
+                    className={`w-20 h-6 text-sm items-center rounded-md text-chaeum-gray-900 ${disabledColor}`}
+                  >
+                    공유완료
+                  </button>
+                )}
               </div>
             </div>
           </CardBody>
