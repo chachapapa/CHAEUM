@@ -102,7 +102,7 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
       className="flex p-3 w-full flex-col items-start justify-between mb-3 bg-white"
     >
       <div className="flex justify-between w-full">
-        <div className="relative flex items-center gap-x-4 w-full">
+        <div className={location.pathname.includes('profile') ? 'relative flex pt-2 gap-x-4 w-full' :'relative flex items-center gap-x-4 w-full'}>
           {location.pathname.includes('profile') ? null : (
             <img
               src={article.profileUrl}

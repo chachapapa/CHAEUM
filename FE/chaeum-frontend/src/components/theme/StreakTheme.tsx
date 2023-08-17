@@ -187,6 +187,7 @@ const WaveBottomColor = ({
   const newcolor = typeof color !== 'undefined' ? color : 'default';
   const newweight = weight0? 'w0' : weight2 ? 'w2' : weight3 ? 'w3' : 'w4';
 
+
   return ColorNameList[newcolor + newweight];
 };
 

@@ -10,7 +10,7 @@ import LoadingPage from '../components/common/LoadingPage';
 import axios from 'axios';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { setMyProfileImageUrl } from '../features/states/states';
-import { setMyNickname } from '../features/states/userStates';
+import { setIsLogedin, setMyNickname } from '../features/states/userStates';
 
 const SIGNUP_CHECK_URL = 'http://i9a810.p.ssafy.io:8080/api/user/me';
 const REGIST_STREAK_URL = 'http://i9a810.p.ssafy.io:8080/api/streak';
@@ -64,6 +64,7 @@ const SignupPage = () => {
         } else {
           console.log(res.data);
           // dispatch()
+          dispatch(setIsLogedin());
           dispatch(setMyNickname(res.data.nickname));
           dispatch(setMyProfileImageUrl(res.data.profileImageUrl));
           navigate('/main');
@@ -120,6 +121,7 @@ const SignupPage = () => {
               if (res.data.isRegistered === false) {
                 setCurrentStep(1);
               } else {
+                dispatch(setIsLogedin());
                 navigate('/main');
               }
             });

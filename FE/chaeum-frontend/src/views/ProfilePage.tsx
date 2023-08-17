@@ -43,7 +43,6 @@ const AccessToken = localStorage.getItem('access_token');
 const ProfilePage = () => {
   const location = useLocation();
   const userNickname = decodeURI(location.pathname.split('/')[2]);
-  // const params = useSearchParams
   const [user, setUser] = useState<User>({ nickname: '', profileImageUrl: '' });
 
   useEffect(() => {
@@ -171,7 +170,8 @@ const ProfilePage = () => {
     state => state.stateSetter
   );
   const dispatch = useDispatch();
-  const imageList = useAppSelector(state => state.stateSetter.imageList);
+  const profileImage = useAppSelector(state => state.stateSetter.profileImage);
+  const backgroundImage = useAppSelector(state => state.stateSetter.backgroundImage);
   const navigate = useNavigate();
   const [modalTypeKor, setModalTypeKor] = useState<string>('');
   const [isLogoutButtonClicked, setIsLogoutButtonClicked] =
@@ -196,7 +196,6 @@ const ProfilePage = () => {
   };
   const registMyData = () => {
     console.log(user);
-    console.log(imageList[0]);
     const formData = new FormData();
     const updateMypageInfoRequest = JSON.stringify({
           gender: user.gender,
@@ -206,8 +205,18 @@ const ProfilePage = () => {
           introduce: user.introduce,
           mainColor: user.mainColor,
     });
-    formData.append('updateMypageProfileImage', imageList[1].file);
-    formData.append('updateMypageBackgroundImage', imageList[0].file);
+    if(profileImage.length>0){
+    formData.append('updateMypageProfileImage', profileImage[0].file);
+  }else{
+    // formData.append('updateMypageProfileImage', '');
+  }
+
+  if(backgroundImage.length>0){
+    formData.append('updateMypageBackgroundImage', backgroundImage[0].file);
+  }else{
+    // formData.append('updateMypageBackgroundImage', '');
+  }
+    
     formData.append(
       'updateMypageInfoRequest',
       new Blob([updateMypageInfoRequest], { type: 'application/json' })
@@ -227,49 +236,13 @@ const ProfilePage = () => {
           setTimeout(() => {
             dispatch(closeModal());
             setGoMypageModify(false);
+            window.location.reload();
           }, 500);
         }
       })
       .catch(e => {
         console.log(e);
       });
-
-
-
- 
-    // axios
-    //   .patch(
-    //     `${USER_INFO_URL}`,
-    //     JSON.stringify({
-    //       nickname: user.nickname,
-    //       profileImageUrl: user.profileImageUrl,
-    //       gender: user.gender,
-    //       age: user.age,
-    //       weight: user.weight,
-    //       height: user.height,
-    //       mbti: user.mbti,
-    //       introduce: user.introduce,
-    //       mainColor: user.mainColor,
-    //     }),
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${AccessToken}`,
-    //         'Content-Type': 'application/json',
-    //       },
-    //     }
-    //   )
-    //   .then(res => {
-    //     console.log(res);
-    //     if (res) {
-    //       setGoMypageModify(true);
-    //       setTimeout(() => {
-    //         dispatch(closeModal());
-    //         setGoMypageModify(false);
-    //       }, 500);
-    //     }
-    //   });
-
-    // 창닫기
   };
 
   const onMbtiChange = (value: string | undefined) => {
@@ -356,6 +329,7 @@ const ProfilePage = () => {
           longest={300}
           age={user.age}
           mbti={user.mbti}
+          mainColor={user.mainColor}
           profileImage={user.profileImageUrl}
           onClick={() => {
             console.log('내 프로필');
@@ -363,19 +337,12 @@ const ProfilePage = () => {
         ></MyProfileCard>
         {/* 배경사진 */}
         <div
-          className="w-full min-h-[200px]"
-          style={{
-            maxHeight: '200px', // 높이를 최대 200px로 제한
-            overflow: 'hidden', // 넘치는 부분은 숨김 처리
-          }}
+          className="w-full h-[200px]"
         >
           <img
-            src={user.backgroundUrl}
+            src={user.backgroundUrl?user.backgroundUrl :'../Logo.png'}
             alt="배경사진"
-            className="w-full h-auto object-cover top-1/2 -translate-y-1/4"
-            style={{
-              minWidth: '200px', // 최소 너비를 200px로 유지하여 비율 유지
-            }}
+            className="w-full top-1/2 h-[200px]"
           />
         </div>
 
@@ -494,7 +461,7 @@ const ProfilePage = () => {
                 label="간단히 나를 소개해주세요."
                 width="w-full mb-5"
                 setUser={setUser}
-                for="introduction"
+                for='introduction'
                 value={user.introduce}
               />
             </div>

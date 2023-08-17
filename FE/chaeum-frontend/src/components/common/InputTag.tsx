@@ -28,7 +28,7 @@ const InputTag = ({ width = 'w-full', ...props }: Props) => {
       if (props.for === 'introduction') {
         props.setUser(prev => ({
           ...prev,
-          introduction: e.target.value,
+          introduce: e.target.value,
         }));
       } else if (props.for === 'height') {
         props.setUser(prev => ({

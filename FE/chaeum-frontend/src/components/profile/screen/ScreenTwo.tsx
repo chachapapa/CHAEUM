@@ -32,7 +32,7 @@ const ScreenTwo = ({ userNickname }: Props) => {
         params: { nickName: userNickname },
       })
       .then(res => {
-        // console.log(res);
+        console.log(res);
         if (res.data.length > 0) {
           for (let i = 0; i < res.data.length; i++) {
             const commentList: Comment[] = [];
