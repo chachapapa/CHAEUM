@@ -18,16 +18,17 @@ import axios from 'axios';
 import { User } from '../Types';
 import FriendProfileCard from '../profile/FriendProfileCard';
 import { FriendNoti } from '../feed/FriendNoti';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 interface HeaderPropsType {
   title?: JSX.Element | string;
   isLogo: boolean;
 }
 
-const ARTICLE_WRITE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/create';
-const STREAK_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/streak';
-const USER_SEARCH_URL =
-  'http://i9a810.p.ssafy.io:8080/api/user/nickname-search';
+// const ARTICLE_WRITE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/create';
+// const STREAK_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/streak';
+// const USER_SEARCH_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/user/nickname-search';
 const AccessToken = localStorage.getItem('access_token');
 
 export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
@@ -86,7 +87,7 @@ export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
     );
 
     axios
-      .post(`${ARTICLE_WRITE_URL}`, formData, {
+      .post(`${getApiUrl(API_ROUTES.ARTICLE_WRITE_URL)}`, formData, {
         headers: {
           Authorization: `Bearer ${AccessToken}`,
           'Content-Type': 'multipart/form-data',
@@ -94,7 +95,7 @@ export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
       })
       .then(() => {
         axios
-          .get(`${STREAK_LIST_URL}`, {
+          .get(`${getApiUrl(API_ROUTES.STREAK_LIST_URL)}`, {
             headers: { Authorization: `Bearer ${AccessToken}` },
           })
           .then(res => {
@@ -121,7 +122,7 @@ export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
     const onKeywordChange = () => {
       console.log('검색검색');
       axios
-        .get(`${USER_SEARCH_URL}`, {
+        .get(`${getApiUrl(API_ROUTES.USER_SEARCH_URL)}`, {
           headers: { Authorization: `Bearer ${AccessToken}` },
           params: { keyword: searchKeyword },
         })

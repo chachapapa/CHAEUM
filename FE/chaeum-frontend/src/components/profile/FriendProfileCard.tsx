@@ -7,6 +7,7 @@ import { User } from '../Types';
 import UserNicknameInput from '../signup/UserNicknameInput';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type Props = {
   user: User;
@@ -15,7 +16,7 @@ type Props = {
   type?: string;
 };
 
-const FRIEND_DELETE_URL = 'http://i9a810.p.ssafy.io:8080/api/user';
+// const FRIEND_DELETE_URL = 'http://i9a810.p.ssafy.io:8080/api/user';
 const AccessToken = localStorage.getItem('access_token');
 
 const FriendProfileCard = ({ user, index, setFriendList, type }: Props) => {
@@ -28,10 +29,13 @@ const FriendProfileCard = ({ user, index, setFriendList, type }: Props) => {
   const onDeleteButtonClick = () => {
     const deleteFriend = async () => {
       try {
-        const res = await axios.patch(`${FRIEND_DELETE_URL}`, {
-          headers: { Authorization: `Bearer ${AccessToken}` },
-          params: { nickname: `${user.nickname}` },
-        });
+        const res = await axios.patch(
+          `${getApiUrl(API_ROUTES.FRIEND_DELETE_URL)}`,
+          {
+            headers: { Authorization: `Bearer ${AccessToken}` },
+            params: { nickname: `${user.nickname}` },
+          }
+        );
         if (setFriendList) setFriendList(prev => prev.splice(index, 1));
       } catch (e) {
         console.log('유저 정보가 없습니다.');

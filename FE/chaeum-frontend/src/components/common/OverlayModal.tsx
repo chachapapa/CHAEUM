@@ -13,6 +13,7 @@ import {
 import { Tag } from './Tag';
 import axios from 'axios';
 import { getCategory } from '../main/StreakCategoryList';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type ModalType = {
   categoryList: string[];
@@ -74,16 +75,6 @@ export const OverlayModal = ({ ...props }: ModalType) => {
   const [hashtag, setHashtag] = useState<string>(''); // 단일 해시태그 입력받기
 
   const AccessToken = localStorage.getItem('access_token');
-
-  // axios 테스트
-  type UrlObjType = {
-    [key in string]: string;
-  };
-
-  const url: UrlObjType = {
-    CREATE_STREAK_URL: 'http://i9a810.p.ssafy.io:8080/api/streak',
-    MODIFY_STREAK_URL: 'http://i9a810.p.ssafy.io:8080/api/streak/modification',
-  };
 
   // 스트릭 제목
   const handleInputValueChange = (newValue: string) => {
@@ -174,15 +165,19 @@ export const OverlayModal = ({ ...props }: ModalType) => {
     } else {
       // axios로 요청 날리기
       axios
-        .post(`${url.CREATE_STREAK_URL}`, JSON.stringify(postParams), {
-          headers: {
-            Authorization: `Bearer ${AccessToken}`,
-            'Content-Type': 'application/json',
-          },
-        })
+        .post(
+          `${getApiUrl(API_ROUTES.STREAK_LIST_URL)}`,
+          JSON.stringify(postParams),
+          {
+            headers: {
+              Authorization: `Bearer ${AccessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
         .then(() => {
           axios
-            .get(`${url.CREATE_STREAK_URL}`, {
+            .get(`${getApiUrl(API_ROUTES.STREAK_LIST_URL)}`, {
               // params: { nickname: nickname },
               headers: { Authorization: `Bearer ${AccessToken}` },
             })
@@ -206,18 +201,21 @@ export const OverlayModal = ({ ...props }: ModalType) => {
 
   const modifyStreak = () => {
     // axios로 요청 날리기
-
     console.log(JSON.stringify(patchParams));
     axios
-      .patch(`${url.MODIFY_STREAK_URL}`, JSON.stringify(patchParams), {
-        headers: {
-          Authorization: `Bearer ${AccessToken}`,
-          'Content-Type': 'application/json',
-        },
-      })
+      .patch(
+        `${getApiUrl(API_ROUTES.STREAK_MODIFY_URL)}`,
+        JSON.stringify(patchParams),
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
       .then(() => {
         axios
-          .get(`${url.CREATE_STREAK_URL}`, {
+          .get(`${getApiUrl(API_ROUTES.STREAK_LIST_URL)}`, {
             // params: { nickname: nickname },
             headers: { Authorization: `Bearer ${AccessToken}` },
           })
