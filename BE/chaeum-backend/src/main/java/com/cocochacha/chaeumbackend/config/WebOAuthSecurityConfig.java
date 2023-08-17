@@ -42,9 +42,10 @@ public class WebOAuthSecurityConfig implements WebMvcConfigurer {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080",
-                "http://i9a810.p.ssafy.io:80", "http://i9a810.p.ssafy.io:8080",
-                "https://accounts.kakao.com/login"));
+        configuration.setAllowedOrigins(
+                List.of("https://i9a810.p.ssafy.io", "http://localhost:3000",
+                        "http://localhost:8080", "http://i9a810.p.ssafy.io:80",
+                        "http://i9a810.p.ssafy.io:8080", "https://accounts.kakao.com/login"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);

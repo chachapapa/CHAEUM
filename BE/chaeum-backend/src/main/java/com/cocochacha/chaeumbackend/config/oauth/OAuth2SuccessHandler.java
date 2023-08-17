@@ -114,9 +114,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private String getTargetUrl(String token) {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port(3000)
+                .scheme("https")
+                .host("i9a810.p.ssafy.io")
                 .path("/signup")
                 .queryParam("token", token)
                 .build()
