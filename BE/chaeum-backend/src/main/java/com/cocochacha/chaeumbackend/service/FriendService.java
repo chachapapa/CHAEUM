@@ -248,7 +248,9 @@ public class FriendService {
         List<String> nicknameList = new ArrayList<>();
 
         for (FriendAdd friendAdd : friendAddList) {
-            nicknameList.add(friendAdd.getToId().getNickname());
+            if (friendAdd.isAdd()) {
+                nicknameList.add(friendAdd.getToId().getNickname());
+            }
         }
 
         AddListFriendResponse addListFriendResponses = new AddListFriendResponse();
