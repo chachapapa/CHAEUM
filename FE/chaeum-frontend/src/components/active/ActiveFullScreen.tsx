@@ -23,14 +23,22 @@ import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type Cheering = {
   nickname: string;
-  comments: string;
+  content: string;
   profileUrl: string;
 };
 
 type Props = {
-  cheeringMent: Cheering[];
+  // cheeringMent: Cheering[];
   startMent: string[];
 };
+
+let cheeringMent: Cheering[] = [
+  {
+    nickname: '',
+    content: '응원글이 아직 없습니다.',
+    profileUrl: '../chacha2.png',
+  },
+];
 
 const ActiveFullScreen = (props: Props) => {
   const dispatch = useDispatch();
@@ -71,14 +79,57 @@ const ActiveFullScreen = (props: Props) => {
 
     return timeDifferenceInSeconds;
   }
+  const fetchCheering = async () => {
+    try {
+      const response = await axios
+        .get(`${getApiUrl(API_ROUTES.ACTIVITY_ENCOURAGE_URL)}`, {
+          headers: {
+            Authorization: 'Bearer ' + access_token,
+            'Content-Type': 'application/json',
+          },
+          params: { activityId: myActivityInfo.activityId },
+        })
+        .then(res => {
+          // console.log('응원글입니다');
+          // console.log(res.data);
+          cheeringMent = res.data;
+          // console.log(cheeringMent);
+          // console.log(cheeringMent);
+        });
+    } catch (error) {
+      // console.error('Error fetching sentences:', error);
+      console.log('Error fetching 응원글:', error);
+    }
+  };
+
+  // useEffect(() => {
+  //   // 응원글 갱신
+
+  //   const cheeringValid = setInterval(() => {
+  //     fetchCheering();
+  //     console.log(cheeringMent);
+  //   }, 10000);
+
+  //   return () => {
+  //     clearInterval(cheeringValid);
+  //   };
+  // });
 
   useEffect(() => {
     let intervalId: string | number | NodeJS.Timeout | undefined;
+    // let cheeringValid: string | number | NodeJS.Timeout | undefined;
+
     if (isRunning) {
       // setting time from 0 to 1 every 10 milisecond using javascript setInterval method
-      intervalId = setInterval(() => setTime(time + 1), 1000);
+      intervalId = setInterval(() => {
+        setTime(time + 1);
+        fetchCheering();
+      }, 1000);
     }
-    return () => clearInterval(intervalId);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [isRunning, time]);
 
   // Hours calculation
@@ -164,7 +215,7 @@ const ActiveFullScreen = (props: Props) => {
     };
 
     updateActivity();
-    navigate('/active/result', { state: props.cheeringMent });
+    navigate('/active/result');
   };
 
   const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
@@ -203,14 +254,14 @@ const ActiveFullScreen = (props: Props) => {
               {/* {commentListExample.map(comment => ( */}
 
               {/* 응원글이 없을경우 처리 */}
-              {props.cheeringMent.length === 0 ? (
+              {cheeringMent.length === 0 ? (
                 <div className="text-center w-full pr-24">
                   작성된 응원글이 없습니다.
                 </div>
               ) : (
                 <>
                   {/* 응원글이 있을경우 최대 4개까지 보여주게끔 처리 */}
-                  {props.cheeringMent.slice(0, 4).map(comment => (
+                  {cheeringMent.slice(0, 4).map(comment => (
                     <div
                       className="relative w-full h-10 mb-1"
                       key={comment.nickname}
@@ -233,7 +284,7 @@ const ActiveFullScreen = (props: Props) => {
                               <span className="font-bold mr-2">
                                 {comment.nickname}
                               </span>
-                              <span>{comment.comments}</span>
+                              <span>{comment.content}</span>
                             </Typography>
                           </div>
                         </div>
@@ -302,3 +353,6 @@ const ActiveFullScreen = (props: Props) => {
 };
 
 export default ActiveFullScreen;
+function fetchCheering(): unknown {
+  throw new Error('Function not implemented.');
+}
