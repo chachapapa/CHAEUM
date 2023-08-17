@@ -54,7 +54,7 @@ export const OverlayModal = ({ ...props }: ModalType) => {
   const [patchParams, setPatchParams] = useState<ModiType>({
     streakId: 0,
     streakName: '',
-    streakColor: '',
+    streakColor: ' ',
     tagList: [],
   });
 
@@ -188,7 +188,6 @@ export const OverlayModal = ({ ...props }: ModalType) => {
             })
             .then(res => {
               if (res.data) {
-                console.log(postParams);
                 dispatch(setMyStreakInfo(res.data));
               } else {
                 alert('문제있음');
@@ -352,12 +351,14 @@ export const OverlayModal = ({ ...props }: ModalType) => {
             <InputTag
               label="스트릭 이름을 입력하세요."
               width="w-full mb-5"
+              for="streakName"
               onChange={handleInputValueChange}
             />
           ) : (
             <InputTag
               value={patchParams.streakName}
               width="w-full mb-5"
+              for="streakName"
               onChange={handleInputValueChange}
             />
           )}
