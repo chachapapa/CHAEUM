@@ -1,12 +1,16 @@
+import { string } from 'prop-types';
+
 type User = {
   nickname: string;
   profileImageUrl: string;
+  backgroundUrl?: string;
   introduce? : string;
   gender? : string;
   mbti? : string;
   age? : number;
   weight? : string;
   height? : string;
+  mainColor? : ColorVariation;
 };
 
 type Activity = {

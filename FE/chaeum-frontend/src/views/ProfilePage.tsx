@@ -27,10 +27,15 @@ import { openDrawer, openModal, closeModal } from '../features/states/states';
 import InputTag from '../components/common/InputTag';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import GenderButton from '../components/profile/GenderButton';
-import { User } from '../components/Types';
+import { ColorVariation, User } from '../components/Types';
 import '../components/styles/profiletab.css';
 import axios from 'axios';
 import ColorContainer from '../components/common/ColorContainer';
+import ImageUpload from '../components/common/ImageUpload';
+import BackgroundImageUpload from '../components/common/BackgroundImageUpload';
+import { getApiUrl } from '../apiConfig';
+import { API_ROUTES } from '../apiConfig';
+import ProfileImageUpload from '../components/common/ProfileImageUpload';
 
 const USER_INFO_URL = 'http://i9a810.p.ssafy.io:8080/api/user/mypage-info';
 const AccessToken = localStorage.getItem('access_token');
@@ -50,6 +55,11 @@ const ProfilePage = () => {
           params: { nickname: userNickname },
         });
         setUser(res.data);
+        if (res.data.gender === 'm') {
+          setSelectedButton(0);
+        } else if (res.data.gender === 'f') {
+          setSelectedButton(1);
+        }
       } catch (e) {
         console.log('유저 정보가 없습니다.');
       }
@@ -58,22 +68,6 @@ const ProfilePage = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // const handleColor = (value: string) => {
-  //   if (modalState.modalType === 'create') {
-  //     setPostParams(prevState => {
-  //       const newParams = { ...prevState };
-  //       newParams.streakColor = value;
-  //       return newParams;
-  //     });
-  //   } else {
-  //     setPatchParams(prevState => {
-  //       const newParams = { ...prevState };
-  //       newParams.streakColor = value;
-  //       return newParams;
-  //     });
-  //   }
-  // };
 
   const colorArr = [
     {
@@ -177,6 +171,7 @@ const ProfilePage = () => {
     state => state.stateSetter
   );
   const dispatch = useDispatch();
+  const imageList = useAppSelector(state => state.stateSetter.imageList);
   const navigate = useNavigate();
   const [modalTypeKor, setModalTypeKor] = useState<string>('');
   const [isLogoutButtonClicked, setIsLogoutButtonClicked] =
@@ -201,26 +196,30 @@ const ProfilePage = () => {
   };
   const registMyData = () => {
     console.log(user);
-    axios
-      .patch(
-        `${USER_INFO_URL}`,
-        JSON.stringify({
-          nickname: user.nickname,
-          profileImageUrl: user.profileImageUrl,
+    console.log(imageList[0]);
+    const formData = new FormData();
+    const updateMypageInfoRequest = JSON.stringify({
           gender: user.gender,
-          age: user.age,
           weight: user.weight,
           height: user.height,
           mbti: user.mbti,
           introduce: user.introduce,
-        }),
-        {
-          headers: {
-            Authorization: `Bearer ${AccessToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+          mainColor: user.mainColor,
+    });
+    formData.append('updateMypageProfileImage', imageList[1].file);
+    formData.append('updateMypageBackgroundImage', imageList[0].file);
+    formData.append(
+      'updateMypageInfoRequest',
+      new Blob([updateMypageInfoRequest], { type: 'application/json' })
+    );
+
+    axios
+      .patch(`${getApiUrl(API_ROUTES.USER_MYPAGE_URL)}`, formData, {
+        headers: {
+          Authorization: `Bearer ${AccessToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      })
       .then(res => {
         console.log(res);
         if (res) {
@@ -230,7 +229,45 @@ const ProfilePage = () => {
             setGoMypageModify(false);
           }, 500);
         }
+      })
+      .catch(e => {
+        console.log(e);
       });
+
+
+
+ 
+    // axios
+    //   .patch(
+    //     `${USER_INFO_URL}`,
+    //     JSON.stringify({
+    //       nickname: user.nickname,
+    //       profileImageUrl: user.profileImageUrl,
+    //       gender: user.gender,
+    //       age: user.age,
+    //       weight: user.weight,
+    //       height: user.height,
+    //       mbti: user.mbti,
+    //       introduce: user.introduce,
+    //       mainColor: user.mainColor,
+    //     }),
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${AccessToken}`,
+    //         'Content-Type': 'application/json',
+    //       },
+    //     }
+    //   )
+    //   .then(res => {
+    //     console.log(res);
+    //     if (res) {
+    //       setGoMypageModify(true);
+    //       setTimeout(() => {
+    //         dispatch(closeModal());
+    //         setGoMypageModify(false);
+    //       }, 500);
+    //     }
+    //   });
 
     // 창닫기
   };
@@ -240,6 +277,10 @@ const ProfilePage = () => {
       ...prev,
       mbti: value,
     }));
+  };
+
+  const handleColor = (value: ColorVariation) => {
+    setUser(prev => ({ ...prev, mainColor: value }));
   };
 
   const logOutButtonClick = () => {
@@ -329,7 +370,7 @@ const ProfilePage = () => {
           }}
         >
           <img
-            src="../chacha1.jpg"
+            src={user.backgroundUrl}
             alt="배경사진"
             className="w-full h-auto object-cover top-1/2 -translate-y-1/4"
             style={{
@@ -442,10 +483,10 @@ const ProfilePage = () => {
       {/* 내 정보 수정 */}
       {modalState.isModalOpen ? (
         <div className="absolute flex justify-center items-center flex-col shrink-0 inset-0 w-full h-full pointer-events-auto z-[9995] bg-chaeum-gray-300 bg-opacity-60 backdrop-blur-md transition-all duration-300">
-          <div className="w-10/12 flex flex-col justify-center items-center">
-            <span className="font-bold text-2xl m-8 w-full text-chaeum-gray-900">
-              내정보 수정하기
-            </span>
+          <span className="font-bold text-2xl m-8 w-full text-chaeum-gray-900">
+            내정보 수정하기
+          </span>
+          <div className="w-10/12 flex flex-col items-center h-[700px] overflow-auto">
             <div className="w-full flex flex-col">
               <span className="text-start m-1 text-sm text-black">내 소개</span>
 
@@ -454,6 +495,7 @@ const ProfilePage = () => {
                 width="w-full mb-5"
                 setUser={setUser}
                 for="introduction"
+                value={user.introduce}
               />
             </div>
 
@@ -481,6 +523,7 @@ const ProfilePage = () => {
                     'h-10 bg-white w-full bg-opacity-50 border-[1px] focus:border-2 border-chaeum-gray-500/80 focus:border-blue-500'
                   }
                   onChange={onMbtiChange}
+                  value={user.mbti}
                 >
                   {mbtiList.map((mbti, index) => (
                     <Option key={index} value={mbti}>
@@ -499,6 +542,7 @@ const ProfilePage = () => {
                       className="w-full mb-5"
                       setUser={setUser}
                       for="height"
+                      value={user.height}
                     />
                   </div>
                 </div>
@@ -512,24 +556,50 @@ const ProfilePage = () => {
                       className="w-full mb-5"
                       setUser={setUser}
                       for="weight"
+                      value={user.weight}
                     />
                   </div>
                 </div>
-                {/* <div className="flex w-full overflow-auto overflow-y-hidden">
-                  {colorArr.map((container, idx) => (
-                    <ColorContainer
-                      key={idx}
-                      defaultChecked={
-                        patchParams.streakColor === container.name
-                          ? true
-                          : false
-                      }
-                      value={container.name}
-                      color={container.color}
-                      handleColor={handleColor}
-                    />
-                  ))}
-                </div> */}
+                <div>
+                <span className="text-start m-1 text-sm text-chaeum-gray-700">
+                          테마 컬러
+                        </span>
+                  <div className="flex w-full overflow-auto overflow-y-hidden">
+                    {colorArr.map((container, idx) => (
+                      <ColorContainer
+                        key={idx}
+                        defaultChecked={
+                          user.mainColor === container.name ? true : false
+                        }
+                        value={container.name}
+                        color={container.color}
+                        handleColor={handleColor}
+                      />
+                    ))}
+                  </div>
+                  <div>
+                    <div className="flex flex-col mt-3 w-full">
+                      <label className="self-start mb-1">
+                        <i className="fa-regular fa-image mx-2"></i>
+                        <span className="text-start m-1 text-sm text-chaeum-gray-700">
+                          프로필 사진 수정
+                        </span>
+                      </label>
+                      <ProfileImageUpload />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex flex-col mt-3 w-full">
+                      <label className="self-start mb-1">
+                        <i className="fa-regular fa-image mx-2"></i>
+                        <span className="text-start m-1 text-sm text-chaeum-gray-700">
+                          배경화면 수정{' '}
+                        </span>
+                      </label>
+                      <BackgroundImageUpload />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 

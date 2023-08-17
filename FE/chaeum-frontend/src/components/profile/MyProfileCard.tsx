@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Button } from '@material-tailwind/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
@@ -21,8 +21,11 @@ interface ProfileCardPropsType {
   onClick: () => void;
 }
 
-// const FRIEND_REQUEST_URL = 'http://i9a810.p.ssafy.io:8080/api/user/add';
-// const FRIEND_DELETE_URL = 'http://i9a810.p.ssafy.io:8080/api/user';
+const FRIEND_REQUEST_URL = 'http://i9a810.p.ssafy.io:8080/api/user/add';
+const FRIEND_REQUEST_CHECK_URL =
+  'http://i9a810.p.ssafy.io:8080/api/user/add/me';
+const FRIEND_STATUS_URL = 'http://i9a810.p.ssafy.io:8080/api/user';
+const FRIEND_REQUEST_CANCEL_URL = 'http://i9a810.p.ssafy.io:8080/api/user/cancel';
 const AccessToken = localStorage.getItem('access_token');
 
 export const MyProfileCard = ({
@@ -39,6 +42,10 @@ export const MyProfileCard = ({
   const friendNicknameList = useAppSelector(
     state => state.stateSetter.friendNicknameList
   );
+  //0 아무것도 없는 남
+  //1 친구 신청중
+  //2 친구
+  const [friendCheck, setFriendCheck] = useState<number>(0);
   const dispatch = useAppDispatch();
 
   const onFriendButtonClick = () => {
@@ -56,6 +63,7 @@ export const MyProfileCard = ({
       .then(res => {
         if (res.data === '친구 신청 완료') {
           dispatch(setFriendNicknameList([name]));
+          setFriendCheck(1);
         } else {
           console.log('친구 신청 실패');
         }
@@ -75,13 +83,77 @@ export const MyProfileCard = ({
             },
           }
         );
-        if (res.data === '삭제 완료') dispatch(deleteFriendNicknameList(name));
+        if (res.data === '삭제 완료') {
+          dispatch(deleteFriendNicknameList(name));
+          setFriendCheck(0);
+        }
       } catch (e) {
         console.log('유저 정보가 없습니다.');
       }
     };
     deleteFriend();
   };
+
+  const onCancelButtonClick = () => {
+    const cancelRequest = async () => {
+      try {
+        const res = await axios.patch(
+          `${FRIEND_REQUEST_CANCEL_URL}`,
+          { nickname: name },
+          {
+            headers: {
+              Authorization: `Bearer ${AccessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        if (res.data === '친구 신청 취소 완료') {
+          setFriendCheck(0);
+        }
+      } catch (e) {
+        console.log('유저 정보가 없습니다.');
+      }
+    };
+    cancelRequest();
+  };
+
+  useEffect(() => {
+    const getFriendCheck = async () => {
+      try {
+        const res = await axios.get(`${FRIEND_STATUS_URL}`, {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+            'Content-Type': 'application/json',
+          },
+          params: { nickname: name },
+        });
+        if (res.data === '둘이 친구 입니다.') {
+          setFriendCheck(2);
+        } else {
+          try {
+            const res = await axios.get(`${FRIEND_REQUEST_CHECK_URL}`, {
+              headers: {
+                Authorization: `Bearer ${AccessToken}`,
+                'Content-Type': 'application/json',
+              },
+              params: { nickname: name },
+            });
+            if (res.data) {
+              setFriendCheck(1);
+            } else {
+              setFriendCheck(0);
+            }
+          } catch (e) {
+            console.log('에러에러');
+          }
+        }
+      } catch (e) {
+        console.log('에러에러');
+      }
+    };
+    getFriendCheck();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
@@ -106,16 +178,23 @@ export const MyProfileCard = ({
           </div>
         </div>
       </div>
-      {name === myNickname ? null : friendNicknameList.includes(name) ? (
+      {name === myNickname ? null : friendCheck === 2 ? (
         <Button
-          className="w-16 p-0 h-6 shadow-none self-center bg-gray-300"
+          className="w-16 p-0 h-6 shadow-none self-center bg-gray-300 hover:shadow-none"
           onClick={onDeleteButtonClick}
         >
           친구 삭제
         </Button>
+      ) : friendCheck === 1 ? (
+        <Button
+          className="w-16 p-0 h-6 shadow-none self-center bg-red-100 hover:shadow-none"
+          onClick={onCancelButtonClick}
+        >
+          신청 취소
+        </Button>
       ) : (
         <Button
-          className="w-16 p-0 h-6 shadow-none self-center bg-chaeum-blue-400"
+          className="w-16 p-0 h-6 shadow-none self-center bg-chaeum-blue-400 hover:shadow-none"
           onClick={onFriendButtonClick}
         >
           친구 신청

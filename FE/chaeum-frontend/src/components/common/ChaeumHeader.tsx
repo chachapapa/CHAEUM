@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import {
   openDrawer,
   setArticleWriteStep,
+  setImageList,
   setIsSearchBarOpened,
   setMyActivityInfo,
   setMyStreakInfo,
@@ -101,6 +102,7 @@ export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
           .then(res => {
             if (res.data) {
               dispatch(setMyStreakInfo(res.data));
+              dispatch(setImageList([]));
               navigate('/feed');
             } else {
               alert('문제있음');

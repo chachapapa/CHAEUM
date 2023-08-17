@@ -166,7 +166,13 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
         </div>
       </div>
       <div className="group relative">
-        <p className="mt-5 line-clamp-3 text-sm text-left leading-6 text-chaeum-gray-900 whitespace-pre-line">
+        <p
+          className={
+            detailedArticle && focusedArticle === article.postId
+              ? 'mt-5 text-sm text-left leading-6 text-chaeum-gray-900 whitespace-pre-line'
+              : 'mt-5 line-clamp-3 text-sm text-left leading-6 text-chaeum-gray-900 whitespace-pre-line'
+          }
+        >
           {article.postContent}
         </p>
       </div>
@@ -214,7 +220,7 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
         setIsLiked={setIsLiked}
       />
       {detailedArticle && focusedArticle === article.postId ? (
-        <div className="flex flex-col items-start w-full">
+        <div className="flex flex-col items-end w-full">
           <span
             onClick={() => onCloseButtonClicked(article.postId)}
             className="text-sm"
@@ -227,12 +233,14 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
           />
         </div>
       ) : (
-        <span
-          onClick={() => onMoreCommentClicked(article.postId)}
-          className="text-sm"
-        >
-          댓글 더보기
-        </span>
+        <div className="flex flex-col items-end w-full">
+          <span
+            onClick={() => onMoreCommentClicked(article.postId)}
+            className="text-sm text-chaeum-blue-500"
+          >
+            게시글 상세 보기
+          </span>
+        </div>
       )}
     </article>
     //         ))}

@@ -24,20 +24,6 @@ const ScreenTwo = ({ userNickname }: Props) => {
   const [focusedArticle, setFocusedArticle] = useState<number>();
   const [articleList, setArticleList] = useState<Article[]>([]);
 
-  const onPlusButtonClicked = (postId: number) => {
-    setIsPlusButtonClicked(!isPlusButtonClicked);
-    setFocusedArticle(postId);
-  };
-
-  const onMoreCommentClicked = (postId: number) => {
-    setDetailedArticle(true);
-    setFocusedArticle(postId);
-  };
-
-  const onCloseButtonClicked = (postId: number) => {
-    setDetailedArticle(false);
-    setFocusedArticle(postId);
-  };
 
   useEffect(() => {
     axios

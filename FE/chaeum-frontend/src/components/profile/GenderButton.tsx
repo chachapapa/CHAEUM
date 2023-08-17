@@ -19,7 +19,7 @@ const GenderButton: React.FC<ButtonProps> = ({
     : 'bg-white text-gray-700 border-none';
 
   return (
-    <Button className={`${baseClasses} ${selectedClasses}`} onClick={onClick}>
+    <Button className={`${baseClasses} ${selectedClasses} hover:shadow-none`} onClick={onClick}>
       {label}
     </Button>
   );
