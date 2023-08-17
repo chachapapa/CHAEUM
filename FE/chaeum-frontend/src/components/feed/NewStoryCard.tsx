@@ -47,10 +47,11 @@ const NewStoryCard = ({ story, onStoryClicked }: Props) => {
     color: story.streakColor,
     weight0,
   });
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   const [time, setTime] = useState(
     calculateTimeDifference(story.activeStartTime)
   );
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  
 
   function calculateTimeDifference(targetTime: string): number {
     /*

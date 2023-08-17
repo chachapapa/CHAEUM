@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Card, Typography, Avatar } from '@material-tailwind/react';
 import { ChevronDownIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
 import { Article, ColorForSelection, Comment, Story } from '../Types';
@@ -31,6 +31,7 @@ const StoryDetailCard = ({ story, closeStoryDetail }: Props) => {
     []
   );
   const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [commentUpdateCount, setCommentUpdateCount] = useState<number>(0);
   console.log(encourageMessageList);
   useEffect(() => {
     axios
@@ -44,7 +45,7 @@ const StoryDetailCard = ({ story, closeStoryDetail }: Props) => {
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [commentUpdateCount]);
 
   useEffect(() => {
     axios
@@ -76,6 +77,7 @@ const StoryDetailCard = ({ story, closeStoryDetail }: Props) => {
           inputPlaceholder="응원글 입력..."
           commentOrEncourageMessage="encourageMessage"
           setEncourageMessageList={setEncourageMessageList}
+          setCommentUpdateCount={setCommentUpdateCount}
           isLiked={isLiked}
           setIsLiked={setIsLiked}
         />

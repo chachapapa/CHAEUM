@@ -11,6 +11,7 @@ type Props = {
   activityId?: number;
   postId?: number;
   setCommentList?: React.Dispatch<React.SetStateAction<Comment[]>>;
+  setCommentUpdateCount? : React.Dispatch<React.SetStateAction<number>>;
   setEncourageMessageList?: React.Dispatch<React.SetStateAction<Comment[]>>;
   isLiked: boolean;
   setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,6 +32,7 @@ const CommentInput = ({
   activityId,
   postId,
   setCommentList,
+  setCommentUpdateCount,
   setEncourageMessageList,
   inputPlaceholder,
   commentOrEncourageMessage,
@@ -135,6 +137,7 @@ const CommentInput = ({
             //     content: currentComment,
             //   },
             // ]);
+            if(setCommentUpdateCount) setCommentUpdateCount(prev => prev+1);
             setCommentList(prev =>
               prev.splice(prev.length, 0, {
                 nickname: myNickname,
