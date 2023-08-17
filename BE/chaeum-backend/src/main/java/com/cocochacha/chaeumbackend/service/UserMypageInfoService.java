@@ -84,14 +84,14 @@ public class UserMypageInfoService {
             userMypageInfo.setMainColor(updateMypageInfoRequest.getMainColor());
             updateMypageInfoResponse.setMainColor(updateMypageInfoRequest.getMainColor());
         }
-        if (!updateMypageBackgroundImage.isEmpty()) {
-            String backgroundUrl = saveFile(updateMypageBackgroundImage);
+        if (updateMypageProfileImage != null && !updateMypageProfileImage.isEmpty()) {
+            String backgroundUrl = saveFile(updateMypageProfileImage);
 
             userMypageInfo.setBackgroundUrl(backgroundUrl);
             updateMypageInfoResponse.setBackgroundUrl(backgroundUrl);
         }
-        if (!updateMypageProfileImage.isEmpty()) {
-            String profileImageUrl = saveFile(updateMypageProfileImage);
+        if (updateMypageBackgroundImage != null && !updateMypageBackgroundImage.isEmpty()) {
+            String profileImageUrl = saveFile(updateMypageBackgroundImage);
 
             userPersonalInfo.setProfileImageUrl(profileImageUrl);
             updateMypageInfoResponse.setProfileImageUrl(profileImageUrl);
