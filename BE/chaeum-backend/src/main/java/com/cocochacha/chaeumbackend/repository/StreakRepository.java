@@ -13,5 +13,5 @@ public interface StreakRepository extends JpaRepository<Streak, Integer> {
 
     Optional<List<Streak>> findAllByStreakDeletedIsFalse();
     Optional<List<Streak>> findStreaksByUserPersonalInfoAndStreakDeletedIsFalse(UserPersonalInfo userPersonalInfo);
-    Optional<List<Streak>> findAllByCategory(Category category);
+    Optional<List<Streak>> findAllByCategoryAndStreakDeletedIsFalse(Category category);
 }
