@@ -21,6 +21,7 @@ export const store = configureStore({
     stateSetter: Reducer,
     userStateSetter : persistedReducer,
   },
+  middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
