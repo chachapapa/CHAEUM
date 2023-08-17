@@ -116,6 +116,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .newInstance()
                 .scheme("http")
                 .host("i9a810.p.ssafy.io")
+                .port(80)
                 .path("/signup")
                 .queryParam("token", token)
                 .build()
