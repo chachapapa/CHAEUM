@@ -10,6 +10,7 @@ import CommentInput from './CommentInput';
 import StoryActivityInfoCard from './StoryActivityInfoCard';
 import axios from 'axios';
 import CommentList from './CommentList';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type User = {
   nickname: string;
@@ -21,9 +22,9 @@ type Props = {
   closeStoryDetail: (e: React.MouseEvent) => void;
 };
 
-const ENCOURAGE_MESSAGE_URL =
-  'http://i9a810.p.ssafy.io:8080/api/activity/message/cheering';
-const LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-activity';
+// const ENCOURAGE_MESSAGE_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/activity/message/cheering';
+// const LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-activity';
 const AccessToken = localStorage.getItem('access_token');
 
 const StoryDetailCard = ({ story, closeStoryDetail }: Props) => {
@@ -35,7 +36,7 @@ const StoryDetailCard = ({ story, closeStoryDetail }: Props) => {
   console.log(encourageMessageList);
   useEffect(() => {
     axios
-      .get(`${LIKE_URL}`, {
+      .get(`${getApiUrl(API_ROUTES.ACTIVITY_LIKE_URL)}`, {
         headers: { Authorization: `Bearer ${AccessToken}` },
         params: { activityId: story.activityId },
       })
@@ -49,7 +50,7 @@ const StoryDetailCard = ({ story, closeStoryDetail }: Props) => {
 
   useEffect(() => {
     axios
-      .get(`${ENCOURAGE_MESSAGE_URL}`, {
+      .get(`${getApiUrl(API_ROUTES.ACTIVITY_ENCOURAGE_URL)}`, {
         headers: { Authorization: `Bearer ${AccessToken}` },
         params: { activityId: story.activityId },
       })

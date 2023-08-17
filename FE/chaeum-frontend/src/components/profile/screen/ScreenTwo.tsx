@@ -9,11 +9,12 @@ import { Comment } from '../../Types';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import ArticleCard from '../../feed/ArticleCard';
+import { API_ROUTES, getApiUrl } from '../../../apiConfig';
 
 type Props = {
   userNickname: string;
 };
-const USER_ARTICLE_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/mypage';
+// const USER_ARTICLE_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/mypage';
 const AccessToken = localStorage.getItem('access_token');
 
 const ScreenTwo = ({ userNickname }: Props) => {
@@ -23,24 +24,10 @@ const ScreenTwo = ({ userNickname }: Props) => {
   const [focusedArticle, setFocusedArticle] = useState<number>();
   const [articleList, setArticleList] = useState<Article[]>([]);
 
-  const onPlusButtonClicked = (postId: number) => {
-    setIsPlusButtonClicked(!isPlusButtonClicked);
-    setFocusedArticle(postId);
-  };
-
-  const onMoreCommentClicked = (postId: number) => {
-    setDetailedArticle(true);
-    setFocusedArticle(postId);
-  };
-
-  const onCloseButtonClicked = (postId: number) => {
-    setDetailedArticle(false);
-    setFocusedArticle(postId);
-  };
 
   useEffect(() => {
     axios
-      .get(`${USER_ARTICLE_LIST_URL}`, {
+      .get(`${getApiUrl(API_ROUTES.POST_LIST_URL)}`, {
         headers: { Authorization: `Bearer ${AccessToken}` },
         params: { nickName: userNickname },
       })

@@ -10,6 +10,7 @@ import { useAppSelector } from '../../hooks/reduxHooks';
 import axios from 'axios';
 import { WaveBottomColor } from '../theme/StreakTheme';
 import { useLocation } from 'react-router-dom';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type Props = {
   article: Article;
@@ -17,8 +18,8 @@ type Props = {
   setArticleList: React.Dispatch<React.SetStateAction<Article[]>>;
 };
 
-const ARTICLE_DELETE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/delete';
-const LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-post';
+// const ARTICLE_DELETE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/delete';
+// const LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-post';
 const AccessToken = localStorage.getItem('access_token');
 
 const ArticleCard = ({ article, setArticleList, index }: Props) => {
@@ -46,7 +47,7 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
   useEffect(() => {
     //각 게시물당 좋아요 여부 가져오기.
     axios
-      .get(`${LIKE_URL}`, {
+      .get(`${getApiUrl(API_ROUTES.ARTICLE_LIKE_URL)}`, {
         headers: { Authorization: `Bearer ${AccessToken}` },
         params: { postId: article.postId },
       })
@@ -76,7 +77,7 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
   const onArticleDeleteClicked = (id: number, index: number) => {
     axios
       .patch(
-        `${ARTICLE_DELETE_URL}`,
+        `${getApiUrl(API_ROUTES.ARTICLE_DELETE_URL)}`,
         JSON.stringify({ postId: article.postId }),
         {
           headers: {
@@ -201,11 +202,14 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
         />
       ) : article.encourageMessageList !== undefined &&
         article.encourageMessageList.length > 0 ? (
-          <EncourageMessageCarousel
-            onPlusButtonClicked={() => onPlusButtonClicked(article.postId)}
-            encourageMessageList={article.encourageMessageList}
-          />
-        ) : null}
+        // eslint-disable-next-line indent
+        <EncourageMessageCarousel
+          // eslint-disable-next-line indent
+          onPlusButtonClicked={() => onPlusButtonClicked(article.postId)} // eslint-disable-next-line indent
+          encourageMessageList={article.encourageMessageList}
+          // eslint-disable-next-line indent
+        /> // eslint-disable-next-line indent
+      ) : null}
       <CommentInput
         activityId={article.activityId}
         postId={article.postId}

@@ -27,8 +27,6 @@ type Props = {
   isProfilePage: boolean;
 };
 
-const ACCESS_TOKEN_URL = 'http://i9a810.p.ssafy.io:8080/api/token';
-
 const MainPage = ({ isProfilePage }: Props) => {
   // 모든 스트릭 정보 저정
   const [searchParams, setSearchParams] = useSearchParams();

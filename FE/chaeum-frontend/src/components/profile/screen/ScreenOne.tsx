@@ -16,7 +16,7 @@ type Props ={
 
 const ScreenOne = ({exerciseActive, studyActive, othersActive}:Props) => {
   
-  // console.log(studyActive);
+  // console.log(exerciseActive);
   return (
     <div className="w-full h-full">
       <div className="w-full flex flex-col items-center">

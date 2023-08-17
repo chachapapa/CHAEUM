@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import React, { useEffect, useRef, useState } from 'react';
 import ArticleCard from '../../components/feed/ArticleCard';
 import NewStoryCard from '../../components/feed/NewStoryCard';
@@ -6,9 +7,10 @@ import StoryDetailCard from './StoryDetailCard';
 import LoadingPage from '../common/LoadingPage';
 import FeedLoadingWave from './FeedLoadingWave';
 import axios from 'axios';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
-const ARTICLE_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/sns';
-const STORY_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/active';
+// const ARTICLE_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/sns';
+// const STORY_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/active';
 const AccessToken = localStorage.getItem('access_token');
 
 const FeedMain = () => {
@@ -25,7 +27,7 @@ const FeedMain = () => {
 
   useEffect(() => {
     axios
-      .get(`${STORY_LIST_URL}`, {
+      .get(`${getApiUrl(API_ROUTES.STORY_LIST_URL)}`, {
         headers: { Authorization: `Bearer ${AccessToken}` },
       })
       .then(res => {
@@ -60,7 +62,7 @@ const FeedMain = () => {
 
   const getArticle = async () => {
     try {
-      const res = await axios.get(`${ARTICLE_LIST_URL}`, {
+      const res = await axios.get(`${getApiUrl(API_ROUTES.ARTICLE_LIST_URL)}`, {
         headers: {
           Authorization: `Bearer ${AccessToken}`,
         },
@@ -141,8 +143,8 @@ const FeedMain = () => {
           isStoryOpened && !cardTransitionOver
             ? 'background flex absolute top-0 left-0 w-full h-full bg-black bg-opacity-30 transition-all duration-200  z-50 justify-center items-center'
             : !isStoryOpened && !cardTransitionOver
-              ? 'flex absolute top-0 left-0 w-full h-full opacity-0 transition-all duration-200  z-0 justify-center items-center'
-              : ''
+            ? 'flex absolute top-0 left-0 w-full h-full opacity-0 transition-all duration-200  z-0 justify-center items-center'
+            : ''
         }
         onClick={closeStoryDetail}
       >

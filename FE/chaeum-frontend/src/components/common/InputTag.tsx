@@ -7,7 +7,7 @@ type Props = {
   label?: string;
   width?: string;
   className?: string;
-  searchKeyword? : string;
+  searchKeyword?: string;
   setSearchKeyword?: React.Dispatch<React.SetStateAction<string>>;
   setUser?: React.Dispatch<React.SetStateAction<User>>;
   for?: string;
@@ -15,9 +15,8 @@ type Props = {
   onChange?: (value: string) => void; // onChange 콜백 추가
 };
 
-
-const USER_SEARCH_URL =
-  'http://i9a810.p.ssafy.io:8080/api/user/nickname-search';
+// const USER_SEARCH_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/user/nickname-search';
 const AccessToken = localStorage.getItem('access_token');
 
 const InputTag = ({ width = 'w-full', ...props }: Props) => {

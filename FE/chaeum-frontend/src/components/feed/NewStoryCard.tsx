@@ -6,6 +6,7 @@ import { IconColor } from '../theme/IconTheme';
 import { Avatar, IconButton } from '@material-tailwind/react';
 import { ColorVariation, Story } from '../Types';
 import axios from 'axios';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 /*
   사용법
@@ -30,9 +31,9 @@ type Props = {
   story: Story;
   onStoryClicked: () => void;
 };
-const ACTIVITY_LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-activity';
-const ACTIVITY_DISLIKE_URL =
-  'http://i9a810.p.ssafy.io:8080/api/sns/like-activity/cancel';
+// const ACTIVITY_LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-activity';
+// const ACTIVITY_DISLIKE_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/sns/like-activity/cancel';
 const AccessToken = localStorage.getItem('access_token');
 
 const NewStoryCard = ({ story, onStoryClicked }: Props) => {
@@ -42,7 +43,7 @@ const NewStoryCard = ({ story, onStoryClicked }: Props) => {
   const waveFirst = WaveColor({ color: story.streakColor, weight4 });
   const waveSecond = WaveColor({ color: story.streakColor, weight3 });
   const titleBoxColor = WaveBottomColor({ color: story.streakColor, weight3 });
-  const fullIconColor = IconColor({color : story.streakColor , weight3});
+  const fullIconColor = IconColor({ color: story.streakColor, weight3 });
   const backgroundColor = WaveBottomColor({
     color: story.streakColor,
     weight0,
@@ -51,7 +52,6 @@ const NewStoryCard = ({ story, onStoryClicked }: Props) => {
   const [time, setTime] = useState(
     calculateTimeDifference(story.activeStartTime)
   );
-  
 
   function calculateTimeDifference(targetTime: string): number {
     /*
@@ -93,11 +93,11 @@ const NewStoryCard = ({ story, onStoryClicked }: Props) => {
     .toString()
     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-  const onLikeButtonClicked = (e : React.MouseEvent) => {
+  const onLikeButtonClicked = (e: React.MouseEvent) => {
     e.stopPropagation();
     axios
       .patch(
-        `${ACTIVITY_LIKE_URL}`,
+        `${getApiUrl(API_ROUTES.ACTIVITY_LIKE_URL)}`,
         { activityId: story.activityId },
         {
           headers: {
@@ -115,7 +115,7 @@ const NewStoryCard = ({ story, onStoryClicked }: Props) => {
     e.stopPropagation();
     axios
       .patch(
-        `${ACTIVITY_DISLIKE_URL}`,
+        `${getApiUrl(API_ROUTES.ACTIVITY_DISLIKE_URL)}`,
         { activityId: story.activityId },
         {
           headers: {
@@ -131,7 +131,7 @@ const NewStoryCard = ({ story, onStoryClicked }: Props) => {
 
   return (
     <div
-      id = 'storyBackground'
+      id="storyBackground"
       className={`${backgroundColor} relative min-w-[230px] min-h-[150px] flex overflow-auto rounded-lg shadow-lg mr-10 z-20`}
       onClick={onStoryClicked}
     >
@@ -163,8 +163,10 @@ const NewStoryCard = ({ story, onStoryClicked }: Props) => {
             </div>
           </div>
         </div>
-        <div className='flex'>
-          <div className="text-2xl z-20 flex flex-grow items-center justify-center">{formattedTime}</div>
+        <div className="flex">
+          <div className="text-2xl z-20 flex flex-grow items-center justify-center">
+            {formattedTime}
+          </div>
           <div>
             <IconButton
               variant="text"
@@ -182,7 +184,7 @@ const NewStoryCard = ({ story, onStoryClicked }: Props) => {
                 </svg>
               ) : (
                 <svg
-                  className='fill-chaeum-gray-300'
+                  className="fill-chaeum-gray-300"
                   xmlns="http://www.w3.org/2000/svg"
                   height="2em"
                   viewBox="0 0 512 512"

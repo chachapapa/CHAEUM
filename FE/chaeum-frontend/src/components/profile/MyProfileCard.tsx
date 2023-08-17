@@ -10,6 +10,7 @@ import {
   setFriendNicknameList,
 } from '../../features/states/states';
 import axios from 'axios';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 interface ProfileCardPropsType {
   name: string;
@@ -49,12 +50,16 @@ export const MyProfileCard = ({
 
   const onFriendButtonClick = () => {
     axios
-      .post(`${FRIEND_REQUEST_URL}`, JSON.stringify({ nickname: name }), {
-        headers: {
-          Authorization: `Bearer ${AccessToken}`,
-          'Content-Type': 'application/json',
-        },
-      })
+      .post(
+        `${getApiUrl(API_ROUTES.FRIEND_REQUEST_URL)}`,
+        JSON.stringify({ nickname: name }),
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
       .then(res => {
         if (res.data === '친구 신청 완료') {
           dispatch(setFriendNicknameList([name]));
@@ -69,7 +74,7 @@ export const MyProfileCard = ({
     const deleteFriend = async () => {
       try {
         const res = await axios.patch(
-          `${FRIEND_STATUS_URL}`,
+          `${getApiUrl(API_ROUTES.FRIEND_DELETE_URL)}`,
           { nickname: name },
           {
             headers: {
@@ -147,6 +152,7 @@ export const MyProfileCard = ({
       }
     };
     getFriendCheck();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

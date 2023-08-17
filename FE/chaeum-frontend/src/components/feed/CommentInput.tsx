@@ -5,27 +5,28 @@ import axios from 'axios';
 import { Comment } from '../Types';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import { stat } from 'fs';
+import { API_ROUTES, getApiUrl } from '../../apiConfig';
 
 type Props = {
   inputPlaceholder: string;
   activityId?: number;
   postId?: number;
   setCommentList?: React.Dispatch<React.SetStateAction<Comment[]>>;
-  setCommentUpdateCount? : React.Dispatch<React.SetStateAction<number>>;
+  setCommentUpdateCount?: React.Dispatch<React.SetStateAction<number>>;
   setEncourageMessageList?: React.Dispatch<React.SetStateAction<Comment[]>>;
   isLiked: boolean;
   setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
   commentOrEncourageMessage: 'comment' | 'encourageMessage';
 };
 
-const COMMENT_REGIST_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/comment';
-const LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-post';
-const ACTIVITY_LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-activity';
-const DISLIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-post/cancel';
-const ACTIVITY_DISLIKE_URL =
-  'http://i9a810.p.ssafy.io:8080/api/sns/like-activity/cancel';
-const ENCOURAGE_MESSAGE_REGIST_URL =
-  'http://i9a810.p.ssafy.io:8080/api/sns/cheering';
+// const COMMENT_REGIST_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/comment';
+// const LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-post';
+// const ACTIVITY_LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-activity';
+// const DISLIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-post/cancel';
+// const ACTIVITY_DISLIKE_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/sns/like-activity/cancel';
+// const ENCOURAGE_MESSAGE_REGIST_URL =
+//   'http://i9a810.p.ssafy.io:8080/api/sns/cheering';
 const AccessToken = localStorage.getItem('access_token');
 
 const CommentInput = ({
@@ -40,7 +41,9 @@ const CommentInput = ({
   setIsLiked,
 }: Props) => {
   const [currentComment, setCurrentComment] = useState<string>('');
-  const myNickname = useAppSelector(state => state.userStateSetter.userStateSetter.nickname);
+  const myNickname = useAppSelector(
+    state => state.userStateSetter.userStateSetter.nickname
+  );
   const myProfileImageUrl = useAppSelector(
     state => state.stateSetter.myProfileImageUrl
   );
@@ -48,7 +51,7 @@ const CommentInput = ({
     if (commentOrEncourageMessage === 'comment') {
       axios
         .patch(
-          `${LIKE_URL}`,
+          `${getApiUrl(API_ROUTES.ARTICLE_LIKE_URL)}`,
           { postId: postId },
           {
             headers: {
@@ -63,7 +66,7 @@ const CommentInput = ({
     } else if (commentOrEncourageMessage === 'encourageMessage') {
       axios
         .patch(
-          `${ACTIVITY_LIKE_URL}`,
+          `${getApiUrl(API_ROUTES.ACTIVITY_LIKE_URL)}`,
           { activityId: activityId },
           {
             headers: {
@@ -82,7 +85,7 @@ const CommentInput = ({
     if (commentOrEncourageMessage === 'comment') {
       axios
         .patch(
-          `${DISLIKE_URL}`,
+          `${getApiUrl(API_ROUTES.ARTICLE_DISLIKE_URL)}`,
           { postId: postId },
           {
             headers: {
@@ -97,7 +100,7 @@ const CommentInput = ({
     } else if (commentOrEncourageMessage === 'encourageMessage') {
       axios
         .patch(
-          `${ACTIVITY_DISLIKE_URL}`,
+          `${getApiUrl(API_ROUTES.ACTIVITY_DISLIKE_URL)}`,
           { activityId: activityId },
           {
             headers: {
@@ -117,7 +120,7 @@ const CommentInput = ({
     if (commentOrEncourageMessage === 'comment') {
       axios
         .post(
-          `${COMMENT_REGIST_URL}`,
+          `${getApiUrl(API_ROUTES.COMMENT_REGIST_URL)}`,
           { activityId: activityId, comment: currentComment },
           {
             headers: {
@@ -137,7 +140,7 @@ const CommentInput = ({
             //     content: currentComment,
             //   },
             // ]);
-            if(setCommentUpdateCount) setCommentUpdateCount(prev => prev+1);
+            if (setCommentUpdateCount) setCommentUpdateCount(prev => prev + 1);
             setCommentList(prev =>
               prev.splice(prev.length, 0, {
                 nickname: myNickname,
@@ -152,7 +155,7 @@ const CommentInput = ({
     } else if (commentOrEncourageMessage === 'encourageMessage') {
       axios
         .post(
-          `${ENCOURAGE_MESSAGE_REGIST_URL}`,
+          `${getApiUrl(API_ROUTES.ENCOURAGE_WRITE_URL)}`,
           JSON.stringify({ activityId: activityId, comment: currentComment }),
           {
             headers: {
@@ -162,7 +165,6 @@ const CommentInput = ({
           }
         )
         .then(res => {
-          
           if (res && setEncourageMessageList) {
             setEncourageMessageList(prev =>
               prev.splice(prev.length, 0, {
