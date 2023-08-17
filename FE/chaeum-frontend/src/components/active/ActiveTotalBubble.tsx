@@ -52,7 +52,7 @@ const ActiveTotalBubble = (props: Props) => {
   const nameList = rivalInfoList.map(rival => rival.nickname);
   const tagList = rivalInfoList.map(rival => rival.categoryMiddle);
   const times = rivalInfoList.map(rival => rival.accumulateTime);
-  const isActive = rivalInfoList.map(rival => !rival.active);
+  const isActive = rivalInfoList.map(rival => rival.active);
 
   // let nameList: string[] = ['라이벌', '라이벌', '라이벌', '라이벌', '라이벌'];
   // let tagList: string[] = ['로딩중', '로딩중', '로딩중', '로딩중', '로딩중'];
