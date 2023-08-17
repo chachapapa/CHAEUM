@@ -28,7 +28,7 @@ export const FriendNoti = () => {
 
   useEffect(() => {
     axios
-      .get(`${getApiUrl(API_ROUTES.FRIEND_LIST_URL)}`, {
+      .get(`${getApiUrl(API_ROUTES.FRIEND_APPLY_URL)}`, {
         headers: { Authorization: `Bearer ${AccessToken}` },
       })
       .then(res => {
@@ -46,7 +46,7 @@ export const FriendNoti = () => {
       mounted.current = true;
     } else {
       axios
-        .get(`${getApiUrl(API_ROUTES.FRIEND_LIST_URL)}`, {
+        .get(`${getApiUrl(API_ROUTES.FRIEND_APPLY_URL)}`, {
           headers: { Authorization: `Bearer ${AccessToken}` },
         })
         .then(res => {
