@@ -172,6 +172,25 @@ public class FriendController {
         }
     }
 
+    /**
+     * 내가 해당 사람한테 지금 친구 신청을 했는지 알려주는 메소드
+     *
+     * @param nickname nickname
+     * @return true면 현재 친구 신청 중, false면 현재 친구 신청 중이 아님
+     */
+    @GetMapping("/add/me")
+    public ResponseEntity<?> addMeFriend(@RequestParam String nickname) {
+        AddMeFriendRequest addMeFriendRequest = new AddMeFriendRequest();
+        addMeFriendRequest.setNickname(nickname);
+
+        UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(getUserIDFromAuthentication());
+        try {
+            return new ResponseEntity<>(friendService.addMeFriend(addMeFriendRequest, userPersonalInfo), HttpStatus.OK);
+        } catch(NoSuchElementException NSEE) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     /**
      * 헤더에서 UserId를 추출하는 함수

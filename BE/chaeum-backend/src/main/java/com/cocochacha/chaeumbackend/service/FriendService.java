@@ -264,6 +264,26 @@ public class FriendService {
     }
 
     /**
+     * 본인과 현재 친구 신청 중인지 알려주는 메소드
+     *
+     * @param addMeFriendRequest nickname
+     * @param user user
+     * @return 본인과 현재 친구 신청 중이면 true, 아니라면 false
+     */
+    public boolean addMeFriend(AddMeFriendRequest addMeFriendRequest, UserPersonalInfo user) {
+        // 내가 현재 addMeFriend에 해당하는 사람한테 친구 신청을 보냈는지 궁금한 상황
+        UserPersonalInfo userPersonalInfo = findUserPersonalInfo(addMeFriendRequest.getNickname());
+
+        // to가 보낸 사람, from이 받는 사람
+        FriendAdd friendAdd = friendAddRepository.findByToIdAndFromId(user, userPersonalInfo).orElse(null);
+
+        if (friendAdd == null) {
+            throw new NoSuchElementException("null 값");
+        }
+        return friendAdd.isAdd();
+    }
+
+    /**
      * 친구 신청 중 DB에 값을 넣어주는 메소드
      * 값이 이미 있다면, 친구 신청 중으로 바꿔주는 메소드
      *
