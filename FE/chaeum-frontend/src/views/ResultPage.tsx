@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -13,6 +13,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { setStartMentList } from '../features/states/states';
 import { useAppSelector } from '../hooks/reduxHooks';
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
+import { API_ROUTES, getApiUrl } from '../apiConfig';
 /*
   Props
   시간은 2023-08-02 17:20:15 
@@ -23,7 +25,7 @@ import { useDispatch } from 'react-redux';
 */
 type Cheering = {
   nickname: string;
-  comments: string;
+  content: string;
   profileUrl: string;
 };
 type Props = {
@@ -44,6 +46,13 @@ type Comment = {
   content: string;
 };
 
+let cheeringMent: Cheering[] = [
+  {
+    nickname: '',
+    content: '응원글이 아직 없습니다.',
+    profileUrl: '../chacha2.png',
+  },
+];
 const access_token = localStorage.getItem('access_token');
 const COMPLETE_ACT_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
 
@@ -66,8 +75,8 @@ const ResultPage = () => {
   const myActivityTagList = useAppSelector(
     state => state.stateSetter.myActivityTagList
   );
+
   const tags = myActivityTagList;
-  const { state } = useLocation();
 
   const commentListExample: Comment[] = [
     {
@@ -91,6 +100,40 @@ const ResultPage = () => {
       content: '댓글 4',
     },
   ];
+
+  // 응원글 갱신
+  const fetchCheering = async () => {
+    try {
+      const response = await axios
+        .get(`${getApiUrl(API_ROUTES.ACTIVITY_ENCOURAGE_URL)}`, {
+          headers: {
+            Authorization: 'Bearer ' + access_token,
+            'Content-Type': 'application/json',
+          },
+          params: { activityId: myActivityInfo.activityId },
+        })
+        .then(res => {
+          // console.log('응원글입니다');
+          // console.log(res.data);
+          cheeringMent = res.data;
+          // console.log(cheeringMent);
+        });
+    } catch (error) {
+      // console.error('Error fetching sentences:', error);
+      console.log('Error fetching 응원글:', error);
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchCheering();
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const myActivityInfo = useAppSelector(
     state => state.stateSetter.myActivityInfo
@@ -240,46 +283,52 @@ const ResultPage = () => {
 
           <div className="text-2xl pt-10">친구의 응원글</div>
           <div className="mx-auto flex justify-center pt-4">
-            {/* 응원글이 없을경우 처리 */}
-            {state.length === 0 ? (
-              <div className="text-center w-full pr-24">
-                작성된 응원글이 없습니다.
-              </div>
-            ) : (
-              <>
-                {/* 응원글이 있을경우 최대 4개까지 보여주게끔 처리 */}
-                {state.slice(0, 4).map((comment: Cheering) => (
-                  <div
-                    className="relative w-full h-10 mb-1"
-                    key={comment.nickname}
-                  >
-                    <div className="absolute h-full w-full grid justify-items-start items-center ">
-                      <div className="flex h-full">
-                        <Avatar
-                          src={comment.profileUrl}
-                          alt="avatar"
-                          size="sm"
-                          className="mr-2"
-                        />
+            <Card className="w-full h-[200px] border-x-4">
+              <div className=" w-[360px] p-1 pl-2 my-3">
+                {/* {commentListExample.map(comment => ( */}
 
-                        <div className="text-center self-center">
-                          <Typography
-                            variant="lead"
-                            color="text-chaeum-gray-900"
-                            className="opacity-80 text-sm"
-                          >
-                            <span className="font-bold mr-2">
-                              {comment.nickname}
-                            </span>
-                            <span>{comment.comments}</span>
-                          </Typography>
+                {/* 응원글이 없을경우 처리 */}
+                {cheeringMent.length === 0 ? (
+                  <div className="text-center w-full pr-24">
+                    작성된 응원글이 없습니다.
+                  </div>
+                ) : (
+                  <>
+                    {/* 응원글이 있을경우 최대 4개까지 보여주게끔 처리 */}
+                    {cheeringMent.slice(0, 4).map(comment => (
+                      <div
+                        className="relative w-full h-10 mb-1"
+                        key={comment.nickname}
+                      >
+                        <div className="absolute h-full w-full grid justify-items-start items-center ">
+                          <div className="flex h-full">
+                            <Avatar
+                              src={comment.profileUrl}
+                              alt="avatar"
+                              size="sm"
+                              className="mr-2"
+                            />
+
+                            <div className="text-center self-center">
+                              <Typography
+                                variant="lead"
+                                color="text-chaeum-gray-900"
+                                className="opacity-80 text-sm"
+                              >
+                                <span className="font-bold mr-2">
+                                  {comment.nickname}
+                                </span>
+                                <span>{comment.content}</span>
+                              </Typography>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
-              </>
-            )}
+                    ))}
+                  </>
+                )}
+              </div>
+            </Card>
           </div>
 
           <div className="mx-auto flex justify-center place-items-center pt-20 mt-1">
