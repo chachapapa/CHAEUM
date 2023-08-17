@@ -176,10 +176,10 @@ export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
             ) : location.pathname === '/feed' ? (
               <div className="w-[70px] flex flex-row-reverse justify-between">
                 <Link to={'write'} onClick={onWriteButtonClicked}>
-                  <i className="fa-regular fa-pen-to-square text-2xl text-chaeum-blue-500"></i>
+                  <i className="fa-regular fa-pen-to-square text-2xl text-chaeum-blue-500 hover:text-chaeum-blue-900"></i>
                 </Link>
                 <i
-                  className="fa-regular fa-bell text-2xl text-chaeum-blue-500"
+                  className="fa-regular fa-bell text-2xl text-chaeum-blue-500 hover:cursor-pointer hover:text-chaeum-blue-900"
                   onClick={onNotiButtonClicked}
                 ></i>
               </div>
@@ -227,7 +227,7 @@ export const ChaeumHeader = ({ title, isLogo }: HeaderPropsType) => {
         {isSearchBarOpened && location.pathname.includes('/profile') ? (
           <div className="w-11/12 flex flex-col items-center justify-center">
             <InputTag
-              label="유저 검색"
+              label="유저 검색  "
               setSearchKeyword={setSearchKeyword}
               for="user"
             ></InputTag>
