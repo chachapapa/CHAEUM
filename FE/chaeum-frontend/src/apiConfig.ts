@@ -15,7 +15,8 @@ export const API_ROUTES = {
   FRIEND_REJECT_URL: '/user/reject', // 친구 신청 거절(PATCH)
   FRIEND_CANCEL_URL: '/user/cancel', // 친구 신청 취소 (PATCH)
   FRIEND_SEARCH_URL: '/user/friend-nickname-search', // 마이페이지 친구 닉네임 검색(GET)
-  FRIEND_LIST_URL: '/user/list', // 닉네임에 해당하는 사람 친구 목록(GET), 나한테 친구 신청을 넣은 사람 목록(GET)
+  FRIEND_LIST_URL: '/user/list', // 닉네임에 해당하는 사람 친구 목록(GET)
+  FRIEND_APPLY_URL: '/user/add/list', // 나한테 친구 신청을 넣은 사람 목록(GET)
   FRIEND_BOOL_URL: '/user?nickname=', // 본인과 친구인지 확인(GET)
 
   // streak
