@@ -9,74 +9,52 @@ import { IconButton } from '@material-tailwind/react';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import axios from 'axios';
 import { WaveBottomColor } from '../theme/StreakTheme';
+import { useLocation } from 'react-router-dom';
 
 type Props = {
   article: Article;
-  index : number
+  index: number;
   setArticleList: React.Dispatch<React.SetStateAction<Article[]>>;
 };
 
 const ARTICLE_DELETE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/delete';
-const LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/heart';
+const LIKE_URL = 'http://i9a810.p.ssafy.io:8080/api/sns/like-post';
 const AccessToken = localStorage.getItem('access_token');
 
 const ArticleCard = ({ article, setArticleList, index }: Props) => {
+  const location = useLocation();
   const [isPlusButtonClicked, setIsPlusButtonClicked] =
     useState<boolean>(false);
   const [detailedArticle, setDetailedArticle] = useState<boolean>(false);
   const [focusedArticle, setFocusedArticle] = useState<number>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isFadingOut, setIsFadingOut] = useState<boolean>(false);
-  const [commentList, setCommentList] = useState<Comment[]>([]);
-  const fixedNickname = useAppSelector(state => state.stateSetter.nickname);
+  const fixedNickname = useAppSelector(state => state.userStateSetter.userStateSetter.nickname);
   const tagBackgroundColor = WaveBottomColor({
-    color: article.activityInfo.color,
+    color: article.streakColor,
     weight3: 'w3',
   });
-  const [isLiked, setsIsLiked] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [likeCount, setLikeCount] = useState<number>(0);
+  const [commentList, setCommentList] = useState<Comment[]>(
+    article.commentList
+  );
+  const [encourageMessageList, setEncourageMessageList] = useState<Comment[]>(
+    article.encourageMessageList
+  );
 
   useEffect(() => {
     //각 게시물당 좋아요 여부 가져오기.
-    // axios
-    //   .get(`${LIKE_URL}`, {
-    //     headers: { Authorization: `Bearer ${AccessToken}` },
-    //     params: { activityId: article.activityInfo.id },
-    //   })
-    //   .then(res => {
-    //     console.log(res);
-    //     if (res.data) {
-    //       setsIsLiked(true);
-    //     } else {
-    //       setsIsLiked(false);
-    //     }
-    //   });
+    axios
+      .get(`${LIKE_URL}`, {
+        headers: { Authorization: `Bearer ${AccessToken}` },
+        params: { postId: article.postId },
+      })
+      .then(res => {
+        if (res.data) {
+          setLikeCount(res.data.cnt);
+          if (res.data.like) setIsLiked(true);
+        }
+      });
   });
-
-  //로딩스크린 페이드아웃을 만들어보자...
-  //페이지 로드가 끝나면
-  //isFadingOut true로 바꿔주기
-  //isloading 값은 false로 바꾸기
-  //isFadingOut 이 true인 동안 애니메이션
-  //이후 다시 setTimeout으로 false 로 변환
-  //최종적으로 isLoading과 isFadingOut이 둘다 false가 되면
-  //페이지 이동.
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setIsFadingOut(true);
-  //     setIsLoading(false);
-  //     console.log('애니메이션시작');
-  //   }, 5000);
-  // }, []);
-
-  // useEffect(() => {
-  //   if (isFadingOut) {
-  //     setTimeout(() => {
-  //       setIsFadingOut(false);
-  //       console.log('화면전환');
-  //     }, 700);
-  //   }
-  // }, [isFadingOut]);
 
   const onPlusButtonClicked = (id: number) => {
     setIsPlusButtonClicked(!isPlusButtonClicked);
@@ -95,9 +73,16 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
 
   const onArticleDeleteClicked = (id: number, index: number) => {
     axios
-      .put(`${ARTICLE_DELETE_URL}`, JSON.stringify({ article_id: id }), {
-        headers: { Authorization: `Bearer ${AccessToken}` },
-      })
+      .patch(
+        `${ARTICLE_DELETE_URL}`,
+        JSON.stringify({ postId: article.postId }),
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
       .then(res => {
         console.log(res);
         if (res) {
@@ -109,56 +94,60 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
   };
 
   return (
-    // <div className="bg-gray-100 mt-3">
-    //   {!isLoading && !isFadingOut ? (
-    //     <div className="max-w-7xl">
-    //       <div className="w-full">
-    //         {exampleList.map(post => (
     <article
-      key={article.id}
+      key={article.postId}
       className="flex p-3 w-full flex-col items-start justify-between mb-3 bg-white"
     >
       <div className="flex justify-between w-full">
-        <div className="relative flex items-center gap-x-4">
-          <img
-            src={article.user.profileImage}
-            alt=""
-            className="h-16 w-16 rounded-full bg-gray-50"
-          />
-          <div className="text-lg leading-6">
-            <p className="text-chaeum-gray-900 text-left">
-              {article.user.nickName}
-            </p>
-            <div
-              className={`text-sm ${tagBackgroundColor} rounded-md py-0.5 px-1 w-fit`}
-            >
-              <p className="text-white text-left">
-                #{article.activityInfo.category}
+        <div className="relative flex items-center gap-x-4 w-full">
+          {location.pathname.includes('profile') ? null : (
+            <img
+              src={article.profileUrl}
+              alt=""
+              className="h-16 w-16 rounded-full bg-gray-50"
+            />
+          )}
+          <div className="flex flex-col w-[180px] text-lg leading-6 ">
+            {location.pathname.includes('profile') ? null : (
+              <p className="text-chaeum-gray-900 text-left">
+                {article.nickname}
               </p>
-              {/* <p className="text-white text-left">
-                          {article.activityInfo.time}시간
-                        </p> */}
-            </div>
+            )}
+            {article.tagList ? (
+              <div className="flex text-sm py-0.5 px-1 gap-1 flex-wrap">
+                {article.tagList.map((tag, index) => (
+                  <div
+                    className={`${tagBackgroundColor} text-white text-left px-1 py-0.5 whitespace-nowrap rounded-md`}
+                    key={index}
+                  >
+                    #{tag}
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
 
         <div>
-          <time dateTime={article.dateTime} className="text-chaeum-gray-900">
-            {article.date}
+          <time
+            dateTime={article.postTime}
+            className="text-chaeum-gray-900 whitespace-nowrap"
+          >
+            {article.postTime ? article.postTime.split(' ')[0] : ''}
           </time>
 
           <div className="text-right text-chaeum-gray-900">
             <i className="fa-regular fa-heart mr-0.5 " />
-            {article.likeCount}
+            {likeCount}
             <i className="fa-regular fa-comment ml-2 mr-0.5" />
-            {article.commentCount}
+            {article.commentList ? article.commentList.length : ''}
           </div>
-          {fixedNickname === article.user.nickName ? (
+          {fixedNickname === article.nickname ? (
             <div className="flex justify-end">
               <IconButton
                 variant="text"
                 className="w-8 h-8 rounded-full hover:bg-chaeum-blue-500/10"
-                onClick={() => onArticleDeleteClicked(article.id, index)}
+                onClick={() => onArticleDeleteClicked(article.postId, index)}
               >
                 <svg
                   className="fill-chaeum-gray-900"
@@ -175,50 +164,53 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
       </div>
       <div className="group relative">
         <p className="mt-5 line-clamp-3 text-sm text-left leading-6 text-chaeum-gray-900 whitespace-pre-line">
-          {article.content}
+          {article.postContent}
         </p>
       </div>
       {/* 이미지 미리보기 / 상세 */}
-
-      <div className="my-5 flex flex-row overflow-auto snap-x">
-        {article.imageList.map((image, key) => (
-          <img
-            src={image}
-            key={key}
-            alt=""
-            className={
-              detailedArticle && focusedArticle === article.id
-                ? 'flex-none mr-2 h-[330px] w-[330px] rounded-lg snap-center transition-all'
-                : 'flex-none mr-2 h-[150px] w-[150px] rounded-lg snap-center transition-all'
-            }
-          />
-        ))}
-      </div>
+      {article.imageList && article.imageList.length > 0 ? (
+        <div className="my-5 flex flex-row overflow-auto snap-x">
+          {article.imageList.map((image, key) => (
+            <img
+              src={image}
+              key={key}
+              alt=""
+              className={
+                detailedArticle && focusedArticle === article.postId
+                  ? 'flex-none mr-2 h-[330px] w-[330px] rounded-lg snap-center transition-all'
+                  : 'flex-none mr-2 h-[150px] w-[150px] rounded-lg snap-center transition-all'
+              }
+            />
+          ))}
+        </div>
+      ) : null}
 
       {/* 응원글 미리보기 / 상세 */}
-      {isPlusButtonClicked && focusedArticle === article.id ? (
+      {isPlusButtonClicked && focusedArticle === article.postId ? (
         <EncourageMessageDetail
-          onPlusButtonClicked={() => onPlusButtonClicked(article.id)}
+          onPlusButtonClicked={() => onPlusButtonClicked(article.postId)}
           encourageMessageList={article.encourageMessageList}
         />
-      ) : (
-        <EncourageMessageCarousel
-          onPlusButtonClicked={() => onPlusButtonClicked(article.id)}
-          encourageMessageList={article.encourageMessageList}
-        />
-      )}
+      ) : article.encourageMessageList !== undefined &&
+        article.encourageMessageList.length > 0 ? (
+          <EncourageMessageCarousel
+            onPlusButtonClicked={() => onPlusButtonClicked(article.postId)}
+            encourageMessageList={article.encourageMessageList}
+          />
+        ) : null}
       <CommentInput
-        activityId={article.activityInfo.id}
+        activityId={article.activityId}
+        postId={article.postId}
         setCommentList={setCommentList}
         inputPlaceholder="댓글 입력..."
         commentOrEncourageMessage="comment"
         isLiked={isLiked}
-        setIsLiked={setsIsLiked}
+        setIsLiked={setIsLiked}
       />
-      {detailedArticle && focusedArticle === article.id ? (
+      {detailedArticle && focusedArticle === article.postId ? (
         <div className="flex flex-col items-start w-full">
           <span
-            onClick={() => onCloseButtonClicked(article.id)}
+            onClick={() => onCloseButtonClicked(article.postId)}
             className="text-sm"
           >
             닫기
@@ -230,7 +222,7 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
         </div>
       ) : (
         <span
-          onClick={() => onMoreCommentClicked(article.id)}
+          onClick={() => onMoreCommentClicked(article.postId)}
           className="text-sm"
         >
           댓글 더보기

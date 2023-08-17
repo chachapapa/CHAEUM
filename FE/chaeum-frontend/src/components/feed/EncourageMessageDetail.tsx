@@ -34,7 +34,7 @@ const EncourageMessageDetail = (props: Props) => {
           <div className="h-full w-full grid justify-items-start items-center bg-gray-100 mb-3" key={index}>
             <div className="flex h-full w-full">
               <Avatar
-                src={encourageMessage.user.profileImage}
+                src={encourageMessage.profileUrl}
                 alt="avatar"
                 size="sm"
                 className="mr-2"
@@ -47,7 +47,7 @@ const EncourageMessageDetail = (props: Props) => {
                   className="flex flex-col opacity-80 text-sm"
                 >
                   <span className="flex whitespace-nowrap font-bold text-xs mr-2 items-center">
-                    {encourageMessage.user.nickName}
+                    {encourageMessage.nickname}
                   </span>
                   <span className='text-start items'>{encourageMessage.content}</span>
                 </Typography>

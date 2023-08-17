@@ -2,7 +2,6 @@ import React, { JSXElementConstructor, useEffect, useState } from 'react';
 import AnimatedLogo from '../components/common/AnimatedLogo';
 import TextButton from '../components/common/TextButton';
 import { ChaeumHeader } from '../components/common/ChaeumHeader';
-import StoryCard from '../components/feed/StoryCard';
 import ArticleCard from '../components/feed/ArticleCard';
 import { ChaeumNav } from '../components/common/ChaeumNav';
 import NewStoryCard from '../components/feed/NewStoryCard';

@@ -214,7 +214,7 @@ const ActivePage = () => {
   }, []);
 
   return (
-    <div className="w-[307.16px] bg-white outline outline-4 relative flex justify-center">
+    <div className="w-full bg-white outline outline-4 relative flex justify-center">
       <Outlet context={{ state }}></Outlet>
       {/* <div>1</div> */}
     </div>

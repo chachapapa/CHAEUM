@@ -64,7 +64,7 @@ const ActivityUploadCard = (props: Props) => {
             >
               {props.tag.map((tagItem, index) => (
                 <div key={index} style={{ marginRight: '5px' }}>
-                  <p className="text-white text-left">{tagItem}</p>
+                  <p className="text-white text-left">#{tagItem}</p>
                 </div>
               ))}
             </div>
