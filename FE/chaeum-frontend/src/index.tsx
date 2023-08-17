@@ -8,6 +8,10 @@ import { CookiesProvider } from 'react-cookie';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import { PersistGate } from 'redux-persist/integration/react';
+import persistStore from 'redux-persist/es/persistStore';
+
+export const persistor = persistStore(store);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -18,7 +22,9 @@ root.render(
     <BrowserRouter>
       <CookiesProvider>
         <Provider store={store}>
-          <App />
+          <PersistGate loading={null} persistor={persistor}>
+            <App />
+          </PersistGate>
         </Provider>
       </CookiesProvider>
     </BrowserRouter>

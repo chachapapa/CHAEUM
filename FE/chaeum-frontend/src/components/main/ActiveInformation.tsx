@@ -17,7 +17,7 @@ type Props = {
 
 const ActiveInformation = ({activity} : Props) => {
 
-  const color = activity.color;
+  const color = activity.streakColor;
   const weight2 = 'w2';
   const weight3 = 'w3';
   const weight4 = 'w4';
@@ -69,7 +69,7 @@ const ActiveInformation = ({activity} : Props) => {
                     {startTimeFormed +'~'+endTimeFormed}
                   </Typography>
                 </div>
-                <Typography>{activity.id}번째 채움</Typography>
+                {/* <Typography>{index}번째 채움</Typography> */}
               </div>
             </div>
           </CardHeader>

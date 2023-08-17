@@ -21,7 +21,7 @@ import { useAppSelector } from './hooks/reduxHooks';
 
 function App() {
   const [isLogedin, setIsLogedin] = useState(false);
-  const myNickname = useAppSelector(state => state.stateSetter.nickname);
+  const myNickname = useAppSelector(state => state.userStateSetter.userStateSetter.nickname);
   const location = useLocation();
   useEffect(() => {
     if (myNickname !== '') {

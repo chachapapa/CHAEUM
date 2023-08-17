@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../../hooks/reduxHooks';
 import MainPage from '../../../views/MainPage';
@@ -7,36 +7,16 @@ import { StreakCardCarousel } from '../../main/StreakCardCarousel';
 import { StreakInfoType } from '../../Types';
 import axios from 'axios';
 
-//url 수정 필요
-const STREAK_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/streak/';
-const AccessToken = localStorage.getItem('access_token');
 
-const ScreenOne = () => {
-  const location = useLocation();
-  const userNickname = decodeURI(location.pathname.split('/')[2]);
-  // const myNickname = useAppSelector(state => state.stateSetter.nickname);
-  const [studyActive, setStudyActive] = useState<StreakInfoType[]>([]);
-  const [exerciseActive, setExerciseActive] = useState<StreakInfoType[]>([]);
-  const [othersActive, setOthersActive] = useState<StreakInfoType[]>([]);
+type Props ={
+  exerciseActive : StreakInfoType[],
+  studyActive : StreakInfoType[];
+  othersActive : StreakInfoType[];
+}
 
-  useEffect(() => {
-    // axios
-    //   .get(`${STREAK_LIST_URL}`, {
-    //     headers: { Authorization: `Bearer ${AccessToken}` },
-    //     params: { nickname: { userNickname } },
-    //   })
-    //   .then(res => {
-    //     console.log(res);
-    //     if (res.data) {
-    //       setStudyActive(res.data[0]);
-    //       setExerciseActive(res.data[1]);
-    //       setOthersActive(res.data[2]);
-    //     } else {
-    //       console.log('유저 정보가 없어용');
-    //     }
-    //   });
-  }, [userNickname]);
-
+const ScreenOne = ({exerciseActive, studyActive, othersActive}:Props) => {
+  
+  // console.log(studyActive);
   return (
     <div className="w-full h-full">
       <div className="w-full flex flex-col items-center">
