@@ -102,7 +102,13 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
       className="flex p-3 w-full flex-col items-start justify-between mb-3 bg-white"
     >
       <div className="flex justify-between w-full">
-        <div className={location.pathname.includes('profile') ? 'relative flex pt-2 gap-x-4 w-full' :'relative flex items-center gap-x-4 w-full'}>
+        <div
+          className={
+            location.pathname.includes('profile')
+              ? 'relative flex pt-2 gap-x-4 w-full'
+              : 'relative flex items-center gap-x-4 w-full'
+          }
+        >
           {location.pathname.includes('profile') ? null : (
             <img
               src={article.profileUrl}
@@ -111,13 +117,17 @@ const ArticleCard = ({ article, setArticleList, index }: Props) => {
             />
           )}
           <div className="flex flex-col w-[180px] text-lg leading-6 ">
-            {location.pathname.includes('profile') ? null : (
+            {location.pathname.includes('profile') ? (
+              <p className="text-chaeum-gray-900 text-left text-sm font-semibold">
+                {article.streakName}
+              </p>
+            ) : (
               <p className="text-chaeum-gray-900 text-left">
                 {article.nickname}
               </p>
             )}
             {article.tagList ? (
-              <div className="flex text-sm py-0.5 px-1 gap-1 flex-wrap">
+              <div className="flex text-sm py-0.5 gap-1 flex-wrap">
                 {article.tagList.map((tag, index) => (
                   <div
                     className={`${tagBackgroundColor} text-white text-left px-1 py-0.5 whitespace-nowrap rounded-md`}

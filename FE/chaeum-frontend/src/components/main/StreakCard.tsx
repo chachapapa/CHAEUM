@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StreakFull } from './StreakFull';
 import { Tag } from '../common/Tag';
 import { JsxElement } from 'typescript';
@@ -25,6 +25,9 @@ import { useNavigate } from 'react-router-dom';
 import { getCategory } from './StreakCategoryList';
 
 export const StreakCard = ({ ...props }: StreakInfoType) => {
+
+  console.log(props);
+
   // 비활성화 시 props 정보 바꾸기
   if (props.streakDeleted) {
     props.streakColor = 'deactive';
@@ -187,6 +190,7 @@ export const StreakCard = ({ ...props }: StreakInfoType) => {
           </div>
         ) : (
           <div className="flex flex-row justify-end items-center p-0.5 mb-2">
+            <div className='text-sm mr-3 text-chaeum-gray-900'>{props.categoryMiddle}</div>
             <FontAwesomeIcon
               onClick={settingToggle}
               icon={faGear}
