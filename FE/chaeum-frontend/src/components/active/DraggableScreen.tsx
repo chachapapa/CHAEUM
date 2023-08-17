@@ -125,7 +125,7 @@ const DraggableScreen = () => {
           Authorization: 'Bearer ' + access_token,
           'Content-Type': 'application/json',
         },
-        params: { categoryId: 2 },
+        params: { categoryId: myActivityInfo.categoryId },
       });
 
       // Dispatch action to store the sentences in Redux
@@ -138,29 +138,29 @@ const DraggableScreen = () => {
     }
   };
 
-  // 활동 중 동기부여 멘트
-  const fetchActiveSentences = async () => {
-    try {
-      const response = await axios.get(ACTIVE_MENT_URL, {
-        headers: {
-          Authorization: 'Bearer ' + access_token,
-          'Content-Type': 'application/json',
-        },
-        params: {
-          categoryId: 2,
-          activityId: myActivityInfo.activityId,
-        },
-      });
+  // // 활동 중 동기부여 멘트
+  // const fetchActiveSentences = async () => {
+  //   try {
+  //     const response = await axios.get(ACTIVE_MENT_URL, {
+  //       headers: {
+  //         Authorization: 'Bearer ' + access_token,
+  //         'Content-Type': 'application/json',
+  //       },
+  //       params: {
+  //         categoryId: myActivityInfo.categoryId,
+  //         activityId: myActivityInfo.activityId,
+  //       },
+  //     });
 
-      // Dispatch action to store the sentences in Redux
-      dispatch(setActiveMentList(response.data.sentences));
-      // console.log(startMentList);
-      // console.log(response.data.sentences);
-    } catch (error) {
-      // console.error('Error fetching sentences:', error);
-      console.log('Error fetching sentences:', error);
-    }
-  };
+  //     // Dispatch action to store the sentences in Redux
+  //     dispatch(setActiveMentList(response.data.sentences));
+  //     // console.log(startMentList);
+  //     // console.log(response.data.sentences);
+  //   } catch (error) {
+  //     // console.error('Error fetching sentences:', error);
+  //     console.log('Error fetching sentences:', error);
+  //   }
+  // };
 
   let cheeringMent: Cheering[] = [];
   // const cheeringMent: Cheering[] = [];
@@ -180,9 +180,9 @@ const DraggableScreen = () => {
       // dispatch(setActiveMentList(response.data.sentences));
       // console.log(startMentList);
 
-      console.log(response.data);
+      // console.log(response.data);
       cheeringMent = response.data;
-      console.log(cheeringMent);
+      // console.log(cheeringMent);
     } catch (error) {
       // console.error('Error fetching sentences:', error);
       console.log('Error fetching 응원글:', error);
@@ -213,8 +213,8 @@ const DraggableScreen = () => {
 
       // myAccumulateTime = response.data.myAccumulateTime;
       // console.log(myAccumulateTime);
-      console.log('라이벌 목록을 불러옵니다.');
-      console.log(response.data);
+      // console.log('라이벌 목록을 불러옵니다.');
+      // console.log(response.data);
       dispatch(setRivalInfoList(response.data.rivalList));
       dispatch(setMyAccumalteTime(response.data.myAccumulateTime));
     } catch (error) {
@@ -253,7 +253,6 @@ const DraggableScreen = () => {
   useEffect(() => {
     // 렌더링 시 최초 실행
     fetchStartSentences();
-    fetchActiveSentences();
 
     fetchRival();
     // // 3초 대기
@@ -265,7 +264,6 @@ const DraggableScreen = () => {
     const interval = setInterval(() => {
       fetchCheering();
       fetchRival();
-      // setTimeout(fetchCheering, 30000); // 30초 뒤에 fetchRival 호출
     }, 60000); // 1분마다 fetchCheering 호출
 
     // return () => clearTimeout(timer);
@@ -278,7 +276,7 @@ const DraggableScreen = () => {
 
   return (
     <div
-      className=" h-screen flex flex-col items-center justify-center"
+      className="w-full h-screen flex flex-col items-center justify-center"
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}

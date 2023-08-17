@@ -14,7 +14,8 @@ import { useNavigate } from 'react-router';
 import { useAppSelector } from '../../hooks/reduxHooks';
 import LoadingPage from '../common/LoadingPage';
 import axios from 'axios';
-
+import { setMyStreakInfo } from '../../features/states/states';
+import { useDispatch } from 'react-redux';
 /*
     추후 서버에서 받아올때는 날짜 형식으로 받아오므로
     props로 받는 time을 number로 변환해서 사용
@@ -45,6 +46,7 @@ const ActiveTotalBubble = (props: Props) => {
   const myActivityInfo = useAppSelector(
     state => state.stateSetter.myActivityInfo
   );
+  const myStreakInfo = useAppSelector(state => state.stateSetter.myStreakInfo);
   // RivalActivity 배열에서 accumulateTime 값을 추출하여 times 배열에 저장
   const profileImgList = rivalInfoList.map(rival => rival.profileImageUrl);
   const nameList = rivalInfoList.map(rival => rival.nickname);
@@ -81,12 +83,13 @@ const ActiveTotalBubble = (props: Props) => {
   // const isActive: boolean[] = [true, true, true, true, true];
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const stopTime = () => {
-    alert('stop!');
+    alert('추후 업데이트 예정입니다 :(');
   };
 
   const UPDATE_ACTIVITY_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
+  const STREAK_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/streak';
   const access_token = localStorage.getItem('access_token');
 
   // 서버에 시간을 넘기기 위한 함수
@@ -105,20 +108,34 @@ const ActiveTotalBubble = (props: Props) => {
     // 활동 종료
     const updateActivity = async () => {
       try {
-        const response = await axios.patch(
-          UPDATE_ACTIVITY_URL,
-          {
-            activityId: myActivityInfo.activityId,
-            streakId: myActivityInfo.streakId,
-            endTime: currentTimer(),
-          },
-          {
-            headers: {
-              Authorization: 'Bearer ' + access_token,
-              'Content-Type': 'application/json',
+        const response = await axios
+          .patch(
+            UPDATE_ACTIVITY_URL,
+            {
+              activityId: myActivityInfo.activityId,
+              streakId: myActivityInfo.streakId,
+              endTime: currentTimer(),
             },
-          }
-        );
+            {
+              headers: {
+                Authorization: 'Bearer ' + access_token,
+                'Content-Type': 'application/json',
+              },
+            }
+          )
+          .then(() => {
+            axios
+              .get(STREAK_LIST_URL, {
+                headers: { Authorization: 'Bearer ' + access_token },
+              })
+              .then(res => {
+                if (res.data) {
+                  dispatch(setMyStreakInfo(res.data));
+                } else {
+                  alert('문제있음');
+                }
+              });
+          });
 
         // Dispatch action to store the sentences in Redux
         // dispatch(setActiveMentList(response.data.sentences));
@@ -126,8 +143,8 @@ const ActiveTotalBubble = (props: Props) => {
 
         // myAccumulateTime = response.data.myAccumulateTime;
         // console.log(myAccumulateTime);
-        console.log('활동을 끝내고 서버로 업데이트합니다.');
-        console.log(response.data);
+        // console.log('활동을 끝내고 서버로 업데이트합니다.');
+        // console.log(response.data);
       } catch (error) {
         // console.error('Error fetching sentences:', error);
         console.log('Error fetching sentences:', error);
@@ -204,40 +221,40 @@ const ActiveTotalBubble = (props: Props) => {
           <NewActiveInfoCard time={times[4]}></NewActiveInfoCard>
         </div>
       ) : (
-        <div className="z-0 absolute bottom-0 w-full h-[450px] custom-scale-100 right-0">
+        <div className="z-0 absolute bottom-0 w-full h-[350px] custom-scale-100 right-0">
           {/* <NewWave color="chaeumblue"></NewWave> */}
           <NewActiveInfoCard time={times[4]}></NewActiveInfoCard>
 
-          <div className="bg-chaeum-blue-300 max-w-[307px] h-[387px]">
+          <div className="bg-[#aae8ed] max-w-full h-[287px]">
             <div className=" mx-auto overflow-hidden">
-              <Carousel>
+              <div className="text-lg text-chaeum-blue-800 mt-6">
+                CHAE:UM 이 응원합니다!!
+              </div>
+              <Carousel
+                autoplay
+                loop
+                navigation={({ setActiveIndex, activeIndex, length }) => (
+                  <div className="absolute bottom-1 left-2/4 z-50 flex -translate-x-2/4 gap-2">
+                    {new Array(length).fill('').map((_, i) => (
+                      <span
+                        key={i}
+                        className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
+                          activeIndex === i ? 'w-0 bg-white' : 'w-0 bg-white/50'
+                        }`}
+                        onClick={() => setActiveIndex(i)}
+                      />
+                    ))}
+                  </div>
+                )}
+                prevArrow={({ handlePrev }) => null}
+                nextArrow={({ handleNext }) => null}
+              >
                 {props.startMent.map((ment, index) => (
                   <div
                     key={index}
-                    className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center"
+                    className="bg-[#aae8ed] p-4 w-300 h-200 items-center"
                   >
-                    <Card>
-                      <PhraseCard
-                        title="동기부여 멘트"
-                        ment={ment}
-                      ></PhraseCard>
-                    </Card>
-                  </div>
-                ))}
-              </Carousel>
-
-              <Carousel>
-                {props.activeMent.map((ment, index) => (
-                  <div
-                    key={index}
-                    className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center"
-                  >
-                    <Card>
-                      <PhraseCard
-                        title="맞춤형 동기부여 멘트"
-                        ment={ment}
-                      ></PhraseCard>
-                    </Card>
+                    <div>{ment}</div>
                   </div>
                 ))}
               </Carousel>

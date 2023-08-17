@@ -16,6 +16,8 @@ public class GetPostResponse {
     private String profileUrl;
     private String postContent;
     private String postTime;
+    private String streakColor;
+    private String nickname;
     private List<GetReplyResponse> replyList;
     private List<String> tagList;
     private List<String> imageList;

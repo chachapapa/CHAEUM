@@ -110,6 +110,17 @@ public class SnsServiceImpl implements SnsService {
                     continue;
                 }
 
+                List<String> tagList = new ArrayList<>();
+
+                // tag 정보를 가져오기 위한 streakInfo 리스트
+                List<StreakInfo> streakInfos = streakInfoRepository
+                        .findAllByStreak(streak)
+                        .orElse(null);
+
+                for (StreakInfo streakInfo : streakInfos) {
+                    tagList.add(streakInfo.getTag().getTagName());
+                }
+
                 // 활동 내역이 있고 아직 endTime이 설정되지 않았다면
                 // 활동 중이므로 list에 추가한다.
                 if (activity.getActivityEndTime() == null) {
@@ -119,8 +130,10 @@ public class SnsServiceImpl implements SnsService {
                             .friendName(friendShip.getFromId().getNickname())
                             .streakName(streak.getStreakName())
                             .streakId(streak.getStreakId())
+                            .streakColor(streak.getStreakColor())
                             .activityId(activity.getId())
                             .profileUrl(friendShip.getFromId().getProfileImageUrl())
+                            .tagList(tagList)
                             .build();
                     activeResponseList.add(activeResponse);
                     break;
@@ -240,6 +253,11 @@ public class SnsServiceImpl implements SnsService {
     public boolean createReply(CreateReplyRequest createReplyRequest,
                                UserPersonalInfo userPersonalInfo, boolean isCheer) {
 
+        Long rereplyId = -1L;
+
+        if(createReplyRequest.getRereplyId() != null)
+            rereplyId = createReplyRequest.getRereplyId();
+
         Reply reply = Reply.builder()
                 .isCheer(isCheer)
                 .content(createReplyRequest.getComment())
@@ -247,6 +265,7 @@ public class SnsServiceImpl implements SnsService {
                 .activityId(activityRepository.findById(createReplyRequest.getActivityId())
                         .orElse(null))
                 .userId(userPersonalInfo)
+                .rereplyId(rereplyId)
                 .build();
 
         return reply.equals(replyRepository.save(reply));
@@ -355,9 +374,11 @@ public class SnsServiceImpl implements SnsService {
                         .content(reply.getContent())
                         .isCheer(reply.getIsCheer())
                         .rereplyId(reply.getRereplyId())
+                        .profileUrl(reply.getUserId().getProfileImageUrl())
+                        .nickname(reply.getUserId().getNickname())
                         .build();
 
-                if (reply.getRereplyId() == null) {
+                if (reply.getRereplyId() == -1L) {
                     replySortList.add(replyResponse);
                 } else {
                     // 대댓글을 댓글의 해쉬맵 안에 넣어서 관리한다.
@@ -386,8 +407,10 @@ public class SnsServiceImpl implements SnsService {
                     .replyList(replySortList)
                     .tagList(tagList)
                     .profileUrl(post.getUserPersonalInfo().getProfileImageUrl())
+                    .nickname(post.getUserPersonalInfo().getNickname())
                     .imageList(fileList)
                     .isFriend(true)
+                    .streakColor(post.getActivity().getStreakId().getStreakColor())
                     .build();
 
             if (cnt++ <= friendCnt) {
@@ -448,9 +471,11 @@ public class SnsServiceImpl implements SnsService {
                         .content(reply.getContent())
                         .isCheer(reply.getIsCheer())
                         .rereplyId(reply.getRereplyId())
+                        .profileUrl(reply.getUserId().getProfileImageUrl())
+                        .nickname(reply.getUserId().getNickname())
                         .build();
 
-                if (reply.getRereplyId() == null) {
+                if (reply.getRereplyId() == -1L) {
                     replySortList.add(replyResponse);
                 } else {
                     // 대댓글을 댓글의 해쉬맵 안에 넣어서 관리한다.
@@ -479,8 +504,10 @@ public class SnsServiceImpl implements SnsService {
                     .replyList(replySortList)
                     .tagList(tagList)
                     .profileUrl(post.getUserPersonalInfo().getProfileImageUrl())
+                    .nickname(post.getUserPersonalInfo().getNickname())
                     .imageList(fileList)
                     .isFriend(true)
+                    .streakColor(post.getActivity().getStreakId().getStreakColor())
                     .build();
 
             // dto 리스트에 저장
@@ -488,6 +515,54 @@ public class SnsServiceImpl implements SnsService {
         }
 
         return postResponseList;
+    }
+
+    @Override
+    public List<GetReplyResponse> getReplyByActivity(int activityId) {
+
+        Activity activity = activityRepository.findById(activityId).orElse(null);
+
+        if(activity == null){
+            return null;
+        }
+
+        // 포스트에 해당하는 댓글들 가져오기
+        List<Reply> replyList = replyRepository
+                .findAllByActivityIdAndReplyDeletedIsFalse(activity);
+
+
+        // 댓글들을 가져와서 대댓글과 댓글로 정렬하기
+        List<GetReplyResponse> replySortList = new ArrayList<>();
+        Map<Long, List<GetReplyResponse>> replyMap = new HashMap<>();
+
+        // 댓글들을 가져와서 대댓글, 댓글로 분류하기
+        for (Reply reply : replyList) {
+
+            GetReplyResponse replyResponse = GetReplyResponse.builder()
+                    .replyId(reply.getReplyId())
+                    .content(reply.getContent())
+                    .isCheer(reply.getIsCheer())
+                    .rereplyId(reply.getRereplyId())
+                    .profileUrl(reply.getUserId().getProfileImageUrl())
+                    .nickname(reply.getUserId().getNickname())
+                    .build();
+
+            if (reply.getRereplyId() == null) {
+                replySortList.add(replyResponse);
+            } else {
+                // 대댓글을 댓글의 해쉬맵 안에 넣어서 관리한다.
+                replyMap.computeIfAbsent(reply.getRereplyId(), k -> new ArrayList<>())
+                        .add(replyResponse);
+            }
+        }
+
+        for (GetReplyResponse replyResponse : replySortList) {
+            List<GetReplyResponse> replies = replyMap.getOrDefault(replyResponse.getReplyId(),
+                    Collections.emptyList());
+            replyResponse.setReplies(replies);
+        }
+
+        return replySortList;
     }
 
     /**

@@ -15,9 +15,11 @@ import {
   setMyActivityInfo,
   setRivalInfoList,
   setMyAccumalteTime,
+  setMyStreakInfo,
 } from '../../features/states/states';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../hooks/reduxHooks';
+
 type Cheering = {
   nickname: string;
   comments: string;
@@ -43,7 +45,7 @@ const ActiveFullScreen = (props: Props) => {
   const myActivityTagList = useAppSelector(
     state => state.stateSetter.myActivityTagList
   );
-
+  const myStreakInfo = useAppSelector(state => state.stateSetter.myStreakInfo);
   // state to store time
   const [time, setTime] = useState(
     myAccumulateTime + calculateTimeDifference(myActivityInfo.date)
@@ -89,13 +91,15 @@ const ActiveFullScreen = (props: Props) => {
 
   // Method to start and stop timer
   const startAndStop = () => {
-    setIsRunning(!isRunning);
-    console.log(Math.floor(time / 100));
-    console.log('현재 시간 입니다 : ' + currentTimer());
-    console.log('현재 시간 타입입니다 : ' + typeof currentTimer());
+    // setIsRunning(!isRunning);
+    // console.log(Math.floor(time / 100));
+    // console.log('현재 시간 입니다 : ' + currentTimer());
+    // console.log('현재 시간 타입입니다 : ' + typeof currentTimer());
+    alert('추후 업데이트 예정입니다 :(');
   };
 
   const UPDATE_ACTIVITY_URL = 'http://i9a810.p.ssafy.io:8080/api/activity';
+  const STREAK_LIST_URL = 'http://i9a810.p.ssafy.io:8080/api/streak';
   const access_token = localStorage.getItem('access_token');
   const navigate = useNavigate();
 
@@ -115,20 +119,34 @@ const ActiveFullScreen = (props: Props) => {
     // 활동 종료
     const updateActivity = async () => {
       try {
-        const response = await axios.patch(
-          UPDATE_ACTIVITY_URL,
-          {
-            activityId: myActivityInfo.activityId,
-            streakId: myActivityInfo.streakId,
-            endTime: currentTimer(),
-          },
-          {
-            headers: {
-              Authorization: 'Bearer ' + access_token,
-              'Content-Type': 'application/json',
+        const response = await axios
+          .patch(
+            UPDATE_ACTIVITY_URL,
+            {
+              activityId: myActivityInfo.activityId,
+              streakId: myActivityInfo.streakId,
+              endTime: currentTimer(),
             },
-          }
-        );
+            {
+              headers: {
+                Authorization: 'Bearer ' + access_token,
+                'Content-Type': 'application/json',
+              },
+            }
+          )
+          .then(() => {
+            axios
+              .get(STREAK_LIST_URL, {
+                headers: { Authorization: 'Bearer ' + access_token },
+              })
+              .then(res => {
+                if (res.data) {
+                  dispatch(setMyStreakInfo(res.data));
+                } else {
+                  alert('문제있음');
+                }
+              });
+          });
 
         // Dispatch action to store the sentences in Redux
         // dispatch(setActiveMentList(response.data.sentences));
@@ -136,8 +154,8 @@ const ActiveFullScreen = (props: Props) => {
 
         // myAccumulateTime = response.data.myAccumulateTime;
         // console.log(myAccumulateTime);
-        console.log('활동을 끝내고 서버로 업데이트합니다.');
-        console.log(response.data);
+        // console.log('활동을 끝내고 서버로 업데이트합니다.');
+        // console.log(response.data);
       } catch (error) {
         // console.error('Error fetching sentences:', error);
         console.log('Error fetching sentences:', error);
@@ -169,7 +187,7 @@ const ActiveFullScreen = (props: Props) => {
 
   const tags = myActivityTagList;
   return (
-    <div className="z-10 stopwatch-container bg-chaeum-blue-300 w-[307.16px] h-full">
+    <div className="z-10 stopwatch-container bg-[#aae8ed] w-full h-full">
       <div className="max-w-[307.16px] mx-auto overflow-hidden">
         <div className="text-5xl mt-5"> 채움 중 ...</div>
         <div className="mt-5">
@@ -178,7 +196,7 @@ const ActiveFullScreen = (props: Props) => {
           ))}
         </div>
         <div className="text-5xl mt-10">{formattedTime}</div>
-        <div className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center">
+        <div className="bg-[#aae8ed] p-4 w-300 h-200 items-center">
           <Card className="w-full h-[200px] border-x-4">
             <div className=" w-[360px] p-1 pl-2 my-3">
               {/* {commentListExample.map(comment => ( */}
@@ -226,16 +244,32 @@ const ActiveFullScreen = (props: Props) => {
             </div>
           </Card>
         </div>
-        <div className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center">
-          <Carousel>
+        <div className="bg-[#aae8ed] p-4 w-300 h-200 items-center">
+          <Carousel
+            autoplay
+            loop
+            navigation={({ setActiveIndex, activeIndex, length }) => (
+              <div className="absolute bottom-1 left-2/4 z-50 flex -translate-x-2/4 gap-2">
+                {new Array(length).fill('').map((_, i) => (
+                  <span
+                    key={i}
+                    className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
+                      activeIndex === i ? 'w-0 bg-white' : 'w-0 bg-white/50'
+                    }`}
+                    onClick={() => setActiveIndex(i)}
+                  />
+                ))}
+              </div>
+            )}
+            prevArrow={({ handlePrev }) => null}
+            nextArrow={({ handleNext }) => null}
+          >
             {props.startMent.map((ment, index) => (
               <div
                 key={index}
-                className="bg-chaeum-blue-300 p-4 w-300 h-200 items-center"
+                className="bg-[#aae8ed] p-4 w-300 h-200 items-center"
               >
-                <Card>
-                  <PhraseCard title="동기부여 멘트" ment={ment}></PhraseCard>
-                </Card>
+                <div>{ment}</div>
               </div>
             ))}
           </Carousel>

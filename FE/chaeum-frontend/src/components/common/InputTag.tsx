@@ -23,6 +23,7 @@ const AccessToken = localStorage.getItem('access_token');
 const InputTag = ({ width = 'w-full', ...props }: Props) => {
   const onKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (props.setSearchKeyword) {
+      console.log('keyword');
       props.setSearchKeyword(e.target.value);
     } else if (props.setUser) {
       if (props.for === 'introduction') {
@@ -40,9 +41,9 @@ const InputTag = ({ width = 'w-full', ...props }: Props) => {
           ...prev,
           weight: e.target.value,
         }));
-      } else if(props.onChange){
-        props.onChange(e.target.value);
       }
+    } else if (props.onChange !== undefined) {
+      props.onChange(e.target.value);
     }
   };
 

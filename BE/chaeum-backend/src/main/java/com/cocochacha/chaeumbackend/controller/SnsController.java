@@ -8,6 +8,7 @@ import com.cocochacha.chaeumbackend.dto.DeleteReplyRequest;
 import com.cocochacha.chaeumbackend.dto.GetActiveResponse;
 import com.cocochacha.chaeumbackend.dto.GetPostRequest;
 import com.cocochacha.chaeumbackend.dto.GetPostResponse;
+import com.cocochacha.chaeumbackend.dto.GetReplyResponse;
 import com.cocochacha.chaeumbackend.service.SnsService;
 import com.cocochacha.chaeumbackend.service.UserPersonalInfoService;
 import java.io.IOException;
@@ -54,6 +55,16 @@ public class SnsController {
         return new ResponseEntity<>(getActiveResponseList, HttpStatus.OK);
     }
 
+    @GetMapping("/active/comment")
+    public ResponseEntity<?> getActiveReplyList(@RequestParam int activityId){
+
+        List<GetReplyResponse> replyResponses = snsService.getReplyByActivity(activityId);
+
+        if(replyResponses == null)
+            return new ResponseEntity<>("액티비티 없어요", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
     /**
      * 액티브에서 응원글을 등록하는 함수
      *
@@ -76,7 +87,7 @@ public class SnsController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createPost(@RequestPart CreatePostRequest createPostRequest,
-                                        @RequestPart List<MultipartFile> fileList) {
+                                        @RequestPart(required = false) List<MultipartFile> fileList) {
 
         UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
                 getUserIDFromAuthentication());
@@ -91,6 +102,7 @@ public class SnsController {
         }
         return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
     }
+
 
     @PatchMapping("/delete")
     public ResponseEntity<?> deletePost(@RequestBody DeletePostRequest deletePostRequest) {
