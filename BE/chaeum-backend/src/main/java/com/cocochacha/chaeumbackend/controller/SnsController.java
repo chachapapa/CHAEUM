@@ -87,7 +87,7 @@ public class SnsController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createPost(@RequestPart CreatePostRequest createPostRequest,
-                                        @RequestPart List<MultipartFile> fileList) {
+                                        @RequestPart(required = false) List<MultipartFile> fileList) {
 
         UserPersonalInfo userPersonalInfo = userPersonalInfoService.findById(
                 getUserIDFromAuthentication());
@@ -102,6 +102,7 @@ public class SnsController {
         }
         return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
     }
+
 
     @PatchMapping("/delete")
     public ResponseEntity<?> deletePost(@RequestBody DeletePostRequest deletePostRequest) {
