@@ -18,6 +18,7 @@ public class GetPostResponse {
     private String postTime;
     private String streakColor;
     private String nickname;
+    private String streakName;
     private List<GetReplyResponse> replyList;
     private List<String> tagList;
     private List<String> imageList;

@@ -255,6 +255,8 @@ public class StreakServiceImpl implements StreakService {
                         .streakColor(streak.getStreakColor())
                         .streakName(streak.getStreakName())
                         .categoryId(streak.getCategory().getCategoryId())
+                        .categoryMain(streak.getCategory().getCategoryMain())
+                        .categoryMiddle(streak.getCategory().getCategoryMiddle())
                         .activeHistoryList(activityList)
                         .continueDays(0)
                         .build();
@@ -501,4 +503,6 @@ public class StreakServiceImpl implements StreakService {
 
         return RivalUpdateResponse.builder().rivalList(selectedRivalList).build();
     }
+
+
 }
