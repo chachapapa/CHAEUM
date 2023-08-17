@@ -360,8 +360,8 @@ public class StreakServiceImpl implements StreakService {
     public RivalListResponse getRivalList(Streak myStreak) {
         // 요청으로 들어온 스트릭과 카테고리가 같은 중분류인 스트릭id들을 가져와요
         // 개수가 5개가 안된다면 그냥 스트릭 id를 다 가져와요
-        List<Streak> streakList = streakRepository.findAllByCategory(myStreak.getCategory())
-                .orElse(null);
+        List<Streak> streakList = streakRepository.findAllByCategoryAndStreakDeletedIsFalse
+                        (myStreak.getCategory()).orElse(null);
         if (streakList.size() < 6) {
             streakList = streakRepository.findAll();
         }
