@@ -95,8 +95,8 @@ public class UserInfoApiController {
     @PatchMapping("/mypage-info")
     public ResponseEntity<?> updateMypageInfo(
             @RequestPart UpdateMypageInfoRequest updateMypageInfoRequest,
-            @RequestPart MultipartFile updateMypageProfileImage,
-            @RequestPart MultipartFile updateMypageBackgroundImage) {
+            @RequestPart(required = false) MultipartFile updateMypageProfileImage,
+            @RequestPart(required = false) MultipartFile updateMypageBackgroundImage) {
         Long userId = getUserIDFromAuthentication();
         UpdateMypageInfoResponse updateMypageInfoResponse = null;
         try {
