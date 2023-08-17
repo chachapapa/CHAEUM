@@ -55,6 +55,8 @@ public class FriendService {
                 return false;
             }
             // 원래 친구 였다가, 관계를 끊은 상태로 다시 친구 요청을 보낸 것
+            // 혹은 친구 신청을 취소하고 한 상태
+            createdAddDatabase(userPersonalInfoTo, userPersonalInfoFrom);
             return true;
         }
 
@@ -184,7 +186,6 @@ public class FriendService {
 
         String id = toId + "." + fromId;
         FriendCheck friendCheck = friendRepository.findByFriendRelationship(id).orElse(null);
-        System.out.println(friendCheck);
 
         if (friendCheck == null || !friendCheck.isCheck()) {
             // 둘이 친구 아님
