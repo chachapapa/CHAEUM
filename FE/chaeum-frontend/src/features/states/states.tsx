@@ -60,7 +60,11 @@ export type State = {
 
   // 활동 시작 동기부여 문구
   activeMentList: string[];
-};
+
+  // 프로필 / 배경사진
+  profileImage : ImageFile[];
+  backgroundImage : ImageFile[];
+ };
 // 1-1. initial state 객체 생성
 const initialState: State = {
   // nickname: '',
@@ -89,6 +93,8 @@ const initialState: State = {
   activeMentList: ['동기 부여 멘트를 생성중입니다.'],
   myAccumulateTime: 0,
   myActivityTagList: [],
+  profileImage : [],
+  backgroundImage:[],
 };
 
 // 2. slice 생성 : createSlice
@@ -202,6 +208,22 @@ const Slice = createSlice({
     setActiveMentList: (state, action: PayloadAction<string[]>) => {
       state.activeMentList = action.payload;
     },
+
+    // 프로필 / 배경 사진 
+    setProfileImage : (state, action: PayloadAction<ImageFile[]>) => {
+      state.profileImage = action.payload;
+    },
+
+    setBackgroundImage : (state, action: PayloadAction<ImageFile[]>) => {
+      state.backgroundImage = action.payload;
+    },
+
+    deleteProfileImage :(state) => {
+      state.profileImage = [];
+    },
+    deleteBackgroundImage :(state) => {
+      state.profileImage = [];
+    },
   },
 });
 
@@ -234,6 +256,10 @@ export const {
   setRivalInfoList,
   setStartMentList,
   setActiveMentList,
+  setBackgroundImage,
+  setProfileImage,
+  deleteBackgroundImage,
+  deleteProfileImage
 } = Slice.actions;
 // 3-2. export default slice.reducer
 export default Slice.reducer;
