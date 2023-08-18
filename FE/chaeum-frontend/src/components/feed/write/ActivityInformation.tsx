@@ -36,7 +36,6 @@ const ActivityInformation = ({
   const disabledColor = WaveBottomColor({ weight3 });
   const startTime: Date = new Date(activity[0]);
 
-  const elapsedTime = Number(activity[2]);
   const date =
     activity[0].split(' ')[0].split('-')[0] +
     '년 ' +
@@ -45,7 +44,8 @@ const ActivityInformation = ({
     activity[0].split(' ')[0].split('-')[2] +
     '일 ';
   const startTimeFormed = activity[0].split(' ')[1];
-  const endTimeFormed = activity[1].split(' ')[1];
+  const endTimeFormed = activity[1] === null ? '' : activity[1].split(' ')[1];
+  const elapsedTime = activity[1] === null ? 3600 : Number(activity[2]);
 
   const hour = Math.floor(elapsedTime / 3600);
   const minute = Math.floor((elapsedTime - hour * 3600) / 60);
