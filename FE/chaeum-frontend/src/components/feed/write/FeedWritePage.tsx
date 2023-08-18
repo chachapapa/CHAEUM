@@ -24,7 +24,7 @@ const FeedWritePage = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [registActivity, setRegistActivity] = useState<Activity>();
 
-  if (registActivity === undefined) {
+  if (registActivity === undefined && state) {
     setRegistActivity(state.registActivity);
   }
   const onClickNext = () => {
