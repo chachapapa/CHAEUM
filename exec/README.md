@@ -159,37 +159,44 @@ chaeum-backend
   - 기능명세서 등 모두가 공유해야 하는 문서 관리
 
 ### 팀원 역할 분배
-![팀원소개](./image/팀원소개.png)
+<img src='./image/팀원소개.png' width=50%> 
 <br>
 
 ### 프로토 타입
 #### 색상 지정
-![프로토타입](./image/프로토타입.png)
+<img src='./image/프로토타입.png' width=50%> 
+<br>
 
 #### 회원 가입/로그인
-![회원가입](./image/회원가입.png)
+<img src='./image/회원가입.png' width=50%> 
+<br>
 
 #### 메인 페이지
-![메인페이지](./image/메인페이지.png)
+<img src='./image/메인페이지.png' width=50%> 
+<br>
 
 #### 액티브
-![액티브](./image/액티브.png)
+<img src='./image/액티브.png' width=50%> 
+<br>
 
 #### 결과
-![결과](./image/결과.png)
+<img src='./image/결과.png' width=50%> 
+<br>
 
 #### 피드
-![피드](./image/피드.png)
+<img src='./image/피드.png' width=50%> 
+<br>
 
 #### 알림
-![알림](./image/알림.png)
+<img src='./image/알림.png' width=50%> 
+<br>
 
 #### 마이페이지
-![마이페이지](./image/마이페이지.png)
+<img src='./image/마이페이지.png' width=50%> 
 <br>
 
 ### 아키텍쳐
-![아키텍쳐](./image/아키텍쳐.png)
+<img src='./image/아키텍쳐.png' width=50%> 
 <br>
 
 ### 컨벤션
@@ -197,11 +204,11 @@ chaeum-backend
 <br>
 
 ### API DOCS
-![API DOCS](./image/API_DOCS.png)
+<img src='./image/API_DOCS.png' width=50%> 
 <br>
 
 ### ERD
-![ERD](./image/erd.png)
+<img src='./image/erd.png' width=50%> 
 <br>
 
 ### 포팅메뉴얼
@@ -212,14 +219,14 @@ chaeum-backend
 
 ### 시연
 #### 활동 시작
-![활동 시작 시연](./image/활동 시작.gif)
+<img src='./image/활동 시작.gif' width=50%> 
 <br>
 - 시작 버튼을 클릭해서 활동을 시작
 - 활동을 시작하면 라이벌들이 보임
 <br><br>
 
 #### 활동 중
-![활동 중 시연](./image/채움 중 + 라이벌 보여주기.gif)
+<img src='./image/채움 중 + 라이벌 보여주기.gif' width=50%> 
 <br>
 - 현재 본인이 얼마나 진행 했는지 확인 가능
 - 본인을 응원한 사람의 응원글 확인 가능
@@ -227,68 +234,68 @@ chaeum-backend
 <br><br>
 
 #### 활동 종료
-![활동 종료 시연](./image/활동 종료 및 라이벌 목록과 응원글 목록.gif)
+<img src='./image/활동 종료 및 라이벌 목록과 응원글 목록.gif' width=50%> 
 <br>
 - 본인이 활동 했을 때 생성되었던 라이벌의 목록 확인 가능
 - 활동 종료 후, 본인이 받은 응원글의 목록 확인 가능
 <br><br>
 
 #### 피드
-![피드 시연](./image/chaeum-feed.gif)
+<img src='./image/chaeum-feed.gif' width=50%> 
 <br>
 - 다른 사람들이 작성한 피드를 확인 할 수 있음
 <br><br>
 
 #### 상세 피드
-![피드 시연](./image/chaeum-feed.gif)
-<img src='./image/feed-detail.gif' width=50%><br>
+<img src='./image/feed-detail.gif' width=50%> 
+<br>
 - 다른 사람이 작성한 피드를 상세히 볼 수 있음
 <br><br>
 
 #### 마이페이지
-![피드 시연](./image/chaeum-feed.gif)
-<img src='./image/chaeum-mypage.gif' width=50%><br>
+<img src='./image/chaeum-mypage.gif' width=50%> 
+<br>
 - 마이페이지에서 다른 피드 페이지로 넘어갈 수 있음
 <br><br>
 
 #### 나의 게시글
-![나의 게시글 시연](./image/myArticle.gif)
+<img src='./image/myArticle.gif' width=50%> 
 <br>
 - 마이 페이지에서 내가 쓴 피드를 확인 할 수 있음
 <br><br>
 
 #### 스트릭 생성
-![스트릭 생성 시연](./image/streak-create.gif)
+<img src='./image/streak-create.gif' width=50%> 
 <br>
 - 스트릭 생성 버튼을 통해서 스트릭 생성 화면으로 이동 가능
 <br><br>
 
 #### 스트릭 생성 완료
-![스트릭 생성 시연](./image/streak-create-complete.gif)
+<img src='./image/streak-create-complete.gif' width=50%> 
 <br>
 - 스트릭 이름, 중분류, 태그 등 입력 후 스트릭 생성 가능
 <br><br>
 
 #### 스트리 수정
-![스트릭 수정 시연](./image/streak-modify.gif)
+<img src='./image/streak-modify.gif' width=50%> 
 <br>
 - 스트릭 이름, 태그를 수정 할 수 있음
 <br><br>
 
 #### 스트릭 비활성화
-![스트릭 비활성화 시연](./image/streak-disable.gif)
+<img src='./image/streak-disable.gif' width=50%> 
 <br>
 - 활성화 되어있던 스트릭을 비활성화 할 수 있음
 <br><br>
 
 #### 스트릭 활성화
-![스트릭 활성화 시연](./image/streak-able.gif)
+<img src='./image/streak-able.gif' width=50%> 
 <br>
 - 비활성화 중이었던 스트릭을 활성화 가능
 <br><br>
 
 #### 스트릭 삭제
-![스트릭 삭제 시연](./image/streak-delete.gif)
+<img src='./image/streak-delete.gif' width=50%> 
 <br>
 - 삭제를 원하는 스트릭 삭제 가능
 <br><br>

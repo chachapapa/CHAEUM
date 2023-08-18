@@ -1,7 +1,7 @@
 # 컨벤션
 ## 목차
 [1. Commit Convention](#Commit-Convention) <br>
-[2. Merge Convention ](#Merge-Convention) <br>
+[2. Merge Convention](#Merge-Convention) <br>
 [3. BE Convention](#BE-Convention) <br>
 [4. FE Convention](#FE-Convention) <br>
 [5. JIRA Convention](#JIRA-Convetion) <br>
@@ -9,18 +9,18 @@
 
 ### Commit Convention
 #### 큰틀
-    ```
+
     git commit -m ":sparkles: Feat : #태스트_지라_이슈_번호 태스크_이름
 
     - 추가 설명"
-    ```
+
 
 #### 예시
-    ```
+
     git commit -m ":sparkles: Feat :#1 리드미 작성
     
     - 리드미를 작성했습니다."
-    ```
+
 #### 커밋 유형 지정
 |커밋 유형|의미|아이콘|
 |---------|------|-------|
@@ -57,7 +57,7 @@
 ```
 
 #### 적용
-![커밋 적용](./image/commit_convention.png)
+<img src='./image/commit_convention.png' width=50%>
 
 
 ### Merge Convention
@@ -104,7 +104,7 @@ git push origin 브랜치 이름
 ```
 
 #### 적용
-![머지 적용](./image/merge_convention.png)
+<img src='./image/merge_convention.png' width=50%>
 
 ### BE Convention
 ```
