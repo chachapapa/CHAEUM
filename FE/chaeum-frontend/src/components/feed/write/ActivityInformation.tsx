@@ -91,7 +91,7 @@ const ActivityInformation = ({
           >
             <div className="flex w-full flex-col gap-0.5">
               <div className="flex items-center justify-between">
-                <div className="w-[250px] text-left">
+                <div className="w-[220px] text-left">
                   <Typography variant="h6">
                     {middleCategory.streakName}
                   </Typography>
