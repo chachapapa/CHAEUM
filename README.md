@@ -165,7 +165,7 @@ chaeum-backend
 
 **[활동 시작]**
 
-<img src='./exec/image/활동 시작.gif' width=50%> 
+<img src='./exec/image/활동 시작.gif' width=25%> 
 <br>
 - 시작 버튼을 클릭해서 활동을 시작
 - 활동을 시작하면 라이벌들이 보임
@@ -173,7 +173,7 @@ chaeum-backend
 
 **[활동 중]**
 
-<img src='./exec/image/채움 중 + 라이벌 보여주기.gif' width=50%> 
+<img src='./exec/image/채움 중 + 라이벌 보여주기.gif' width=25%> 
 <br>
 - 현재 본인이 얼마나 진행 했는지 확인 가능
 - 본인을 응원한 사람의 응원글 확인 가능
@@ -182,7 +182,7 @@ chaeum-backend
 
 **[활동 종료]**
 
-<img src='./exec/image/활동 종료 및 라이벌 목록과 응원글 목록.gif' width=50%> 
+<img src='./exec/image/활동 종료 및 라이벌 목록과 응원글 목록.gif' width=25%> 
 <br>
 - 본인이 활동 했을 때 생성되었던 라이벌의 목록 확인 가능
 - 활동 종료 후, 본인이 받은 응원글의 목록 확인 가능
@@ -190,70 +190,70 @@ chaeum-backend
 
 **[피드]**
 
-<img src='./exec/image/chaeum-feed.gif' width=50%> 
+<img src='./exec/image/chaeum-feed.gif' width=25%> 
 <br>
 - 다른 사람들이 작성한 피드를 확인 할 수 있음
 <br><br>
 
 **[상세 피드]**
 
-<img src='./exec/image/feed-detail.gif' width=50%> 
+<img src='./exec/image/feed-detail.gif' width=25%> 
 <br>
 - 다른 사람이 작성한 피드를 상세히 볼 수 있음
 <br><br>
 
 **[마이페이지]**
 
-<img src='./exec/image/chaeum-mypage.gif' width=50%> 
+<img src='./exec/image/chaeum-mypage.gif' width=25%> 
 <br>
 - 마이페이지에서 다른 피드 페이지로 넘어갈 수 있음
 <br><br>
 
 **[내 게시글]**
 
-<img src='./exec/image/myArticle.gif' width=50%> 
+<img src='./exec/image/myArticle.gif' width=25%> 
 <br>
 - 마이 페이지에서 내가 쓴 피드를 확인 할 수 있음
 <br><br>
 
 **[스트릭 생성]**
 
-<img src='./exec/image/streak-create.gif' width=50%> 
+<img src='./exec/image/streak-create.gif' width=25%> 
 <br>
 - 스트릭 생성 버튼을 통해서 스트릭 생성 화면으로 이동 가능
 <br><br>
 
 **[스트릭 생성 완료]**
 
-<img src='./exec/image/streak-create-complete.gif' width=50%> 
+<img src='./exec/image/streak-create-complete.gif' width=25%> 
 <br>
 - 스트릭 이름, 중분류, 태그 등 입력 후 스트릭 생성 가능
 <br><br>
 
 **[스트릭 수정]**
 
-<img src='./exec/image/streak-modify.gif' width=50%> 
+<img src='./exec/image/streak-modify.gif' width=25%> 
 <br>
 - 스트릭 이름, 태그를 수정 할 수 있음
 <br><br>
 
 **[스트릭 비활성화]**
 
-<img src='./exec/image/streak-disable.gif' width=50%> 
+<img src='./exec/image/streak-disable.gif' width=25%> 
 <br>
 - 활성화 되어있던 스트릭을 비활성화 할 수 있음
 <br><br>
 
 **[스트릭 활성화]**
 
-<img src='./exec/image/streak-able.gif' width=50%> 
+<img src='./exec/image/streak-able.gif' width=25%> 
 <br>
 - 비활성화 중이었던 스트릭을 활성화 가능
 <br><br>
 
 **[스트릭 삭제]**
 
-<img src='./exec/image/streak-delete.gif' width=50%> 
+<img src='./exec/image/streak-delete.gif' width=25%> 
 <br>
 - 삭제를 원하는 스트릭 삭제 가능
 <br><br>
