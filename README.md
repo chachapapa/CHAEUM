@@ -186,7 +186,7 @@ chaeum-backend
 
 | <span style="font-size:20px;">내 게시글</span>      |
 | --------------------------------------------------- |
-| <img src='./exec/image/chaeum-mypage.gif' height="600"> |
+| <img src='./exec/image/myarticle.gif' height="600"> |
 |- 마이 페이지에서 내가 쓴 피드를 확인 할 수 있음|
 
 **[활동]**
