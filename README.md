@@ -163,100 +163,31 @@ chaeum-backend
 
 ## 😊 서비스 화면
 
-**[활동 시작]**
+| <span style="font-size:20px;">스트릭 활성화</span>      | <span style="font-size:20px;">스트릭 생성</span>      | <span style="font-size:20px;">스트릭 생성 완료</span>      |
+| --------------------------------------------------- | ------------------------------------------------------ | --------------------------------------------------- |
+| <img src='./exec/image/streak-able.gif' height="600">  | <img src='./exec/image/streak-create.gif'  height="600">  | <img src='./exec/image/streak-create-complete.gif'  height="600">  |
+|- 비활성화 중이었던 스트릭을 활성화 가능|- 새로운 카테고리 별 스트릭 생성||
 
-<img src='./exec/image/활동 시작.gif' width=25%> 
-<br>
-- 시작 버튼을 클릭해서 활동을 시작
-- 활동을 시작하면 라이벌들이 보임
-<br><br>
+| <span style="font-size:20px;">스트릭 수정</span>      | <span style="font-size:20px;">스트릭 삭제</span>      | <span style="font-size:20px;">스트릭 비활성화</span>      |
+| --------------------------------------------------- | ------------------------------------------------------ | --------------------------------------------------- |
+| <img src='./exec/image/streak-modify.gif'  height="600"> | <img src='./exec/image/streak-delete.gif'  height="600">  | <img src='./exec/image/streak-disable.gif'  height="600">   |
+|- 활성화 되어있던 스트릭을 비활성화 할 수 있음 |- 삭제를 원하는 스트릭 삭제 가능| - 진행하지 못하는 스트릭 비활성화 가능|
 
-**[활동 중]**
+| <span style="font-size:20px;">활동 시작</span>      | <span style="font-size:20px;">활동 중</span>      | <span style="font-size:20px;">활동 종료</span> |
+| --------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- |
+| <img src='./exec/image/활동 시작.gif' height="600">  | <img src='./exec/image/채움 중 + 라이벌 보여주기.gif' height="600">  | <img src='./exec/image/활동 종료 및 라이벌 목록과 응원글 목록.gif' height="600">  |
+| - 라이벌들의 현황또한 확인 가능 | - 현재 본인이 얼마나 진행 했는지 확인 가능 <br/> - 본인을 응원한 사람의 응원글 확인 가능 <br/> - 본인의 활동에 대한 동기부여 멘트 확인 가능 | - 활동 시 생성되었던 라이벌의 목록 확인 가능<br> - 활동 종료 후, 본인이 받은 응원글의 목록 확인 가능 |
 
-<img src='./exec/image/채움 중 + 라이벌 보여주기.gif' width=25%> 
-<br>
-- 현재 본인이 얼마나 진행 했는지 확인 가능
-- 본인을 응원한 사람의 응원글 확인 가능
-- 본인의 활동에 대한 동기부여 멘트 확인 가능
-<br><br>
 
-**[활동 종료]**
+| <span style="font-size:20px;">피드</span>      | <span style="font-size:20px;">게시글 상세</span>      | <span style="font-size:20px;">마이페이지</span>      |
+| --------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- |
+| <img src='./exec/image/chaeum-feed.gif' height="600">  | <img src='./exec/image/feed-detail.gif' height="600">  | <img src='./exec/image/chaeum-mypage.gif' height="600">  |
+|- 다른 사람들이 작성한 피드를 확인 할 수 있음| - 다른 사람이 작성한 피드를 상세히 볼 수 있음 | - 마이페이지에서 다른 피드 페이지로 넘어갈 수 있음 |
 
-<img src='./exec/image/활동 종료 및 라이벌 목록과 응원글 목록.gif' width=25%> 
-<br>
-- 본인이 활동 했을 때 생성되었던 라이벌의 목록 확인 가능
-- 활동 종료 후, 본인이 받은 응원글의 목록 확인 가능
-<br><br>
-
-**[피드]**
-
-<img src='./exec/image/chaeum-feed.gif' width=25%> 
-<br>
-- 다른 사람들이 작성한 피드를 확인 할 수 있음
-<br><br>
-
-**[상세 피드]**
-
-<img src='./exec/image/feed-detail.gif' width=25%> 
-<br>
-- 다른 사람이 작성한 피드를 상세히 볼 수 있음
-<br><br>
-
-**[마이페이지]**
-
-<img src='./exec/image/chaeum-mypage.gif' width=25%> 
-<br>
-- 마이페이지에서 다른 피드 페이지로 넘어갈 수 있음
-<br><br>
-
-**[내 게시글]**
-
-<img src='./exec/image/myArticle.gif' width=25%> 
-<br>
-- 마이 페이지에서 내가 쓴 피드를 확인 할 수 있음
-<br><br>
-
-**[스트릭 생성]**
-
-<img src='./exec/image/streak-create.gif' width=25%> 
-<br>
-- 스트릭 생성 버튼을 통해서 스트릭 생성 화면으로 이동 가능
-<br><br>
-
-**[스트릭 생성 완료]**
-
-<img src='./exec/image/streak-create-complete.gif' width=25%> 
-<br>
-- 스트릭 이름, 중분류, 태그 등 입력 후 스트릭 생성 가능
-<br><br>
-
-**[스트릭 수정]**
-
-<img src='./exec/image/streak-modify.gif' width=25%> 
-<br>
-- 스트릭 이름, 태그를 수정 할 수 있음
-<br><br>
-
-**[스트릭 비활성화]**
-
-<img src='./exec/image/streak-disable.gif' width=25%> 
-<br>
-- 활성화 되어있던 스트릭을 비활성화 할 수 있음
-<br><br>
-
-**[스트릭 활성화]**
-
-<img src='./exec/image/streak-able.gif' width=25%> 
-<br>
-- 비활성화 중이었던 스트릭을 활성화 가능
-<br><br>
-
-**[스트릭 삭제]**
-
-<img src='./exec/image/streak-delete.gif' width=25%> 
-<br>
-- 삭제를 원하는 스트릭 삭제 가능
-<br><br>
+| <span style="font-size:20px;">내 게시글</span>      |
+| --------------------------------------------------- |
+| <img src='./exec/image/chaeum-mypage.gif' height="600"> |
+|- 마이 페이지에서 내가 쓴 피드를 확인 할 수 있음|
 
 **[활동]**
 
