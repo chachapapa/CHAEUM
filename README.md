@@ -184,11 +184,6 @@ chaeum-backend
 | <img src='./exec/image/chaeum-feed.gif' height="600">  | <img src='./exec/image/feed-detail.gif' height="600">  | <img src='./exec/image/chaeum-mypage.gif' height="600">  |
 |- 다른 사람들이 작성한 피드를 확인 할 수 있음| - 다른 사람이 작성한 피드를 상세히 볼 수 있음 | - 마이페이지에서 다른 피드 페이지로 넘어갈 수 있음 |
 
-| <span style="font-size:20px;">내 게시글</span>      |
-| --------------------------------------------------- |
-| <img src='./exec/image/myarticle.gif' height="600"> |
-|- 마이 페이지에서 내가 쓴 피드를 확인 할 수 있음|
-
 **[활동]**
 
 - 활동 시작을 통해서 채움을 할 수 있음
